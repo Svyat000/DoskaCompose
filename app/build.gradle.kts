@@ -5,6 +5,7 @@ plugins {
     alias(libs.plugins.google.gms.google.services)
     alias(libs.plugins.ksp)
     alias(libs.plugins.hilt)
+    kotlin("plugin.serialization")
 }
 
 android {
@@ -82,4 +83,7 @@ dependencies {
     implementation(libs.hilt.android)
     ksp(libs.hilt.android.compiler)
     implementation(libs.hilt.navigation.compiler)
+
+    // Kotlin Serializations
+    implementation(libs.kotlinx.serialization)
 }

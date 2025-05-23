@@ -1,4 +1,4 @@
-package com.sddrozdov.doskacompose.ui.theme
+package com.sddrozdov.doskacompose.presentation.theme
 
 import android.app.Activity
 import android.os.Build

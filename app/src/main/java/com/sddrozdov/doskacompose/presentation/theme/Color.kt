@@ -1,4 +1,4 @@
-package com.sddrozdov.doskacompose.ui.theme
+package com.sddrozdov.doskacompose.presentation.theme
 
 import androidx.compose.ui.graphics.Color
 
