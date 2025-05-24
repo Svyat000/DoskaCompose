@@ -1,6 +1,7 @@
 package com.sddrozdov.doskacompose.presentation.states
 
 import com.google.firebase.auth.FirebaseUser
+import kotlin.Result
 
 data class LoginScreenState(
     val email: String = "",
