@@ -13,4 +13,5 @@ sealed class RegisterScreenEvent {
     data class EmailUpdated(val newEmail: String) : RegisterScreenEvent()
     data class PasswordUpdated(val newPassword: String) : RegisterScreenEvent()
     data object RegisterBtnClicked : RegisterScreenEvent()
+    data object RegisterGoogleBtnClicked: RegisterScreenEvent()
 }

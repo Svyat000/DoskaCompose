@@ -15,7 +15,6 @@ class AuthUseCase @Inject constructor(private val repository: AuthRepositoryImpl
         }
 //        val deleteResult = repository.deleteCurrentUser()
 //        if (deleteResult.isFailure) {
-//            // Логируем, но не прерываем
 //            Log.w("AuthUseCase", "Delete current user failed: ${deleteResult.exceptionOrNull()}")
 //        }
 
@@ -24,7 +23,6 @@ class AuthUseCase @Inject constructor(private val repository: AuthRepositoryImpl
         if (signUpResult.isFailure) {
             val ex = signUpResult.exceptionOrNull()
             if (ex is FirebaseAuthUserCollisionException) {
-                // Попытка связать email с Google аккаунтом
                 val linkResult = repository.linkEmailToGmail(email, password)
                 if (linkResult.isFailure) {
                     return Result.failure(linkResult.exceptionOrNull()!!)

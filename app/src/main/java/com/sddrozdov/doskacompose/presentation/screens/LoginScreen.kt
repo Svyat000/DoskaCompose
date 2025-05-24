@@ -33,6 +33,8 @@ fun LoginScreen(
     LaunchedEffect(state.loginResult) {
         state.loginResult?.onSuccess {
             onNavigateTo(Screen.MainScreen)
+        }?.onFailure { e ->
+            println("Google sign in failed: ${e.message}")
         }
     }
 
@@ -61,6 +63,9 @@ fun LoginView(
             label = { Text("Password") },
             visualTransformation = PasswordVisualTransformation()
         )
+        Button(onClick = { onEvent(LoginScreenEvent.LoginGoogleBtnClicked) }) {
+            Text("Login Google")
+        }
         Button(onClick = { onEvent(LoginScreenEvent.LoginBtnClicked) }) {
             Text("Login")
         }

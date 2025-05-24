@@ -61,6 +61,9 @@ fun RegisterView(
             label = { Text("Password") },
             visualTransformation = PasswordVisualTransformation()
         )
+        Button(onClick = { onEvent(RegisterScreenEvent.RegisterGoogleBtnClicked) }) {
+            Text("Зарегаться с Google")
+        }
         Button(onClick = { onEvent(RegisterScreenEvent.RegisterBtnClicked) }) {
             Text("Зарегистрироваться")
         }
