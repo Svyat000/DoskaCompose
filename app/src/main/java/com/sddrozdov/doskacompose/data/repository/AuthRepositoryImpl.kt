@@ -1,10 +1,16 @@
 package com.sddrozdov.doskacompose.data.repository
 
+import androidx.credentials.Credential
+import androidx.credentials.CustomCredential
+import androidx.credentials.exceptions.ClearCredentialException
+import com.google.android.libraries.identity.googleid.GoogleIdTokenCredential
+import com.google.android.libraries.identity.googleid.GoogleIdTokenCredential.Companion.TYPE_GOOGLE_ID_TOKEN_CREDENTIAL
 import com.google.firebase.auth.EmailAuthProvider
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
 import com.google.firebase.auth.FirebaseAuthInvalidUserException
 import com.google.firebase.auth.FirebaseUser
+import com.google.firebase.auth.GoogleAuthProvider
 import com.sddrozdov.doskacompose.domain.repository.AuthRepository
 import kotlin.Result
 import kotlinx.coroutines.tasks.await
@@ -59,5 +65,33 @@ class AuthRepositoryImpl @Inject constructor(val firebaseAuth: FirebaseAuth) : A
         Result.success(Unit)
     } catch (e: Exception) {
         Result.failure(e)
+    }
+
+    override suspend fun signInWithGoogle(credential: Credential): Result<FirebaseUser> {
+        return try {
+
+            if (credential is CustomCredential && credential.type == TYPE_GOOGLE_ID_TOKEN_CREDENTIAL) {
+                val googleIdTokenCredential = GoogleIdTokenCredential.createFrom(credential.data)
+                val idToken = googleIdTokenCredential.idToken
+                val firebaseCredential = GoogleAuthProvider.getCredential(idToken, null)
+                val result = firebaseAuth.signInWithCredential(firebaseCredential).await()
+                val user = result.user ?: throw Exception("User  is null")
+
+                Result.success(user)
+            } else {
+                Result.failure(Exception("Invalid credential type"))
+            }
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
+
+
+    override suspend fun signOut(): Result<Unit> = try {
+        firebaseAuth.signOut()
+        Result.success(Unit)
+    } catch (e: ClearCredentialException) {
+        Result.failure(e)
+
     }
 }
