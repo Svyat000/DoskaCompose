@@ -2,10 +2,11 @@ package com.sddrozdov.doskacompose.presentation.navigations
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.navigation.NavHost
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import com.sddrozdov.doskacompose.presentation.screens.LoginScreen
+import com.sddrozdov.doskacompose.presentation.screens.RegisterScreen
 import kotlinx.serialization.Serializable
 
 sealed class Screen {
@@ -42,19 +43,25 @@ fun MainNavigation(
     NavHost(
         modifier = modifier,
         navController = navHostController,
-        startDestination = Screen.MainScreen
+        startDestination = Screen.RegisterScreen
     ) {
-        composable<Screen.LoginScreen> {  }
-        composable<Screen.RegisterScreen> {  }
-        composable<Screen.MainScreen> {  }
-        composable<Screen.FilterScreen> {  }
-        composable<Screen.DialogsScreen> {  }
-        composable<Screen.ChatScreen> {  }
-        composable<Screen.CreateAdScreen> {  }
-        composable<Screen.DescriptionAdScreen> {  }
-
-
+        composable<Screen.LoginScreen> {
+            LoginScreen(
+                onNavigateTo = { navigateTo ->
+                    navHostController.navigate(navigateTo)
+                })
+        }
+        composable<Screen.RegisterScreen> {
+            RegisterScreen(
+                onNavigateTo = { navigateTo ->
+                    navHostController.navigate(navigateTo)
+                })
+        }
+        composable<Screen.MainScreen> { }
+        composable<Screen.FilterScreen> { }
+        composable<Screen.DialogsScreen> { }
+        composable<Screen.ChatScreen> { }
+        composable<Screen.CreateAdScreen> { }
+        composable<Screen.DescriptionAdScreen> { }
     }
-
-
 }

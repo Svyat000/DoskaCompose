@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">DoskaCompose</string>
+    <string name="no_account">Нет аккаунта? Зарегистрируйтесь!</string>
+    <string name="already_have_an_acc">Уже есть аккаунт? Войти!</string>
 </resources>
