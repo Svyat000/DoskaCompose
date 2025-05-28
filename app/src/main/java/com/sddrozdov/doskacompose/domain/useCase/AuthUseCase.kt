@@ -1,5 +1,6 @@
 package com.sddrozdov.doskacompose.domain.useCase
 
+import android.util.Log
 import androidx.credentials.Credential
 import com.google.firebase.auth.FirebaseAuthUserCollisionException
 import com.google.firebase.auth.FirebaseUser
@@ -52,7 +53,14 @@ class AuthUseCase @Inject constructor(private val repository: AuthRepositoryImpl
         return repository.sendEmailVerification(user)
     }
 
-    suspend fun signInWithGoogle(credential: Credential): Result<FirebaseUser>{
+    suspend fun signInWithGoogle(credential: Credential): Result<FirebaseUser> {
         return repository.signInWithGoogle(credential)
     }
+
+    suspend fun signOut(): Result<Unit> {
+        Log.d("EXIT","ЮЗ КЕйс вышли ")
+        return repository.signOut()
+
+    }
+
 }

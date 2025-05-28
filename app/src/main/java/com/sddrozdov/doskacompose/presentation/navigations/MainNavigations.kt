@@ -6,6 +6,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.sddrozdov.doskacompose.presentation.screens.LoginScreen
+import com.sddrozdov.doskacompose.presentation.screens.MainScreen
 import com.sddrozdov.doskacompose.presentation.screens.RegisterScreen
 import kotlinx.serialization.Serializable
 
@@ -57,7 +58,11 @@ fun MainNavigation(
                     navHostController.navigate(navigateTo)
                 })
         }
-        composable<Screen.MainScreen> { }
+        composable<Screen.MainScreen> {
+            MainScreen(onNavigateTo = { navigateTo ->
+                navHostController.navigate(navigateTo)
+            })
+        }
         composable<Screen.FilterScreen> { }
         composable<Screen.DialogsScreen> { }
         composable<Screen.ChatScreen> { }

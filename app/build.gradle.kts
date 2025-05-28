@@ -98,4 +98,6 @@ dependencies {
 
     // MockK
     testImplementation (libs.mockk)
+
+    implementation (libs.material3)
 }
