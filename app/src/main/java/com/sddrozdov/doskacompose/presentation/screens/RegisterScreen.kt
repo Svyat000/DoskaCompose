@@ -19,6 +19,7 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.sddrozdov.doskacompose.R
 import com.sddrozdov.doskacompose.presentation.navigations.Screen
+import com.sddrozdov.doskacompose.presentation.states.AuthType
 import com.sddrozdov.doskacompose.presentation.states.RegisterScreenEvent
 import com.sddrozdov.doskacompose.presentation.states.RegisterScreenState
 import com.sddrozdov.doskacompose.presentation.viewModels.RegisterViewModel
@@ -32,7 +33,12 @@ fun RegisterScreen(
 
     LaunchedEffect(state.registerResult) {
         state.registerResult?.let { result ->
-            result.onSuccess { onNavigateTo(Screen.LoginScreen) }
+            result.onSuccess {
+                when (state.authType) {
+                    AuthType.EMAIL -> onNavigateTo(Screen.LoginScreen)
+                    AuthType.GOOGLE -> onNavigateTo(Screen.MainScreen)
+                }
+            }
         }
     }
 
@@ -62,7 +68,7 @@ fun RegisterView(
             visualTransformation = PasswordVisualTransformation()
         )
         Button(onClick = { onEvent(RegisterScreenEvent.RegisterGoogleBtnClicked) }) {
-            Text("Зарегаться с Google")
+            Text("Зарегистрироваться с Google")
         }
         Button(onClick = { onEvent(RegisterScreenEvent.RegisterBtnClicked) }) {
             Text("Зарегистрироваться")

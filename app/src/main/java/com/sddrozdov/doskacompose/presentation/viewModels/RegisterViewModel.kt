@@ -9,6 +9,7 @@ import androidx.lifecycle.viewModelScope
 import com.google.android.libraries.identity.googleid.GetGoogleIdOption
 import com.sddrozdov.doskacompose.R
 import com.sddrozdov.doskacompose.domain.useCase.AuthUseCase
+import com.sddrozdov.doskacompose.presentation.states.AuthType
 import com.sddrozdov.doskacompose.presentation.states.RegisterScreenEvent
 import com.sddrozdov.doskacompose.presentation.states.RegisterScreenState
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -49,12 +50,13 @@ class RegisterViewModel @Inject constructor(
 
     private fun register() {
         viewModelScope.launch {
+            _state.value = _state.value.copy(authType = AuthType.EMAIL)
             val result = authUseCase.signUp(_state.value.email, _state.value.password)
             _state.value = _state.value.copy(registerResult = result)
             result.onSuccess { user ->
                 authUseCase.sendVerificationEmail(user)
             }
-            result.onFailure { exeption ->
+            result.onFailure {
 
             }
         }
