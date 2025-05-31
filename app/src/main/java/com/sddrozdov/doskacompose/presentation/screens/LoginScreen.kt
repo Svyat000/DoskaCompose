@@ -64,7 +64,7 @@ fun LoginView(
         Text(
             text = "Welcome Back!",
             fontSize = 24.sp,
-            modifier = Modifier.padding(bottom = 16.dp),
+            modifier = Modifier.padding(bottom = 16.dp, top = 100.dp),
             color = Color.Black
         )
 
@@ -129,6 +129,19 @@ fun LoginView(
                     onNavigateTo(Screen.RegisterScreen)
                 }
                 .padding(top = 20.dp),
+            color = Color.Blue
+        )
+
+
+
+        Text(
+            text = stringResource(id = R.string.forgot_your_password),
+            fontSize = 14.sp,
+            modifier = Modifier
+                .clickable {
+                    onEvent(LoginScreenEvent.ForgotPasswordBtnClicked)
+                }
+                .padding(top = 250.dp),
             color = Color.Blue
         )
 

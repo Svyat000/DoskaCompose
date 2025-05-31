@@ -14,4 +14,5 @@ sealed class LoginScreenEvent {
     data class PasswordUpdated(val newPassword: String) : LoginScreenEvent()
     data object LoginBtnClicked : LoginScreenEvent()
     data object LoginGoogleBtnClicked: LoginScreenEvent()
+    data object ForgotPasswordBtnClicked: LoginScreenEvent()
 }

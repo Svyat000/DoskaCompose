@@ -7,6 +7,7 @@ import com.google.android.libraries.identity.googleid.GoogleIdTokenCredential
 import com.google.android.libraries.identity.googleid.GoogleIdTokenCredential.Companion.TYPE_GOOGLE_ID_TOKEN_CREDENTIAL
 import com.google.firebase.auth.EmailAuthProvider
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseAuthException
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
 import com.google.firebase.auth.FirebaseAuthInvalidUserException
 import com.google.firebase.auth.FirebaseUser
@@ -93,5 +94,12 @@ class AuthRepositoryImpl @Inject constructor(val firebaseAuth: FirebaseAuth) : A
     } catch (e: ClearCredentialException) {
         Result.failure(e)
 
+    }
+
+    override suspend fun sendEmailForgotPassword(email: String): Result<Unit> = try {
+        firebaseAuth.sendPasswordResetEmail(email)
+        Result.success(Unit)
+    } catch (e: FirebaseAuthException){
+        Result.failure(e)
     }
 }

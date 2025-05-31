@@ -62,5 +62,8 @@ class AuthUseCase @Inject constructor(private val repository: AuthRepositoryImpl
         return repository.signOut()
 
     }
+    suspend fun sendEmailForgotPassword(email: String): Result<Unit>{
+        return repository.sendEmailForgotPassword(email)
+    }
 
 }

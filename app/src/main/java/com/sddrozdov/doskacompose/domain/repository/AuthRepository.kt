@@ -12,4 +12,5 @@ interface AuthRepository {
     suspend fun linkEmailToGmail(email: String, password: String): Result<Unit>
     suspend fun signInWithGoogle(credential: Credential): Result<FirebaseUser>
     suspend fun signOut(): Result<Unit>
+    suspend fun sendEmailForgotPassword(email: String) : Result<Unit>
 }
