@@ -60,7 +60,8 @@ fun MainNavigation(
             RegisterScreen(
                 onNavigateTo = { navigateTo ->
                     navHostController.navigate(navigateTo)
-                })
+                }, snackbarHostState = snackbarHostState
+            )
         }
         composable<Screen.MainScreen> {
             MainScreen(onNavigateTo = { navigateTo ->

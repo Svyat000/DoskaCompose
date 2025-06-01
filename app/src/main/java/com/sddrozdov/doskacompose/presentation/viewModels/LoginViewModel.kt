@@ -132,6 +132,7 @@ class LoginViewModel @Inject constructor(
                 _state.value = _state.value.copy(
                     loginResult = Result.failure(e)
                 )
+                showMessage(R.string.google_sign_in_failed)
             }
         }
     }

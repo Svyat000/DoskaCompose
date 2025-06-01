@@ -9,12 +9,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -25,7 +25,6 @@ import com.sddrozdov.doskacompose.presentation.navigations.Screen
 import com.sddrozdov.doskacompose.presentation.states.LoginScreenEvent
 import com.sddrozdov.doskacompose.presentation.states.LoginScreenState
 import com.sddrozdov.doskacompose.presentation.viewModels.LoginViewModel
-
 
 
 @Composable
@@ -42,15 +41,20 @@ fun LoginScreen(
         state.loginResult?.onSuccess {
             onNavigateTo(Screen.MainScreen)
         }?.onFailure { e ->
-            println("Google sign in failed: ${e.message}")
+            snackbarMessage?.let { messageRes ->
+                val message = context.getString(messageRes)
+                snackbarHostState.showSnackbar(message)
+                viewModel.messageShown()
+            }
+            //println("Google sign in failed: ${e.message}")
         }
     }
 
     LaunchedEffect(snackbarMessage) {
         snackbarMessage?.let { messageRes ->
             val message = context.getString(messageRes)
-                snackbarHostState.showSnackbar(message)
-                viewModel.messageShown()
+            snackbarHostState.showSnackbar(message)
+            viewModel.messageShown()
 
         }
     }
@@ -68,101 +72,102 @@ fun LoginView(
     onEvent: (LoginScreenEvent) -> Unit,
     onNavigateTo: (Screen) -> Unit
 ) {
-    Column(
+    Box(
         modifier = Modifier
             .fillMaxSize()
+            .background(Color.White)
             .padding(16.dp)
-            .background(color = Color.White, shape = RoundedCornerShape(12.dp))
-            .padding(24.dp),
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Text(
-            text = "Welcome Back!",
-            fontSize = 24.sp,
-            modifier = Modifier.padding(bottom = 16.dp, top = 100.dp),
-            color = Color.Black
-        )
-
-        TextField(
-            value = state.email,
-            onValueChange = { onEvent(LoginScreenEvent.EmailUpdated(it)) },
-            label = { Text("Email") },
-            colors = TextFieldDefaults.colors(
-                focusedIndicatorColor = Color.Blue,
-                unfocusedIndicatorColor = Color.Gray,
-                focusedContainerColor = Color.Transparent
-            ),
-            shape = RoundedCornerShape(8.dp),
-            modifier = Modifier.fillMaxWidth()
-        )
-
-        Spacer(modifier = Modifier.height(16.dp))
-
-        TextField(
-            value = state.password,
-            onValueChange = { onEvent(LoginScreenEvent.PasswordUpdated(it)) },
-            label = { Text("Password") },
-            visualTransformation = PasswordVisualTransformation(),
-            colors = TextFieldDefaults.colors(
-                focusedIndicatorColor = Color.Blue,
-                unfocusedIndicatorColor = Color.Gray,
-                focusedContainerColor = Color.Transparent
-            ),
-            shape = RoundedCornerShape(8.dp),
-            modifier = Modifier.fillMaxWidth()
-        )
-
-        Spacer(modifier = Modifier.height(24.dp))
-
-        Button(
-            onClick = { onEvent(LoginScreenEvent.LoginGoogleBtnClicked) },
-            modifier = Modifier.fillMaxWidth(),
-            shape = RoundedCornerShape(8.dp),
-            colors = ButtonDefaults.buttonColors(containerColor = Color.Blue)
+        Column(
+            modifier = Modifier
+                .align(Alignment.Center)
+                .fillMaxWidth()
+                .background(color = Color.White, shape = RoundedCornerShape(12.dp))
+                .padding(24.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Text("Login with Google", color = Color.White)
+            Text(
+                text = "С возвращением!",
+                fontSize = 28.sp,
+                fontWeight = FontWeight.Bold,
+                modifier = Modifier.padding(bottom = 16.dp),
+                color = Color.Black
+            )
+
+            TextField(
+                value = state.email,
+                onValueChange = { onEvent(LoginScreenEvent.EmailUpdated(it)) },
+                label = { Text("Email") },
+                colors = TextFieldDefaults.colors(
+                    focusedIndicatorColor = Color.Blue,
+                    unfocusedIndicatorColor = Color.Gray,
+                    focusedContainerColor = Color.Transparent
+                ),
+                shape = RoundedCornerShape(8.dp),
+                modifier = Modifier.fillMaxWidth()
+            )
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            TextField(
+                value = state.password,
+                onValueChange = { onEvent(LoginScreenEvent.PasswordUpdated(it)) },
+                label = { Text("Пароль") },
+                visualTransformation = PasswordVisualTransformation(),
+                colors = TextFieldDefaults.colors(
+                    focusedIndicatorColor = Color.Blue,
+                    unfocusedIndicatorColor = Color.Gray,
+                    focusedContainerColor = Color.Transparent
+                ),
+                shape = RoundedCornerShape(8.dp),
+                modifier = Modifier.fillMaxWidth()
+            )
+
+            Spacer(modifier = Modifier.height(24.dp))
+
+            Button(
+                onClick = { onEvent(LoginScreenEvent.LoginGoogleBtnClicked) },
+                modifier = Modifier.fillMaxWidth(),
+                shape = RoundedCornerShape(8.dp),
+                colors = ButtonDefaults.buttonColors(containerColor = Color.Blue)
+            ) {
+                Text("Войти с Google", color = Color.White)
+            }
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            Button(
+                onClick = { onEvent(LoginScreenEvent.LoginBtnClicked) },
+                modifier = Modifier.fillMaxWidth(),
+                shape = RoundedCornerShape(8.dp),
+                colors = ButtonDefaults.buttonColors(containerColor = Color.Green)
+            ) {
+                Text("Войти", color = Color.White)
+            }
         }
 
-        Spacer(modifier = Modifier.height(16.dp))
-
-        Button(
-            onClick = { onEvent(LoginScreenEvent.LoginBtnClicked) },
-            modifier = Modifier.fillMaxWidth(),
-            shape = RoundedCornerShape(8.dp),
-            colors = ButtonDefaults.buttonColors(containerColor = Color.Green)
+        Column(
+            modifier = Modifier
+                .align(Alignment.BottomCenter)
+                .fillMaxWidth()
+                .padding(bottom = 24.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Text("Login", color = Color.White)
-        }
+            Text(
+                text = stringResource(id = R.string.no_account),
+                modifier = Modifier
+                    .clickable { onNavigateTo(Screen.RegisterScreen) }
+                    .padding(vertical = 8.dp),
+                color = Color.Blue
+            )
 
-        Spacer(modifier = Modifier.height(20.dp))
-
-        Text(
-            text = stringResource(id = R.string.no_account),
-            fontSize = 14.sp,
-            modifier = Modifier
-                .clickable {
-                    onNavigateTo(Screen.RegisterScreen)
-                }
-                .padding(top = 20.dp),
-            color = Color.Blue
-        )
-
-        Spacer(modifier = Modifier.height(240.dp))
-
-        Text(
-            text = stringResource(id = R.string.forgot_your_password),
-            fontSize = 14.sp,
-            modifier = Modifier
-                .clickable {
-                    onEvent(LoginScreenEvent.ForgotPasswordBtnClicked)
-                }
-                .padding(top = 20.dp),
-            color = Color.Blue
-        )
-
-        state.loginResult?.onFailure { exception ->
-            Text(text = "Login failed: ${exception.localizedMessage}", color = Color.Red)
+            Text(
+                text = stringResource(id = R.string.forgot_your_password),
+                modifier = Modifier
+                    .clickable { onEvent(LoginScreenEvent.ForgotPasswordBtnClicked) }
+                    .padding(vertical = 8.dp),
+                color = Color.Blue
+            )
         }
     }
 }

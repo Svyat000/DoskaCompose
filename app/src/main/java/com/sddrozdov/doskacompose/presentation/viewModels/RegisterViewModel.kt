@@ -1,6 +1,7 @@
 package com.sddrozdov.doskacompose.presentation.viewModels
 
 import android.content.Context
+import androidx.annotation.StringRes
 import androidx.credentials.Credential
 import androidx.credentials.CredentialManager
 import androidx.credentials.GetCredentialRequest
@@ -28,6 +29,9 @@ class RegisterViewModel @Inject constructor(
     private val _state = MutableStateFlow(RegisterScreenState())
     val state: StateFlow<RegisterScreenState> = _state
 
+    private val _snackbarMessage = MutableStateFlow<Int?>(null)
+    val snackbarMessage: StateFlow<Int?> = _snackbarMessage
+
     private val credentialManager by lazy { CredentialManager.create(context) }
 
     fun onEvent(event: RegisterScreenEvent) {
@@ -46,6 +50,14 @@ class RegisterViewModel @Inject constructor(
 
             RegisterScreenEvent.RegisterGoogleBtnClicked -> startGoogleSignUp()
         }
+    }
+
+    private fun showMessage(@StringRes messageRes: Int) {
+        _snackbarMessage.value = messageRes
+    }
+
+    fun messageShown() {
+        _snackbarMessage.value = null
     }
 
     private fun register() {
