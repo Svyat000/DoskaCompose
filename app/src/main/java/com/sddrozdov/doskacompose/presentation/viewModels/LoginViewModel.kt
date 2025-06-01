@@ -2,6 +2,7 @@ package com.sddrozdov.doskacompose.presentation.viewModels
 
 import android.content.Context
 import android.util.Patterns
+import androidx.annotation.StringRes
 import androidx.credentials.Credential
 import androidx.credentials.CredentialManager
 import androidx.credentials.GetCredentialRequest
@@ -27,6 +28,9 @@ class LoginViewModel @Inject constructor(
 
     private val _state = MutableStateFlow(LoginScreenState())
     val state: StateFlow<LoginScreenState> = _state
+
+    private val _snackbarMessage = MutableStateFlow<Int?>(null)
+    val snackbarMessage: StateFlow<Int?> = _snackbarMessage
 
     private val credentialManager by lazy { CredentialManager.create(context) }
 
@@ -55,35 +59,55 @@ class LoginViewModel @Inject constructor(
                     .matches()
             ) {
                 authUseCase.sendEmailForgotPassword(_state.value.email)
-                _state.value = _state.value.copy(emailErrorMessage = "Письмо с восстановлением пароля успешно отправлено!")
+                showMessage(R.string.a_password_recovery_email_has_been_sent_to_your_email_address)
+                // _state.value = _state.value.copy(emailErrorMessage = "Письмо с восстановлением пароля успешно отправлено!")
             } else
                 checkingEmailSymbols()
         }
     }
 
+    private fun showMessage(@StringRes messageRes: Int) {
+        _snackbarMessage.value = messageRes
+    }
+
+    fun messageShown() {
+        _snackbarMessage.value = null
+    }
+
     private fun checkingEmailSymbols() {
         when {
             _state.value.email.isEmpty() -> {
-                _state.value = _state.value.copy(emailErrorMessage = "The Email field must not be empty")
+                showMessage(R.string.the_Email_field_must_not_be_empty)
+                //_state.value = _state.value.copy(emailErrorMessage = "The Email field must not be empty")
             }
+
             !Patterns.EMAIL_ADDRESS.matcher(_state.value.email).matches() -> {
-                _state.value = _state.value.copy(emailErrorMessage = "Please check if your email is entered correctly")
+                showMessage(R.string.please_check_if_your_email_is_entered_correctly)
+                //_state.value = _state.value.copy(emailErrorMessage = "Please check if your email is entered correctly")
             }
+
             else -> {
-                _state.value = _state.value.copy(emailErrorMessage = null)
+
+//                _state.value = _state.value.copy(emailErrorMessage = null)
             }
         }
     }
 
-    fun clearEmailError() {
-        _state.value = _state.value.copy(emailErrorMessage = null)
-    }
+
+//    fun clearEmailError() {
+//        _state.value = _state.value.copy(emailErrorMessage = null)
+//    }
 
 
     private fun login() {
         viewModelScope.launch {
             val result = authUseCase.signIn(_state.value.email, _state.value.password)
-            _state.value = _state.value.copy(loginResult = result)
+            result.onSuccess {
+                _state.value = _state.value.copy(loginResult = result)
+            }.onFailure {
+                showMessage(R.string.please_check_your_email_or_password)
+            }
+
         }
     }
 

@@ -13,6 +13,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
@@ -24,7 +25,7 @@ import com.sddrozdov.doskacompose.presentation.navigations.Screen
 import com.sddrozdov.doskacompose.presentation.states.LoginScreenEvent
 import com.sddrozdov.doskacompose.presentation.states.LoginScreenState
 import com.sddrozdov.doskacompose.presentation.viewModels.LoginViewModel
-import kotlinx.coroutines.launch
+
 
 
 @Composable
@@ -34,7 +35,8 @@ fun LoginScreen(
 ) {
     val viewModel = hiltViewModel<LoginViewModel>()
     val state by viewModel.state.collectAsState()
-    val coroutineScope = rememberCoroutineScope()
+    val snackbarMessage by viewModel.snackbarMessage.collectAsState()
+    val context = LocalContext.current
 
     LaunchedEffect(state.loginResult) {
         state.loginResult?.onSuccess {
@@ -44,12 +46,12 @@ fun LoginScreen(
         }
     }
 
-    LaunchedEffect(state.emailErrorMessage) {
-        state.emailErrorMessage?.let { message ->
-            coroutineScope.launch {
+    LaunchedEffect(snackbarMessage) {
+        snackbarMessage?.let { messageRes ->
+            val message = context.getString(messageRes)
                 snackbarHostState.showSnackbar(message)
-                viewModel.clearEmailError()
-            }
+                viewModel.messageShown()
+
         }
     }
 
@@ -146,7 +148,7 @@ fun LoginView(
             color = Color.Blue
         )
 
-
+        Spacer(modifier = Modifier.height(240.dp))
 
         Text(
             text = stringResource(id = R.string.forgot_your_password),
@@ -155,7 +157,7 @@ fun LoginView(
                 .clickable {
                     onEvent(LoginScreenEvent.ForgotPasswordBtnClicked)
                 }
-                .padding(top = 250.dp),
+                .padding(top = 20.dp),
             color = Color.Blue
         )
 

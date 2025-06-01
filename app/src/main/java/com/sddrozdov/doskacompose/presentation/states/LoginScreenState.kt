@@ -7,7 +7,6 @@ data class LoginScreenState(
     val email: String = "",
     val password: String = "",
     var loginResult: Result<FirebaseUser>? = null,
-    val emailErrorMessage: String? = null
 )
 
 sealed class LoginScreenEvent {
