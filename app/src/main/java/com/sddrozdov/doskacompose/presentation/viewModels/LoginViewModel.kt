@@ -2,7 +2,6 @@ package com.sddrozdov.doskacompose.presentation.viewModels
 
 import android.content.Context
 import android.util.Patterns
-import android.widget.Toast
 import androidx.credentials.Credential
 import androidx.credentials.CredentialManager
 import androidx.credentials.GetCredentialRequest
@@ -56,8 +55,7 @@ class LoginViewModel @Inject constructor(
                     .matches()
             ) {
                 authUseCase.sendEmailForgotPassword(_state.value.email)
-                Toast.makeText(context,
-                    context.getString(R.string.a_password_recovery_email_has_been_sent_to_your_email_address), Toast.LENGTH_LONG).show()
+                _state.value = _state.value.copy(emailErrorMessage = "Письмо с восстановлением пароля успешно отправлено!")
             } else
                 checkingEmailSymbols()
         }
@@ -66,17 +64,19 @@ class LoginViewModel @Inject constructor(
     private fun checkingEmailSymbols() {
         when {
             _state.value.email.isEmpty() -> {
-                Toast.makeText(context,
-                    context.getString(R.string.the_Email_field_must_not_be_empty), Toast.LENGTH_LONG).show()
+                _state.value = _state.value.copy(emailErrorMessage = "The Email field must not be empty")
             }
             !Patterns.EMAIL_ADDRESS.matcher(_state.value.email).matches() -> {
-                Toast.makeText(context,
-                    context.getString(R.string.please_check_if_your_email_is_entered_correctly), Toast.LENGTH_LONG).show()
+                _state.value = _state.value.copy(emailErrorMessage = "Please check if your email is entered correctly")
             }
             else -> {
-
+                _state.value = _state.value.copy(emailErrorMessage = null)
             }
         }
+    }
+
+    fun clearEmailError() {
+        _state.value = _state.value.copy(emailErrorMessage = null)
     }
 
 

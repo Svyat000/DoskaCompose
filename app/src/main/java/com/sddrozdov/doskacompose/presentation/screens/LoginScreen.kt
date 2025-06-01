@@ -9,6 +9,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -23,19 +24,32 @@ import com.sddrozdov.doskacompose.presentation.navigations.Screen
 import com.sddrozdov.doskacompose.presentation.states.LoginScreenEvent
 import com.sddrozdov.doskacompose.presentation.states.LoginScreenState
 import com.sddrozdov.doskacompose.presentation.viewModels.LoginViewModel
+import kotlinx.coroutines.launch
+
 
 @Composable
 fun LoginScreen(
-    onNavigateTo: (Screen) -> Unit
+    onNavigateTo: (Screen) -> Unit,
+    snackbarHostState: SnackbarHostState
 ) {
     val viewModel = hiltViewModel<LoginViewModel>()
     val state by viewModel.state.collectAsState()
+    val coroutineScope = rememberCoroutineScope()
 
     LaunchedEffect(state.loginResult) {
         state.loginResult?.onSuccess {
             onNavigateTo(Screen.MainScreen)
         }?.onFailure { e ->
             println("Google sign in failed: ${e.message}")
+        }
+    }
+
+    LaunchedEffect(state.emailErrorMessage) {
+        state.emailErrorMessage?.let { message ->
+            coroutineScope.launch {
+                snackbarHostState.showSnackbar(message)
+                viewModel.clearEmailError()
+            }
         }
     }
 

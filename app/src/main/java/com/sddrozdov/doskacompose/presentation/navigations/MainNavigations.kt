@@ -1,5 +1,6 @@
 package com.sddrozdov.doskacompose.presentation.navigations
 
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
@@ -39,7 +40,8 @@ sealed class Screen {
 @Composable
 fun MainNavigation(
     modifier: Modifier = Modifier,
-    navHostController: NavHostController
+    navHostController: NavHostController,
+    snackbarHostState: SnackbarHostState,
 ) {
     NavHost(
         modifier = modifier,
@@ -50,7 +52,9 @@ fun MainNavigation(
             LoginScreen(
                 onNavigateTo = { navigateTo ->
                     navHostController.navigate(navigateTo)
-                })
+
+                }, snackbarHostState = snackbarHostState
+            )
         }
         composable<Screen.RegisterScreen> {
             RegisterScreen(
