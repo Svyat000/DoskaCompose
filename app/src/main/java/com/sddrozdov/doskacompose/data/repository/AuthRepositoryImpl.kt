@@ -17,7 +17,11 @@ import kotlin.Result
 import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 
-class AuthRepositoryImpl @Inject constructor(val firebaseAuth: FirebaseAuth) : AuthRepository {
+class AuthRepositoryImpl @Inject constructor(private val firebaseAuth: FirebaseAuth) :
+    AuthRepository {
+
+    override val currentUser: FirebaseUser?
+        get() = firebaseAuth.currentUser
 
     override suspend fun deleteCurrentUser(): Result<Unit> = try {
         firebaseAuth.currentUser?.delete()?.await()
@@ -26,12 +30,15 @@ class AuthRepositoryImpl @Inject constructor(val firebaseAuth: FirebaseAuth) : A
         Result.failure(e)
     }
 
-    override suspend fun signUp(email: String, password: String): Result<FirebaseUser> = try {
-        val result = firebaseAuth.createUserWithEmailAndPassword(email, password).await()
-        val user = result.user ?: throw Exception("User  is null")
-        Result.success(user)
-    } catch (e: Exception) {
-        Result.failure(e)
+    override suspend fun signUp(email: String, password: String): Result<FirebaseUser> {
+        return try {
+            val result = firebaseAuth.createUserWithEmailAndPassword(email, password).await()
+            result.user?.let { user ->
+                Result.success(user)
+            } ?: Result.failure(Exception("User is null"))
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
     }
 
     override suspend fun signIn(email: String, password: String): Result<FirebaseUser> {
@@ -59,13 +66,14 @@ class AuthRepositoryImpl @Inject constructor(val firebaseAuth: FirebaseAuth) : A
         Result.failure(e)
     }
 
-    override suspend fun linkEmailToGmail(email: String, password: String): Result<Unit> = try {
-        val credential = EmailAuthProvider.getCredential(email, password)
-        val currentUser = firebaseAuth.currentUser ?: throw Exception("No current user")
-        currentUser.linkWithCredential(credential).await()
-        Result.success(Unit)
-    } catch (e: Exception) {
-        Result.failure(e)
+    override suspend fun linkEmailToGmail(email: String, password: String): Result<Unit> {
+        return try {
+            val credential = EmailAuthProvider.getCredential(email, password)
+            firebaseAuth.currentUser?.linkWithCredential(credential)?.await()
+            Result.success(Unit)
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
     }
 
     override suspend fun signInWithGoogle(credential: Credential): Result<FirebaseUser> {
@@ -99,7 +107,7 @@ class AuthRepositoryImpl @Inject constructor(val firebaseAuth: FirebaseAuth) : A
     override suspend fun sendEmailForgotPassword(email: String): Result<Unit> = try {
         firebaseAuth.sendPasswordResetEmail(email)
         Result.success(Unit)
-    } catch (e: FirebaseAuthException){
+    } catch (e: FirebaseAuthException) {
         Result.failure(e)
     }
 }

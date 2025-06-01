@@ -5,6 +5,9 @@ import com.google.firebase.auth.FirebaseUser
 import kotlin.Result
 
 interface AuthRepository {
+
+    val currentUser: FirebaseUser?
+
     suspend fun deleteCurrentUser(): Result<Unit>
     suspend fun signUp(email: String, password: String): Result<FirebaseUser>
     suspend fun signIn(email: String, password: String): Result<FirebaseUser>

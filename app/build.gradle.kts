@@ -67,6 +67,7 @@ dependencies {
 
     // Google ID
     implementation(libs.googleid)
+    implementation(libs.firebase.database.ktx)
 
 
     // Debugging
