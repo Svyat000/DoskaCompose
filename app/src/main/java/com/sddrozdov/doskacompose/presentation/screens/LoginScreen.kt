@@ -29,7 +29,7 @@ import com.sddrozdov.doskacompose.presentation.viewModels.LoginViewModel
 
 @Composable
 fun LoginScreen(
-    onNavigateTo: (Screen) -> Unit,
+    onNavigateTo: (String) -> Unit,
     snackbarHostState: SnackbarHostState
 ) {
     val viewModel = hiltViewModel<LoginViewModel>()
@@ -39,7 +39,7 @@ fun LoginScreen(
 
     LaunchedEffect(state.loginResult) {
         state.loginResult?.onSuccess {
-            onNavigateTo(Screen.MainScreen)
+            onNavigateTo(Screen.MainScreen.route)
         }?.onFailure { e ->
             snackbarMessage?.let { messageRes ->
                 val message = context.getString(messageRes)
@@ -70,7 +70,7 @@ fun LoginScreen(
 fun LoginView(
     state: LoginScreenState,
     onEvent: (LoginScreenEvent) -> Unit,
-    onNavigateTo: (Screen) -> Unit
+    onNavigateTo: (String) -> Unit
 ) {
     Box(
         modifier = Modifier
@@ -156,7 +156,7 @@ fun LoginView(
             Text(
                 text = stringResource(id = R.string.no_account),
                 modifier = Modifier
-                    .clickable { onNavigateTo(Screen.RegisterScreen) }
+                    .clickable { onNavigateTo(Screen.RegisterScreen.route) }
                     .padding(vertical = 8.dp),
                 color = Color.Blue
             )

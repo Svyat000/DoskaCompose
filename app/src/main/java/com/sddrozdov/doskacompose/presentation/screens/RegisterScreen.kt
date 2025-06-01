@@ -40,7 +40,7 @@ import com.sddrozdov.doskacompose.presentation.viewModels.RegisterViewModel
 
 @Composable
 fun RegisterScreen(
-    onNavigateTo: (Screen) -> Unit,
+    onNavigateTo: (String) -> Unit,
     snackbarHostState: SnackbarHostState
 ) {
     val viewModel = hiltViewModel<RegisterViewModel>()
@@ -52,8 +52,8 @@ fun RegisterScreen(
         state.registerResult?.let { result ->
             result.onSuccess {
                 when (state.authType) {
-                    AuthType.EMAIL -> onNavigateTo(Screen.LoginScreen)
-                    AuthType.GOOGLE -> onNavigateTo(Screen.MainScreen)
+                    AuthType.EMAIL -> onNavigateTo(Screen.LoginScreen.route)
+                    AuthType.GOOGLE -> onNavigateTo(Screen.MainScreen.route)
                 }
             }
         }
@@ -79,7 +79,7 @@ fun RegisterScreen(
 fun RegisterView(
     state: RegisterScreenState,
     onEvent: (RegisterScreenEvent) -> Unit,
-    onNavigateTo: (Screen) -> Unit
+    onNavigateTo: (String) -> Unit
 ) {
     Box(
         modifier = Modifier
@@ -165,7 +165,7 @@ fun RegisterView(
             Text(
                 text = stringResource(id = R.string.already_have_an_acc),
                 modifier = Modifier
-                    .clickable { onNavigateTo(Screen.LoginScreen) }
+                    .clickable { onNavigateTo(Screen.LoginScreen.route) }
                     .padding(vertical = 8.dp),
                 color = Color.Blue
             )

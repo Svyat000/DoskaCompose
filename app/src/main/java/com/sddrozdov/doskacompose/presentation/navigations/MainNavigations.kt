@@ -11,30 +11,16 @@ import com.sddrozdov.doskacompose.presentation.screens.MainScreen
 import com.sddrozdov.doskacompose.presentation.screens.RegisterScreen
 import kotlinx.serialization.Serializable
 
-sealed class Screen {
-    @Serializable
-    data object LoginScreen : Screen()
-
-    @Serializable
-    data object RegisterScreen : Screen()
-
-    @Serializable
-    data object MainScreen : Screen()
-
-    @Serializable
-    data object FilterScreen : Screen()
-
-    @Serializable
-    data object DialogsScreen : Screen()
-
-    @Serializable
-    data object ChatScreen : Screen()
-
-    @Serializable
-    data object CreateAdScreen : Screen()
-
-    @Serializable
-    data object DescriptionAdScreen : Screen()
+@Serializable
+sealed class Screen(val route: String) {
+    @Serializable data object LoginScreen : Screen(Routes.LOGIN)
+    @Serializable data object RegisterScreen : Screen(Routes.REGISTER)
+    @Serializable data object MainScreen : Screen(Routes.MAIN)
+    @Serializable data object FilterScreen : Screen(Routes.FILTER)
+    @Serializable data object DialogsScreen : Screen(Routes.DIALOGS)
+    @Serializable data object ChatScreen : Screen(Routes.CHAT)
+    @Serializable data object CreateAdScreen : Screen(Routes.CREATE_AD)
+    @Serializable data object DescriptionAdScreen : Screen(Routes.DESCRIPTION_AD)
 }
 
 @Composable
@@ -46,27 +32,30 @@ fun MainNavigation(
     NavHost(
         modifier = modifier,
         navController = navHostController,
-        startDestination = Screen.RegisterScreen
+        startDestination = Screen.RegisterScreen.route
     ) {
-        composable<Screen.LoginScreen> {
+        composable(Screen.LoginScreen.route) {
             LoginScreen(
-                onNavigateTo = { navigateTo ->
-                    navHostController.navigate(navigateTo)
+                onNavigateTo = { route ->
+                    navHostController.navigate(route)
 
                 }, snackbarHostState = snackbarHostState
             )
         }
-        composable<Screen.RegisterScreen> {
+        composable(Screen.RegisterScreen.route) {
             RegisterScreen(
-                onNavigateTo = { navigateTo ->
-                    navHostController.navigate(navigateTo)
-                }, snackbarHostState = snackbarHostState
+                onNavigateTo = { route ->
+                    navHostController.navigate(route)
+                },
+                snackbarHostState = snackbarHostState
             )
         }
-        composable<Screen.MainScreen> {
-            MainScreen(onNavigateTo = { navigateTo ->
-                navHostController.navigate(navigateTo)
-            })
+        composable(Screen.MainScreen.route) {
+            MainScreen(
+                onNavigateTo = { route ->
+                    navHostController.navigate(route)
+                }
+            )
         }
         composable<Screen.FilterScreen> { }
         composable<Screen.DialogsScreen> { }
@@ -74,4 +63,15 @@ fun MainNavigation(
         composable<Screen.CreateAdScreen> { }
         composable<Screen.DescriptionAdScreen> { }
     }
+}
+
+object Routes {
+    const val LOGIN = "login_screen"
+    const val REGISTER = "register_screen"
+    const val MAIN = "main_screen"
+    const val FILTER = "filter_screen"
+    const val DIALOGS = "dialogs_screen"
+    const val CHAT = "chat_screen"
+    const val CREATE_AD = "create_ad_screen"
+    const val DESCRIPTION_AD = "description_ad_screen"
 }

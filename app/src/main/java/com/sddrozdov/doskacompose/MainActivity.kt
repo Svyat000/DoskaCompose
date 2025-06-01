@@ -10,11 +10,14 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.compose.rememberNavController
+import com.sddrozdov.doskacompose.presentation.navigations.BottomBar
 import com.sddrozdov.doskacompose.presentation.navigations.MainNavigation
+import com.sddrozdov.doskacompose.presentation.navigations.Screen
 import com.sddrozdov.doskacompose.presentation.theme.DoskaComposeTheme
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -26,10 +29,29 @@ class MainActivity : ComponentActivity() {
         setContent {
             DoskaComposeTheme {
 
+                val navController = rememberNavController()
                 val snackbarHostState = remember { SnackbarHostState() }
 
-                Scaffold(modifier = Modifier.fillMaxSize(),
-                    snackbarHost = { SnackbarHost(snackbarHostState) }
+                val showBottomBar = remember {
+                    derivedStateOf {
+                        when (navController.currentDestination?.route) {
+                            Screen.MainScreen.route,
+                            Screen.DialogsScreen.route,
+                            Screen.CreateAdScreen.route -> true
+
+                            else -> false
+                        }
+                    }
+                }
+
+                Scaffold(
+                    modifier = Modifier.fillMaxSize(),
+                    snackbarHost = { SnackbarHost(snackbarHostState) },
+                    bottomBar = {
+                        if (showBottomBar.value) {
+                            BottomBar(navController = navController)
+                        }
+                    }
                 ) { innerPadding ->
                     MainContent(
                         modifier = Modifier.padding(innerPadding),
@@ -49,7 +71,7 @@ fun MainContent(
     MainNavigation(
         navHostController = rememberNavController(),
         modifier = modifier,
-        snackbarHostState = snackbarHostState ,
+        snackbarHostState = snackbarHostState,
     )
 }
 

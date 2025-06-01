@@ -8,4 +8,9 @@
     <string name="a_password_recovery_email_has_been_sent_to_your_email_address">Письмо с восстановлением пароля отправлено на ваш Email</string>
     <string name="please_check_your_email_or_password">Проверьте правильность введенных данных</string>
     <string name="google_sign_in_failed">Google sign in failed:</string>
+
+    <string name="main_screen">Главная</string>
+    <string name="dialogs">Сообщения</string>
+    <string name="create_ad">Создать</string>
+    <string name="unknown">Неизвестно</string>
 </resources>

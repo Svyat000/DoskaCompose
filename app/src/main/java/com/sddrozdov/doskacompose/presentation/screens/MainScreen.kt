@@ -9,14 +9,13 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.sddrozdov.doskacompose.presentation.navigations.Screen
 import com.sddrozdov.doskacompose.presentation.states.MainScreenEvent
 import com.sddrozdov.doskacompose.presentation.states.MainScreenState
 import com.sddrozdov.doskacompose.presentation.viewModels.MainViewModel
 
 @Composable
 fun MainScreen(
-    onNavigateTo: (Screen) -> Unit
+    onNavigateTo: (String) -> Unit
 ) {
     val viewModel = hiltViewModel<MainViewModel>()
     val state by viewModel.state.collectAsState()
@@ -33,7 +32,7 @@ fun MainScreen(
 fun MainScreenView(
     state: MainScreenState,
     onEvent: (MainScreenEvent) -> Unit,
-    onNavigateTo: (Screen) -> Unit
+    onNavigateTo: (String) -> Unit
 ) {
     Column {
 
