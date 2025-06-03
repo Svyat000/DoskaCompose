@@ -6,6 +6,9 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import com.sddrozdov.doskacompose.presentation.screens.DescriptionAdScreen
+import com.sddrozdov.doskacompose.presentation.screens.DialogsScreen
+import com.sddrozdov.doskacompose.presentation.screens.FilterScreen
 import com.sddrozdov.doskacompose.presentation.screens.LoginScreen
 import com.sddrozdov.doskacompose.presentation.screens.MainScreen
 import com.sddrozdov.doskacompose.presentation.screens.RegisterScreen
@@ -13,14 +16,22 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 sealed class Screen(val route: String) {
-    @Serializable data object LoginScreen : Screen(Routes.LOGIN)
-    @Serializable data object RegisterScreen : Screen(Routes.REGISTER)
-    @Serializable data object MainScreen : Screen(Routes.MAIN)
-    @Serializable data object FilterScreen : Screen(Routes.FILTER)
-    @Serializable data object DialogsScreen : Screen(Routes.DIALOGS)
-    @Serializable data object ChatScreen : Screen(Routes.CHAT)
-    @Serializable data object CreateAdScreen : Screen(Routes.CREATE_AD)
-    @Serializable data object DescriptionAdScreen : Screen(Routes.DESCRIPTION_AD)
+    @Serializable
+    data object LoginScreen : Screen(Routes.LOGIN)
+    @Serializable
+    data object RegisterScreen : Screen(Routes.REGISTER)
+    @Serializable
+    data object MainScreen : Screen(Routes.MAIN)
+    @Serializable
+    data object FilterScreen : Screen(Routes.FILTER)
+    @Serializable
+    data object DialogsScreen : Screen(Routes.DIALOGS)
+    @Serializable
+    data object ChatScreen : Screen(Routes.CHAT)
+    @Serializable
+    data object CreateAdScreen : Screen(Routes.CREATE_AD)
+    @Serializable
+    data object DescriptionAdScreen : Screen(Routes.DESCRIPTION_AD)
 }
 
 @Composable
@@ -32,7 +43,7 @@ fun MainNavigation(
     NavHost(
         modifier = modifier,
         navController = navHostController,
-        startDestination = Screen.RegisterScreen.route
+        startDestination = Screen.MainScreen.route
     ) {
         composable(Screen.LoginScreen.route) {
             LoginScreen(
@@ -57,11 +68,30 @@ fun MainNavigation(
                 }
             )
         }
-        composable<Screen.FilterScreen> { }
-        composable<Screen.DialogsScreen> { }
+        composable(Screen.FilterScreen.route) {
+            FilterScreen(
+                onNavigateTo = { route ->
+                    navHostController.navigate(route)
+                }
+            )
+        }
+        composable(Screen.DialogsScreen.route) {
+            DialogsScreen(
+                onNavigateTo = { route ->
+                    navHostController.navigate(route)
+                }
+            )
+        }
         composable<Screen.ChatScreen> { }
         composable<Screen.CreateAdScreen> { }
-        composable<Screen.DescriptionAdScreen> { }
+
+        composable(Screen.DescriptionAdScreen.route) {
+            DescriptionAdScreen(
+                onNavigateTo = { route ->
+                    navHostController.navigate(route)
+                }
+            )
+        }
     }
 }
 

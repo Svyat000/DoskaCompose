@@ -10,25 +10,18 @@ import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.res.stringResource
-import androidx.navigation.NavController
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
-import androidx.navigation.compose.currentBackStackEntryAsState
-import androidx.navigation.compose.rememberNavController
 import com.sddrozdov.doskacompose.R
 
 @Composable
-fun BottomBar(navController: NavHostController) {
+fun BottomBar(navController: NavHostController, currentRoute: String?) {
     val screens = listOf(
         Screen.MainScreen,
         Screen.DialogsScreen,
-        Screen.CreateAdScreen
+        Screen.FilterScreen
     )
-
-    val navBackStackEntry by navController.currentBackStackEntryAsState()
-    val currentRoute = navBackStackEntry?.destination?.route
 
     NavigationBar {
         screens.forEach { screen ->
@@ -38,7 +31,7 @@ fun BottomBar(navController: NavHostController) {
                         imageVector = when (screen) {
                             Screen.MainScreen -> Icons.Default.Home
                             Screen.DialogsScreen -> Icons.Default.MailOutline
-                            Screen.CreateAdScreen -> Icons.Default.Add
+                            Screen.FilterScreen -> Icons.Default.Add
                             else -> Icons.Default.Star
                         },
                         contentDescription = null
@@ -64,7 +57,7 @@ private fun getLabelRes(screen: Screen): Int {
     return when (screen) {
         Screen.MainScreen -> R.string.main_screen
         Screen.DialogsScreen -> R.string.dialogs
-        Screen.CreateAdScreen -> R.string.create_ad
+        Screen.FilterScreen -> R.string.create_ad
         else -> R.string.unknown
     }
 }

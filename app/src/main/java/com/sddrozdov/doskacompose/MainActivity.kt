@@ -9,15 +9,14 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.derivedStateOf
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.sddrozdov.doskacompose.presentation.navigations.BottomBar
 import com.sddrozdov.doskacompose.presentation.navigations.MainNavigation
-import com.sddrozdov.doskacompose.presentation.navigations.Screen
+import com.sddrozdov.doskacompose.presentation.navigations.Routes
 import com.sddrozdov.doskacompose.presentation.theme.DoskaComposeTheme
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -32,29 +31,41 @@ class MainActivity : ComponentActivity() {
                 val navController = rememberNavController()
                 val snackbarHostState = remember { SnackbarHostState() }
 
-                val showBottomBar = remember {
-                    derivedStateOf {
-                        when (navController.currentDestination?.route) {
-                            Screen.MainScreen.route,
-                            Screen.DialogsScreen.route,
-                            Screen.CreateAdScreen.route -> true
+//                val showBottomBar = remember {
+//                    derivedStateOf {
+//                        when (navController.currentDestination?.route) {
+//                            Screen.MainScreen.route,
+//                            Screen.DialogsScreen.route,
+//                            Screen.FilterScreen.route -> true
+//
+//                            else -> false
+//                        }
+//                    }
+//                }
 
-                            else -> false
-                        }
-                    }
+                val navBackStackEntry by navController.currentBackStackEntryAsState()
+                val currentRoute = navBackStackEntry?.destination?.route
+
+                val showBottomBar = when (currentRoute) {
+                    Routes.MAIN,
+                    Routes.DIALOGS,
+                    Routes.FILTER -> true
+                    else -> false
                 }
+
 
                 Scaffold(
                     modifier = Modifier.fillMaxSize(),
                     snackbarHost = { SnackbarHost(snackbarHostState) },
                     bottomBar = {
-                        if (showBottomBar.value) {
-                            BottomBar(navController = navController)
+                        if (showBottomBar) {
+                            BottomBar(navController = navController, currentRoute = currentRoute)
                         }
                     }
                 ) { innerPadding ->
-                    MainContent(
+                    MainNavigation(
                         modifier = Modifier.padding(innerPadding),
+                        navHostController = navController,
                         snackbarHostState = snackbarHostState
                     )
                 }
@@ -63,26 +74,26 @@ class MainActivity : ComponentActivity() {
     }
 }
 
-@Composable
-fun MainContent(
-    modifier: Modifier = Modifier,
-    snackbarHostState: SnackbarHostState
-) {
-    MainNavigation(
-        navHostController = rememberNavController(),
-        modifier = modifier,
-        snackbarHostState = snackbarHostState,
-    )
-}
+//@Composable
+//fun MainContent(
+//    modifier: Modifier = Modifier,
+//    snackbarHostState: SnackbarHostState
+//) {
+//    MainNavigation(
+//        navHostController = rememberNavController(),
+//        modifier = modifier,
+//        snackbarHostState = snackbarHostState,
+//    )
+//}
 
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    DoskaComposeTheme {
-        val snackbarHostState = remember { SnackbarHostState() }
-        MainContent(
-            modifier = Modifier,
-            snackbarHostState = snackbarHostState
-        )
-    }
-}
+//@Preview(showBackground = true)
+//@Composable
+//fun GreetingPreview() {
+//    DoskaComposeTheme {
+//        val snackbarHostState = remember { SnackbarHostState() }
+//        MainContent(
+//            modifier = Modifier,
+//            snackbarHostState = snackbarHostState
+//        )
+//    }
+//}
