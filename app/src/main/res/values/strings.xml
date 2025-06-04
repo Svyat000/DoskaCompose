@@ -13,4 +13,11 @@
     <string name="dialogs">Сообщения</string>
     <string name="create_ad">Создать</string>
     <string name="unknown">Неизвестно</string>
+    <string name="sign_in">Войти</string>
+    <string name="password">Пароль</string>
+    <string name="email">Email</string>
+    <string name="welcome_back">С возвращением!</string>
+    <string name="sign_in_with_google">Войти с Google</string>
+
+    Войти с Google
 </resources>
