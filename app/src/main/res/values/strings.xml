@@ -18,6 +18,8 @@
     <string name="email">Email</string>
     <string name="welcome_back">С возвращением!</string>
     <string name="sign_in_with_google">Войти с Google</string>
+    <string name="sign_up">Зарегистрируйся!</string>
+    <string name="sign__up">Зарегистрироваться</string>
+    <string name="sign_up_with_google">Зарегистрироваться с Google</string>
 
-    Войти с Google
 </resources>

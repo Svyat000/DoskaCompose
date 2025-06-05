@@ -64,7 +64,7 @@ fun LoginScreen(
     LaunchedEffect(state.loginResult) {
         state.loginResult?.onSuccess {
             onNavigateTo(Screen.MainScreen.route)
-        }?.onFailure { e ->
+        }?.onFailure {
             snackbarMessage?.let { messageRes ->
                 val message = context.getString(messageRes)
                 snackbarHostState.showSnackbar(message)
@@ -79,7 +79,6 @@ fun LoginScreen(
             val message = context.getString(messageRes)
             snackbarHostState.showSnackbar(message)
             viewModel.messageShown()
-
         }
     }
 
@@ -96,6 +95,7 @@ fun LoginView(
     onEvent: (LoginScreenEvent) -> Unit,
     onNavigateTo: (String) -> Unit
 ) {
+
     val context = LocalContext.current
 
     val primaryBackground = Color(ContextCompat.getColor(context, R.color.primaryBackground))

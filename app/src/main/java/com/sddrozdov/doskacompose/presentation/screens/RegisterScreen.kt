@@ -1,20 +1,30 @@
 package com.sddrozdov.doskacompose.presentation.screens
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.Icon
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -24,12 +34,15 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.content.ContextCompat
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.sddrozdov.doskacompose.R
 import com.sddrozdov.doskacompose.presentation.navigations.Screen
@@ -81,94 +94,168 @@ fun RegisterView(
     onEvent: (RegisterScreenEvent) -> Unit,
     onNavigateTo: (String) -> Unit
 ) {
+
+    val context = LocalContext.current
+
+    val primaryBackground = Color(ContextCompat.getColor(context, R.color.primaryBackground))
+    val cardBackground = Color(ContextCompat.getColor(context, R.color.cardBackground))
+    val accentColor = Color(ContextCompat.getColor(context, R.color.accentColor))
+    val googleButtonColor = Color(ContextCompat.getColor(context, R.color.googleButtonColor))
+    val textColor = Color(ContextCompat.getColor(context, R.color.textColor))
+    val secondaryTextColor = Color(ContextCompat.getColor(context, R.color.secondaryTextColor))
+    val textFieldOutline = Color(ContextCompat.getColor(context, R.color.textFieldOutline))
+
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color.White)
+            .background(primaryBackground)
             .padding(16.dp)
     ) {
-        Column(
+
+        Card(
             modifier = Modifier
                 .align(Alignment.Center)
                 .fillMaxWidth()
-                .background(color = Color.White, shape = RoundedCornerShape(12.dp))
-                .padding(24.dp),
-            horizontalAlignment = Alignment.CenterHorizontally
+                .widthIn(max = 480.dp),
+            shape = RoundedCornerShape(24.dp),
+            elevation = CardDefaults.cardElevation(4.dp),
+            colors = CardDefaults.cardColors(containerColor = cardBackground)
         ) {
-            Text(
-                text = "Зарегистрируйся!",
-                fontSize = 28.sp,
-                fontWeight = FontWeight.Bold,
-                modifier = Modifier.padding(bottom = 16.dp),
-                color = Color.Black
-            )
-
-            TextField(
-                value = state.email,
-                onValueChange = { onEvent(RegisterScreenEvent.EmailUpdated(it)) },
-                label = { Text("Email") },
-                colors = TextFieldDefaults.colors(
-                    focusedIndicatorColor = Color.Blue,
-                    unfocusedIndicatorColor = Color.Gray,
-                    focusedContainerColor = Color.Transparent
-                ),
-                shape = RoundedCornerShape(8.dp),
-                modifier = Modifier.fillMaxWidth()
-            )
-
-            Spacer(modifier = Modifier.height(16.dp))
-
-            TextField(
-                value = state.password,
-                onValueChange = { onEvent(RegisterScreenEvent.PasswordUpdated(it)) },
-                label = { Text("Пароль") },
-                visualTransformation = PasswordVisualTransformation(),
-                colors = TextFieldDefaults.colors(
-                    focusedIndicatorColor = Color.Blue,
-                    unfocusedIndicatorColor = Color.Gray,
-                    focusedContainerColor = Color.Transparent
-                ),
-                shape = RoundedCornerShape(8.dp),
-                modifier = Modifier.fillMaxWidth()
-            )
-
-            Spacer(modifier = Modifier.height(24.dp))
-
-            Button(
-                onClick = { onEvent(RegisterScreenEvent.RegisterGoogleBtnClicked) },
-                modifier = Modifier.fillMaxWidth(),
-                shape = RoundedCornerShape(8.dp),
-                colors = ButtonDefaults.buttonColors(containerColor = Color.Blue)
+            Column(
+                modifier = Modifier
+                    .padding(32.dp),
+                horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                Text("Зарегистрироваться с Google", color = Color.White)
-            }
+                Text(
+                    text = stringResource(R.string.sign_up),
+                    fontSize = 28.sp,
+                    fontWeight = FontWeight.SemiBold,
+                    modifier = Modifier.padding(bottom = 24.dp),
+                    color = textColor
+                )
 
-            Spacer(modifier = Modifier.height(16.dp))
+                OutlinedTextField(
+                    value = state.email,
+                    onValueChange = { onEvent(RegisterScreenEvent.EmailUpdated(it)) },
+                    label = {
+                        Text(
+                            text = stringResource(id = R.string.email),
+                            color = secondaryTextColor,
+                            fontSize = 14.sp
+                        )
+                    },
+                    colors = TextFieldDefaults.colors(
+                        focusedContainerColor = Color.Transparent,
+                        unfocusedContainerColor = Color.Transparent,
+                        focusedTextColor = textColor,
+                        unfocusedTextColor = textColor,
+                        focusedLabelColor = accentColor,
+                        unfocusedLabelColor = secondaryTextColor,
+                        focusedIndicatorColor = accentColor,
+                        unfocusedIndicatorColor = textFieldOutline,
+                    ),
+                    shape = RoundedCornerShape(12.dp),
+                    modifier = Modifier.fillMaxWidth(),
+                    singleLine = true,
+                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email)
+                )
 
-            Button(
-                onClick = { onEvent(RegisterScreenEvent.RegisterBtnClicked) },
-                modifier = Modifier.fillMaxWidth(),
-                shape = RoundedCornerShape(8.dp),
-                colors = ButtonDefaults.buttonColors(containerColor = Color.Green)
-            ) {
-                Text("Зарегистрироваться", color = Color.White)
+                Spacer(modifier = Modifier.height(20.dp))
+
+                OutlinedTextField(
+                    value = state.password,
+                    onValueChange = { onEvent(RegisterScreenEvent.PasswordUpdated(it)) },
+                    label = {
+                        Text(
+                            text = stringResource(id = R.string.password),
+                            color = secondaryTextColor,
+                            fontSize = 14.sp
+                        )
+                    },
+                    visualTransformation = PasswordVisualTransformation(),
+                    colors = TextFieldDefaults.colors(
+                        focusedContainerColor = Color.Transparent,
+                        unfocusedContainerColor = Color.Transparent,
+                        focusedTextColor = textColor,
+                        unfocusedTextColor = textColor,
+                        focusedLabelColor = accentColor,
+                        unfocusedLabelColor = secondaryTextColor,
+                        focusedIndicatorColor = accentColor,
+                        unfocusedIndicatorColor = textFieldOutline,
+                    ),
+                    shape = RoundedCornerShape(12.dp),
+                    modifier = Modifier.fillMaxWidth(),
+                    singleLine = true,
+                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password)
+                )
+
+                Spacer(modifier = Modifier.height(32.dp))
+
+                Button(
+                    onClick = { onEvent(RegisterScreenEvent.RegisterGoogleBtnClicked) },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(50.dp),
+                    shape = RoundedCornerShape(12.dp),
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = googleButtonColor,
+                        contentColor = Color.White
+                    ),
+                    border = BorderStroke(1.dp, googleButtonColor)
+                ) {
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.Center
+                    ) {
+                        Icon(
+                            painter = painterResource(id = R.drawable.google_icon),
+                            contentDescription = "Google",
+                            modifier = Modifier.size(24.dp)
+                        )
+                        Spacer(modifier = Modifier.width(12.dp))
+                        Text(
+                            text = stringResource(id = R.string.sign_up_with_google),
+                            fontSize = 16.sp
+                        )
+                    }
+                }
+
+                Spacer(modifier = Modifier.height(16.dp))
+
+                Button(
+                    onClick = { onEvent(RegisterScreenEvent.RegisterBtnClicked) },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(50.dp),
+                    shape = RoundedCornerShape(12.dp),
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = accentColor,
+                        contentColor = Color.White
+                    )
+                ) {
+                    Text(text = stringResource(id = R.string.sign__up), fontSize = 16.sp)
+                }
             }
         }
 
-        Column(
+        Row(
             modifier = Modifier
                 .align(Alignment.BottomCenter)
                 .fillMaxWidth()
-                .padding(bottom = 24.dp),
-            horizontalAlignment = Alignment.CenterHorizontally
+                .padding(bottom = 32.dp),
+            horizontalArrangement = Arrangement.Center
         ) {
-            Text(
-                text = stringResource(id = R.string.already_have_an_acc),
-                modifier = Modifier
-                    .clickable { onNavigateTo(Screen.LoginScreen.route) }
-                    .padding(vertical = 8.dp),
-                color = Color.Blue
-            )
+            TextButton(
+                onClick = { onNavigateTo(Screen.LoginScreen.route) },
+                modifier = Modifier.padding(end = 16.dp)
+            ) {
+                Text(
+                    text = stringResource(id = R.string.already_have_an_acc),
+                    color = accentColor,
+                    fontSize = 14.sp
+                )
+            }
+
         }
 
 
