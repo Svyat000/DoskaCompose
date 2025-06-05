@@ -19,8 +19,11 @@ import com.sddrozdov.doskacompose.R
 fun BottomBar(navController: NavHostController, currentRoute: String?) {
     val screens = listOf(
         Screen.MainScreen,
+        Screen.FavoriteAdScreen,
+        Screen.CreateAdScreen,
         Screen.DialogsScreen,
-        Screen.FilterScreen
+        Screen.LoginScreen,
+
     )
 
     NavigationBar {
@@ -30,8 +33,10 @@ fun BottomBar(navController: NavHostController, currentRoute: String?) {
                     Icon(
                         imageVector = when (screen) {
                             Screen.MainScreen -> Icons.Default.Home
+                            Screen.FavoriteAdScreen -> Icons.Default.Star
+                            Screen.CreateAdScreen -> Icons.Default.Add
                             Screen.DialogsScreen -> Icons.Default.MailOutline
-                            Screen.FilterScreen -> Icons.Default.Add
+                            Screen.LoginScreen -> Icons.Default.Star
                             else -> Icons.Default.Star
                         },
                         contentDescription = null
@@ -57,7 +62,9 @@ private fun getLabelRes(screen: Screen): Int {
     return when (screen) {
         Screen.MainScreen -> R.string.main_screen
         Screen.DialogsScreen -> R.string.dialogs
-        Screen.FilterScreen -> R.string.create_ad
+        Screen.CreateAdScreen -> R.string.create_ad
+        Screen.LoginScreen -> R.string.sign_in
+        Screen.FavoriteAdScreen -> R.string.favorite_ad
         else -> R.string.unknown
     }
 }

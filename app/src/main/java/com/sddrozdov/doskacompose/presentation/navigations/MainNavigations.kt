@@ -6,8 +6,10 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import com.sddrozdov.doskacompose.presentation.screens.createAdScreens.CreateAdScreen
 import com.sddrozdov.doskacompose.presentation.screens.DescriptionAdScreen
 import com.sddrozdov.doskacompose.presentation.screens.DialogsScreen
+import com.sddrozdov.doskacompose.presentation.screens.FavoriteAdScreen
 import com.sddrozdov.doskacompose.presentation.screens.FilterScreen
 import com.sddrozdov.doskacompose.presentation.screens.LoginScreen
 import com.sddrozdov.doskacompose.presentation.screens.MainScreen
@@ -32,6 +34,8 @@ sealed class Screen(val route: String) {
     data object CreateAdScreen : Screen(Routes.CREATE_AD)
     @Serializable
     data object DescriptionAdScreen : Screen(Routes.DESCRIPTION_AD)
+    @Serializable
+    data object FavoriteAdScreen : Screen(Routes.FAVORITE_AD)
 }
 
 @Composable
@@ -83,10 +87,24 @@ fun MainNavigation(
             )
         }
         composable<Screen.ChatScreen> { }
-        composable<Screen.CreateAdScreen> { }
+
+        composable(Screen.CreateAdScreen.route) {
+            CreateAdScreen(
+                onNavigateTo = { route ->
+                    navHostController.navigate(route)
+                }
+            )
+        }
 
         composable(Screen.DescriptionAdScreen.route) {
             DescriptionAdScreen(
+                onNavigateTo = { route ->
+                    navHostController.navigate(route)
+                }
+            )
+        }
+        composable(Screen.FavoriteAdScreen.route) {
+            FavoriteAdScreen(
                 onNavigateTo = { route ->
                     navHostController.navigate(route)
                 }
@@ -104,4 +122,5 @@ object Routes {
     const val CHAT = "chat_screen"
     const val CREATE_AD = "create_ad_screen"
     const val DESCRIPTION_AD = "description_ad_screen"
+    const val FAVORITE_AD = "favorite_ad_screen"
 }
