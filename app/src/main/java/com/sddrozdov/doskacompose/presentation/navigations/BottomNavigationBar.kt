@@ -20,11 +20,10 @@ fun BottomBar(navController: NavHostController, currentRoute: String?) {
     val screens = listOf(
         Screen.MainScreen,
         Screen.FavoriteAdScreen,
-        Screen.CreateAdScreen,
+        Screen.SelectCategoryScreen,
         Screen.DialogsScreen,
         Screen.LoginScreen,
-
-    )
+        )
 
     NavigationBar {
         screens.forEach { screen ->
@@ -62,7 +61,7 @@ private fun getLabelRes(screen: Screen): Int {
     return when (screen) {
         Screen.MainScreen -> R.string.main_screen
         Screen.DialogsScreen -> R.string.dialogs
-        Screen.CreateAdScreen -> R.string.create_ad
+        Screen.SelectCategoryScreen -> R.string.create_ad
         Screen.LoginScreen -> R.string.sign_in
         Screen.FavoriteAdScreen -> R.string.favorite_ad
         else -> R.string.unknown

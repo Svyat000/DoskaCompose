@@ -101,4 +101,5 @@ dependencies {
     testImplementation (libs.mockk)
 
     implementation (libs.material3)
+    implementation(libs.gson)
 }
