@@ -22,5 +22,6 @@
     <string name="sign__up">Зарегистрироваться</string>
     <string name="sign_up_with_google">Зарегистрироваться с Google</string>
     <string name="favorite_ad">Избранные</string>
+    <string name="select_category">Выберите категорию</string>
 
 </resources>

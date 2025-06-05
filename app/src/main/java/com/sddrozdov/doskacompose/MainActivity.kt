@@ -31,28 +31,19 @@ class MainActivity : ComponentActivity() {
                 val navController = rememberNavController()
                 val snackbarHostState = remember { SnackbarHostState() }
 
-//                val showBottomBar = remember {
-//                    derivedStateOf {
-//                        when (navController.currentDestination?.route) {
-//                            Screen.MainScreen.route,
-//                            Screen.DialogsScreen.route,
-//                            Screen.FilterScreen.route -> true
-//
-//                            else -> false
-//                        }
-//                    }
-//                }
-
                 val navBackStackEntry by navController.currentBackStackEntryAsState()
                 val currentRoute = navBackStackEntry?.destination?.route
 
                 val showBottomBar = when (currentRoute) {
                     Routes.MAIN,
                     Routes.DIALOGS,
-                    Routes.FILTER -> true
+                    Routes.CREATE_AD,
+                    Routes.FAVORITE_AD,
+                    Routes.LOGIN,
+                    Routes.REGISTER -> true
+
                     else -> false
                 }
-
 
                 Scaffold(
                     modifier = Modifier.fillMaxSize(),
@@ -74,26 +65,4 @@ class MainActivity : ComponentActivity() {
     }
 }
 
-//@Composable
-//fun MainContent(
-//    modifier: Modifier = Modifier,
-//    snackbarHostState: SnackbarHostState
-//) {
-//    MainNavigation(
-//        navHostController = rememberNavController(),
-//        modifier = modifier,
-//        snackbarHostState = snackbarHostState,
-//    )
-//}
 
-//@Preview(showBackground = true)
-//@Composable
-//fun GreetingPreview() {
-//    DoskaComposeTheme {
-//        val snackbarHostState = remember { SnackbarHostState() }
-//        MainContent(
-//            modifier = Modifier,
-//            snackbarHostState = snackbarHostState
-//        )
-//    }
-//}

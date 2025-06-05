@@ -14,28 +14,40 @@ import com.sddrozdov.doskacompose.presentation.screens.FilterScreen
 import com.sddrozdov.doskacompose.presentation.screens.LoginScreen
 import com.sddrozdov.doskacompose.presentation.screens.MainScreen
 import com.sddrozdov.doskacompose.presentation.screens.RegisterScreen
+import com.sddrozdov.doskacompose.presentation.screens.createAdScreens.SelectCategoryScreen
 import kotlinx.serialization.Serializable
 
 @Serializable
 sealed class Screen(val route: String) {
     @Serializable
     data object LoginScreen : Screen(Routes.LOGIN)
+
     @Serializable
     data object RegisterScreen : Screen(Routes.REGISTER)
+
     @Serializable
     data object MainScreen : Screen(Routes.MAIN)
+
     @Serializable
     data object FilterScreen : Screen(Routes.FILTER)
+
     @Serializable
     data object DialogsScreen : Screen(Routes.DIALOGS)
+
     @Serializable
     data object ChatScreen : Screen(Routes.CHAT)
+
     @Serializable
     data object CreateAdScreen : Screen(Routes.CREATE_AD)
+
     @Serializable
     data object DescriptionAdScreen : Screen(Routes.DESCRIPTION_AD)
+
     @Serializable
     data object FavoriteAdScreen : Screen(Routes.FAVORITE_AD)
+
+    @Serializable
+    data object SelectCategoryScreen : Screen(Routes.SELECT_CATEGORY_AD)
 }
 
 @Composable
@@ -110,6 +122,13 @@ fun MainNavigation(
                 }
             )
         }
+        composable(Screen.SelectCategoryScreen.route) {
+            SelectCategoryScreen(
+                onNavigateTo = { route ->
+                    navHostController.navigate(route)
+                }
+            )
+        }
     }
 }
 
@@ -123,4 +142,5 @@ object Routes {
     const val CREATE_AD = "create_ad_screen"
     const val DESCRIPTION_AD = "description_ad_screen"
     const val FAVORITE_AD = "favorite_ad_screen"
+    const val SELECT_CATEGORY_AD = "select_category_ad_screen"
 }
