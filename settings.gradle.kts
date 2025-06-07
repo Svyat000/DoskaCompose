@@ -21,4 +21,4 @@ dependencyResolutionManagement {
 
 rootProject.name = "DoskaCompose"
 include(":app")
- 
+include(":domain")
