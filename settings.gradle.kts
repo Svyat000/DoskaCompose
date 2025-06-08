@@ -23,3 +23,4 @@ rootProject.name = "DoskaCompose"
 include(":app")
 include(":domain")
 include(":data")
+include(":presentation")

@@ -1,4 +1,4 @@
-package com.sddrozdov.doskacompose
+package com.sddrozdov.presentation
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity

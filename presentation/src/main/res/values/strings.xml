@@ -1,0 +1,27 @@
+<resources>
+    <string name="app_name">DoskaCompose</string>
+    <string name="no_account">Нет аккаунта? Зарегистрируйтесь!</string>
+    <string name="already_have_an_acc">Уже есть аккаунт? Войти!</string>
+    <string name="forgot_your_password">Забыли пароль?</string>
+    <string name="please_check_if_your_email_is_entered_correctly">Проверьте правильность ввода Email</string>
+    <string name="the_Email_field_must_not_be_empty">Поле Email не должно быть пустым!</string>
+    <string name="a_password_recovery_email_has_been_sent_to_your_email_address">Письмо с восстановлением пароля отправлено на ваш Email</string>
+    <string name="please_check_your_email_or_password">Проверьте правильность введенных данных</string>
+    <string name="google_sign_in_failed">Google sign in failed:</string>
+
+    <string name="main_screen">Главная</string>
+    <string name="dialogs">Сообщения</string>
+    <string name="create_ad">Создать</string>
+    <string name="unknown">Неизвестно</string>
+    <string name="sign_in">Войти</string>
+    <string name="password">Пароль</string>
+    <string name="email">Email</string>
+    <string name="welcome_back">С возвращением!</string>
+    <string name="sign_in_with_google">Войти с Google</string>
+    <string name="sign_up">Зарегистрируйся!</string>
+    <string name="sign__up">Зарегистрироваться</string>
+    <string name="sign_up_with_google">Зарегистрироваться с Google</string>
+    <string name="favorite_ad">Избранные</string>
+    <string name="select_category">Выберите категорию</string>
+
+</resources>
