@@ -18,9 +18,13 @@ class AuthRepositoryImpl @Inject constructor(private val firebaseAuth: FirebaseA
     AuthRepository {
 
     private fun FirebaseUser.toDomainUser(): User = User(
-        id = this.uid,
+        uid = this.uid,
         email = this.email ?: "",
-        isEmailVerified = this.isEmailVerified
+        isEmailVerified = this.isEmailVerified,
+        isAnonymous = this.isAnonymous,
+        displayName = this.displayName,
+        phoneNumber = this.phoneNumber,
+        photoUrl = this.photoUrl.toString()
     )
 
     override suspend fun deleteCurrentUser(): Result<Unit> = try {
@@ -57,7 +61,7 @@ class AuthRepositoryImpl @Inject constructor(private val firebaseAuth: FirebaseA
     override suspend fun sendEmailVerification(user: User): Result<Unit> {
         return try {
             val firebaseUser = firebaseAuth.currentUser
-            if (firebaseUser == null || firebaseUser.uid != user.id) {
+            if (firebaseUser == null || firebaseUser.uid != user.uid) {
                 Result.failure(Exception("Current user does not match"))
             } else {
                 firebaseUser.sendEmailVerification().await()
@@ -90,7 +94,6 @@ class AuthRepositoryImpl @Inject constructor(private val firebaseAuth: FirebaseA
             Result.failure(e)
         }
     }
-
 
     override suspend fun signOut(): Result<Unit> = try {
         firebaseAuth.signOut()
