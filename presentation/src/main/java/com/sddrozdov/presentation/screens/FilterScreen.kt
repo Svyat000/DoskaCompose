@@ -1,4 +1,4 @@
-package com.sddrozdov.doskacompose.presentation.screens
+package com.sddrozdov.presentation.screens
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.material3.Text
@@ -7,9 +7,9 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.sddrozdov.doskacompose.presentation.states.FilterScreenEvent
-import com.sddrozdov.doskacompose.presentation.states.FilterScreenState
-import com.sddrozdov.doskacompose.presentation.viewModels.FilterViewModel
+import com.sddrozdov.presentation.states.FilterScreenEvent
+import com.sddrozdov.presentation.states.FilterScreenState
+import com.sddrozdov.presentation.viewModels.FilterViewModel
 
 @Composable
 fun FilterScreen(

@@ -1,4 +1,4 @@
-package com.sddrozdov.doskacompose.presentation.states.createAd
+package com.sddrozdov.presentation.states.createAd
 
 import com.sddrozdov.doskacompose.domain.models.Country
 

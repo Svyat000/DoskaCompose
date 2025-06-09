@@ -1,4 +1,4 @@
-package com.sddrozdov.doskacompose.presentation.screens.createAdScreens
+package com.sddrozdov.presentation.screens.createAdScreens
 
 import android.util.Log
 import androidx.compose.foundation.layout.*
@@ -18,10 +18,10 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.sddrozdov.doskacompose.R
-import com.sddrozdov.doskacompose.presentation.states.createAd.CreateAdEvents
-import com.sddrozdov.doskacompose.presentation.states.createAd.CreateAdStates
-import com.sddrozdov.doskacompose.presentation.viewModels.createAd.CreateAdViewModel
+import com.sddrozdov.presentation.states.createAd.CreateAdEvents
+import com.sddrozdov.presentation.states.createAd.CreateAdStates
+import com.sddrozdov.presentation.viewModels.createAd.CreateAdViewModel
+import com.sddrozdov.presentation.R
 
 
 @OptIn(ExperimentalMaterial3Api::class)

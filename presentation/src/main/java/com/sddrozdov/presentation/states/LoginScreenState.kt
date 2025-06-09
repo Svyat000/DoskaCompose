@@ -1,12 +1,12 @@
-package com.sddrozdov.doskacompose.presentation.states
+package com.sddrozdov.presentation.states
 
-import com.google.firebase.auth.FirebaseUser
+import com.sddrozdov.domain.models.User
 import kotlin.Result
 
 data class LoginScreenState(
     val email: String = "",
     val password: String = "",
-    var loginResult: Result<FirebaseUser>? = null,
+    var loginResult: Result<User>? = null,
 )
 
 sealed class LoginScreenEvent {

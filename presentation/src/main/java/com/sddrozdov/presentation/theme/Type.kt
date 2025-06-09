@@ -1,4 +1,4 @@
-package com.sddrozdov.doskacompose.presentation.theme
+package com.sddrozdov.presentation.theme
 
 import androidx.compose.material3.Typography
 import androidx.compose.ui.text.TextStyle

@@ -1,4 +1,4 @@
-package com.sddrozdov.dataa.dbNodes
+package com.sddrozdov.dataa.repository.dbNodes
 
 object DbNodes {
         const val AD = "ad"

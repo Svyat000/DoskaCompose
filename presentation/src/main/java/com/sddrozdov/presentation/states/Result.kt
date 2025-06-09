@@ -1,4 +1,4 @@
-package com.sddrozdov.doskacompose.presentation.states
+package com.sddrozdov.presentation.states
 
 //sealed class Result<out T> {
 //    data class Success<out T>(val data: T) : Result<T>()

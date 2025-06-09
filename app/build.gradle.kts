@@ -5,7 +5,7 @@ plugins {
     alias(libs.plugins.google.gms.google.services)
     alias(libs.plugins.ksp)
     alias(libs.plugins.hilt)
-    kotlin("plugin.serialization")
+    //kotlin("plugin.serialization")
 }
 
 android {
@@ -32,11 +32,11 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_17
-        targetCompatibility = JavaVersion.VERSION_17
+        sourceCompatibility = JavaVersion.VERSION_11
+        targetCompatibility = JavaVersion.VERSION_11
     }
     kotlinOptions {
-        jvmTarget = "17"
+        jvmTarget = "11"
     }
     buildFeatures {
         compose = true
@@ -44,30 +44,36 @@ android {
 }
 
 dependencies {
+
+    implementation(project(":presentation"))
+    implementation(project(":domain"))
+    implementation(project(":data"))
+
     // AndroidX Core
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)
+    implementation(libs.firebase.common.ktx)
 
     // Jetpack Compose
-    implementation(platform(libs.androidx.compose.bom))
-    implementation(libs.androidx.ui)
-    implementation(libs.androidx.ui.graphics)
-    implementation(libs.androidx.ui.tooling.preview)
-    implementation(libs.androidx.material3)
-    implementation(libs.androidx.navigation.compose)
-    implementation(libs.coil.compose)
+//    implementation(platform(libs.androidx.compose.bom))
+//    implementation(libs.androidx.ui)
+//    implementation(libs.androidx.ui.graphics)
+//    implementation(libs.androidx.ui.tooling.preview)
+//    implementation(libs.androidx.material3)
+//    implementation(libs.androidx.navigation.compose)
+//    implementation(libs.coil.compose)
 
     // Firebase
-    implementation(libs.firebase.auth)
+    //implementation(libs.firebase.auth)
 
     // AndroidX Credentials
-    implementation(libs.androidx.credentials)
-    implementation(libs.androidx.credentials.play.services.auth)
+    //implementation(libs.androidx.credentials)
+   // implementation(libs.androidx.credentials.play.services.auth)
 
     // Google ID
-    implementation(libs.googleid)
-    implementation(libs.firebase.database.ktx)
+    //implementation(libs.googleid)
+   // implementation(libs.firebase.database.ktx)
 
 
     // Debugging
@@ -77,10 +83,10 @@ dependencies {
     // Hilt for Dependency Injection
     implementation(libs.hilt.android)
     ksp(libs.hilt.android.compiler)
-    implementation(libs.hilt.navigation.compiler)
+//    implementation(libs.hilt.navigation.compiler)
 
     // Kotlin Serializations
-    implementation(libs.kotlinx.serialization)
+    //implementation(libs.kotlinx.serialization)
 
     // Testing
     testImplementation(libs.junit)
@@ -101,6 +107,6 @@ dependencies {
     // MockK
     testImplementation (libs.mockk)
 
-    implementation (libs.material3)
-    implementation(libs.gson)
+    //implementation (libs.material3)
+    //implementation(libs.gson)
 }

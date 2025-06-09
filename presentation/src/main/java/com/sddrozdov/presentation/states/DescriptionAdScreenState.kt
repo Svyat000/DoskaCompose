@@ -1,4 +1,4 @@
-package com.sddrozdov.doskacompose.presentation.states
+package com.sddrozdov.presentation.states
 
 data class DescriptionAdScreenState(
     val test3: String = "",

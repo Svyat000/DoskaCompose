@@ -1,16 +1,16 @@
-package com.sddrozdov.doskacompose.presentation.viewModels
+package com.sddrozdov.presentation.viewModels
 
 import androidx.lifecycle.ViewModel
-import com.sddrozdov.doskacompose.domain.useCase.AdUseCase
-import com.sddrozdov.doskacompose.presentation.states.FavoriteAdScreenEvent
-import com.sddrozdov.doskacompose.presentation.states.FavoriteAdScreenState
+import com.sddrozdov.domain.repository.AuthRepository
+import com.sddrozdov.presentation.states.FavoriteAdScreenEvent
+import com.sddrozdov.presentation.states.FavoriteAdScreenState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import javax.inject.Inject
 
 @HiltViewModel
-class FavoriteAdViewModel @Inject constructor(private val useCase: AdUseCase) : ViewModel() {
+class FavoriteAdViewModel @Inject constructor(private val repository: AuthRepository) : ViewModel() {
 
 
     private val _state = MutableStateFlow(FavoriteAdScreenState())

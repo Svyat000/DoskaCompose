@@ -1,4 +1,4 @@
-package com.sddrozdov.doskacompose.presentation.screens
+package com.sddrozdov.presentation.screens
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.material3.Text
@@ -7,9 +7,9 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.sddrozdov.doskacompose.presentation.states.DescriptionAdScreenEvent
-import com.sddrozdov.doskacompose.presentation.states.DescriptionAdScreenState
-import com.sddrozdov.doskacompose.presentation.viewModels.DescriptionAdViewModel
+import com.sddrozdov.presentation.states.DescriptionAdScreenEvent
+import com.sddrozdov.presentation.states.DescriptionAdScreenState
+import com.sddrozdov.presentation.viewModels.DescriptionAdViewModel
 
 @Composable
 fun DescriptionAdScreen(

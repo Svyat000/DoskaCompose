@@ -1,9 +1,10 @@
 package com.sddrozdov.doskacompose.di
 
-import com.sddrozdov.doskacompose.data.repository.AdRepositoryImpl
-import com.sddrozdov.doskacompose.data.repository.AuthRepositoryImpl
+
+import com.sddrozdov.dataa.repository.AdRepositoryImpl
+import com.sddrozdov.dataa.repository.AuthRepositoryImpl
+import com.sddrozdov.domain.repository.AuthRepository
 import com.sddrozdov.doskacompose.domain.repository.AdRepository
-import com.sddrozdov.doskacompose.domain.repository.AuthRepository
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn

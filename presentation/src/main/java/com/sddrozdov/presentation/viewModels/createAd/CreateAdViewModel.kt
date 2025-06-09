@@ -1,14 +1,14 @@
-package com.sddrozdov.doskacompose.presentation.viewModels.createAd
+package com.sddrozdov.presentation.viewModels.createAd
 
 import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
-import com.sddrozdov.doskacompose.R
 import com.sddrozdov.doskacompose.domain.models.Category
-import com.sddrozdov.doskacompose.presentation.states.createAd.CreateAdEvents
-import com.sddrozdov.doskacompose.presentation.states.createAd.CreateAdStates
+import com.sddrozdov.presentation.R
+import com.sddrozdov.presentation.states.createAd.CreateAdEvents
+import com.sddrozdov.presentation.states.createAd.CreateAdStates
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.Dispatchers

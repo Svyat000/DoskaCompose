@@ -1,4 +1,4 @@
-package com.sddrozdov.doskacompose.presentation.screens
+package com.sddrozdov.presentation.screens
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
@@ -28,6 +28,7 @@ import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -44,12 +45,12 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.content.ContextCompat
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.sddrozdov.doskacompose.R
-import com.sddrozdov.doskacompose.presentation.navigations.Screen
-import com.sddrozdov.doskacompose.presentation.states.AuthType
-import com.sddrozdov.doskacompose.presentation.states.RegisterScreenEvent
-import com.sddrozdov.doskacompose.presentation.states.RegisterScreenState
-import com.sddrozdov.doskacompose.presentation.viewModels.RegisterViewModel
+import com.sddrozdov.presentation.navigations.Screen
+import com.sddrozdov.presentation.states.AuthType
+import com.sddrozdov.presentation.states.RegisterScreenEvent
+import com.sddrozdov.presentation.states.RegisterScreenState
+import com.sddrozdov.presentation.R
+import com.sddrozdov.presentation.viewModels.RegisterViewModel
 
 @Composable
 fun RegisterScreen(

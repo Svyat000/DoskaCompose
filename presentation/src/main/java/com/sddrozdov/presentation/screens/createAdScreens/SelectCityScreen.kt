@@ -1,4 +1,4 @@
-package com.sddrozdov.doskacompose.presentation.screens.createAdScreens
+package com.sddrozdov.presentation.screens.createAdScreens
 
 import androidx.compose.runtime.Composable
 

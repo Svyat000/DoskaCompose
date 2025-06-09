@@ -1,4 +1,4 @@
-package com.sddrozdov.doskacompose.presentation.screens
+package com.sddrozdov.presentation.screens
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
@@ -44,11 +44,11 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.content.ContextCompat
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.sddrozdov.doskacompose.R
-import com.sddrozdov.doskacompose.presentation.navigations.Screen
-import com.sddrozdov.doskacompose.presentation.states.LoginScreenEvent
-import com.sddrozdov.doskacompose.presentation.states.LoginScreenState
-import com.sddrozdov.doskacompose.presentation.viewModels.LoginViewModel
+import com.sddrozdov.presentation.navigations.Screen
+import com.sddrozdov.presentation.states.LoginScreenEvent
+import com.sddrozdov.presentation.states.LoginScreenState
+import com.sddrozdov.presentation.R
+import com.sddrozdov.presentation.viewModels.LoginViewModel
 
 
 @Composable

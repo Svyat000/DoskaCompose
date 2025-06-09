@@ -1,4 +1,4 @@
-package com.sddrozdov.doskacompose.presentation.navigations
+package com.sddrozdov.presentation.navigations
 
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
@@ -6,15 +6,15 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import com.sddrozdov.doskacompose.presentation.screens.createAdScreens.CreateAdScreen
-import com.sddrozdov.doskacompose.presentation.screens.DescriptionAdScreen
-import com.sddrozdov.doskacompose.presentation.screens.DialogsScreen
-import com.sddrozdov.doskacompose.presentation.screens.FavoriteAdScreen
-import com.sddrozdov.doskacompose.presentation.screens.FilterScreen
-import com.sddrozdov.doskacompose.presentation.screens.LoginScreen
-import com.sddrozdov.doskacompose.presentation.screens.MainScreen
-import com.sddrozdov.doskacompose.presentation.screens.RegisterScreen
-import com.sddrozdov.doskacompose.presentation.screens.createAdScreens.SelectCategoryScreen
+import com.sddrozdov.presentation.screens.createAdScreens.CreateAdScreen
+import com.sddrozdov.presentation.screens.DescriptionAdScreen
+import com.sddrozdov.presentation.screens.DialogsScreen
+import com.sddrozdov.presentation.screens.FavoriteAdScreen
+import com.sddrozdov.presentation.screens.FilterScreen
+import com.sddrozdov.presentation.screens.LoginScreen
+import com.sddrozdov.presentation.screens.MainScreen
+import com.sddrozdov.presentation.screens.RegisterScreen
+import com.sddrozdov.presentation.screens.createAdScreens.SelectCategoryScreen
 import kotlinx.serialization.Serializable
 
 @Serializable

@@ -1,4 +1,4 @@
-package com.sddrozdov.doskacompose.presentation.screens
+package com.sddrozdov.presentation.screens
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -16,7 +16,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.tooling.preview.Preview
-import com.sddrozdov.doskacompose.R
+import com.sddrozdov.presentation.R
 
 @Composable
 fun AdCard(
@@ -104,10 +104,10 @@ fun AdCard(
                 )
             }
 
-            Divider(
-                color = Color(0xFFDFE6E9),
+            HorizontalDivider(
+                modifier = Modifier.padding(vertical = 8.dp),
                 thickness = 1.dp,
-                modifier = Modifier.padding(vertical = 8.dp)
+                color = Color(0xFFDFE6E9)
             )
 
             Row(

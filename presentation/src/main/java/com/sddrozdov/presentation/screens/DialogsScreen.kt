@@ -1,4 +1,4 @@
-package com.sddrozdov.doskacompose.presentation.screens
+package com.sddrozdov.presentation.screens
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.material3.Text
@@ -7,9 +7,9 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.sddrozdov.doskacompose.presentation.states.DialogsScreenEvent
-import com.sddrozdov.doskacompose.presentation.states.DialogsScreenState
-import com.sddrozdov.doskacompose.presentation.viewModels.DialogsViewModel
+import com.sddrozdov.presentation.states.DialogsScreenEvent
+import com.sddrozdov.presentation.states.DialogsScreenState
+import com.sddrozdov.presentation.viewModels.DialogsViewModel
 
 @Composable
 fun DialogsScreen(

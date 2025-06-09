@@ -11,13 +11,14 @@ import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
+
 import androidx.compose.ui.Modifier
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import com.sddrozdov.doskacompose.presentation.navigations.BottomBar
-import com.sddrozdov.doskacompose.presentation.navigations.MainNavigation
-import com.sddrozdov.doskacompose.presentation.navigations.Routes
-import com.sddrozdov.doskacompose.presentation.theme.DoskaComposeTheme
+import com.sddrozdov.presentation.navigations.BottomBar
+import com.sddrozdov.presentation.navigations.MainNavigation
+import com.sddrozdov.presentation.navigations.Routes
+import com.sddrozdov.presentation.theme.DoskaComposeTheme
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint

@@ -1,4 +1,4 @@
-package com.sddrozdov.doskacompose.presentation.states
+package com.sddrozdov.presentation.states
 
 data class FilterScreenState(
     val test1 : String = "",

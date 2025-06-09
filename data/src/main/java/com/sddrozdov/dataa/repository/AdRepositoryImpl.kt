@@ -3,7 +3,6 @@ package com.sddrozdov.dataa.repository
 import android.util.Log
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DatabaseReference
-import com.sddrozdov.dataa.dbNodes.DbNodes
 import com.sddrozdov.doskacompose.domain.models.Ad
 import com.sddrozdov.doskacompose.domain.repository.AdRepository
 import kotlinx.coroutines.Dispatchers
@@ -21,11 +20,11 @@ class AdRepositoryImpl @Inject constructor(
             val uid = firebaseAuth.currentUser?.uid
                 ?: return@withContext Result.failure(Exception("User not authenticated"))
 
-            val adKey = databaseReference.child(DbNodes.AD).push().key
+           // val adKey = databaseReference.child(com.sddrozdov.data.dbNodes.DbNodes.AD).push().key
                 ?: return@withContext Result.failure(Exception("Failed to generate ad key"))
 
             val adWithData = ad.copy(
-                key = adKey,
+           //     key = adKey,
                 uid = uid,
                 time = System.currentTimeMillis().toString(),
                 viewsCounter = "0",
@@ -35,7 +34,7 @@ class AdRepositoryImpl @Inject constructor(
             )
 
             val updates = hashMapOf<String, Any>(
-                "${DbNodes.AD}/$adKey" to adWithData,
+               // "${com.sddrozdov.doskacompose.di.dbNodes.DbNodes.AD}/$adKey" to adWithData,
                 // "${DbNodes.USERS}/$uid/${DbNodes.USER_ADS}/$adKey" to true
             )
             databaseReference.updateChildren(updates).await()

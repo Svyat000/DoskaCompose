@@ -1,10 +1,5 @@
 package com.sddrozdov.dataa.repository
 
-import androidx.credentials.Credential
-import androidx.credentials.CustomCredential
-import androidx.credentials.exceptions.ClearCredentialException
-import com.google.android.libraries.identity.googleid.GoogleIdTokenCredential
-import com.google.android.libraries.identity.googleid.GoogleIdTokenCredential.Companion.TYPE_GOOGLE_ID_TOKEN_CREDENTIAL
 import com.google.firebase.auth.EmailAuthProvider
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseAuthException
@@ -81,14 +76,21 @@ class AuthRepositoryImpl @Inject constructor(private val firebaseAuth: FirebaseA
         Result.failure(e)
     }
 
-    override suspend fun signInWithGoogle(googleSignInData: GoogleSignInData): Result<User> = try {
-        val firebaseCredential = GoogleAuthProvider.getCredential(googleSignInData.idToken, null)
-        val result = firebaseAuth.signInWithCredential(firebaseCredential).await()
-        val user = result.user ?: throw Exception("User is null")
-        Result.success(user.toDomainUser())
-    } catch (e: Exception) {
-        Result.failure(e)
+    override suspend fun signInWithGoogle(googleSignInData: GoogleSignInData): Result<User> {
+        return try {
+            val idToken = googleSignInData.idToken
+
+            val firebaseCredential = GoogleAuthProvider.getCredential(idToken, null)
+            val authResult = firebaseAuth.signInWithCredential(firebaseCredential).await()
+
+            val firebaseUser = authResult.user ?: throw Exception("Firebase user is null")
+
+            Result.success(firebaseUser.toDomainUser())
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
     }
+
 
     override suspend fun signOut(): Result<Unit> = try {
         firebaseAuth.signOut()

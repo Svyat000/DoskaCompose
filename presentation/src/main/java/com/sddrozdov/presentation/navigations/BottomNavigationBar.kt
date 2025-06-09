@@ -1,4 +1,4 @@
-package com.sddrozdov.doskacompose.presentation.navigations
+package com.sddrozdov.presentation.navigations
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
@@ -13,7 +13,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
-import com.sddrozdov.doskacompose.R
+import com.sddrozdov.presentation.R
 
 @Composable
 fun BottomBar(navController: NavHostController, currentRoute: String?) {

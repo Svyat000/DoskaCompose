@@ -1,4 +1,4 @@
-package com.sddrozdov.doskacompose.presentation.components
+package com.sddrozdov.presentation.components
 
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -11,7 +11,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
-import com.sddrozdov.doskacompose.R
+import com.sddrozdov.presentation.R
 
 
 @Composable

@@ -1,4 +1,4 @@
-package com.sddrozdov.doskacompose.presentation.states.createAd
+package com.sddrozdov.presentation.states.createAd
 
 import android.net.Uri
 import com.sddrozdov.doskacompose.domain.models.Category
