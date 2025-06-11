@@ -28,7 +28,6 @@ import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -43,13 +42,12 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.core.content.ContextCompat
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.sddrozdov.presentation.R
 import com.sddrozdov.presentation.navigations.Screen
 import com.sddrozdov.presentation.states.AuthType
 import com.sddrozdov.presentation.states.RegisterScreenEvent
 import com.sddrozdov.presentation.states.RegisterScreenState
-import com.sddrozdov.presentation.R
 import com.sddrozdov.presentation.viewModels.RegisterViewModel
 
 @Composable
@@ -96,20 +94,10 @@ fun RegisterView(
     onNavigateTo: (String) -> Unit
 ) {
 
-    val context = LocalContext.current
-
-    val primaryBackground = Color(ContextCompat.getColor(context, R.color.primaryBackground))
-    val cardBackground = Color(ContextCompat.getColor(context, R.color.cardBackground))
-    val accentColor = Color(ContextCompat.getColor(context, R.color.accentColor))
-    val googleButtonColor = Color(ContextCompat.getColor(context, R.color.googleButtonColor))
-    val textColor = Color(ContextCompat.getColor(context, R.color.textColor))
-    val secondaryTextColor = Color(ContextCompat.getColor(context, R.color.secondaryTextColor))
-    val textFieldOutline = Color(ContextCompat.getColor(context, R.color.textFieldOutline))
-
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(primaryBackground)
+            .background(AppColors.primaryBackground)
             .padding(16.dp)
     ) {
 
@@ -120,7 +108,7 @@ fun RegisterView(
                 .widthIn(max = 480.dp),
             shape = RoundedCornerShape(24.dp),
             elevation = CardDefaults.cardElevation(4.dp),
-            colors = CardDefaults.cardColors(containerColor = cardBackground)
+            colors = CardDefaults.cardColors(containerColor = AppColors.cardBackground)
         ) {
             Column(
                 modifier = Modifier
@@ -132,7 +120,7 @@ fun RegisterView(
                     fontSize = 28.sp,
                     fontWeight = FontWeight.SemiBold,
                     modifier = Modifier.padding(bottom = 24.dp),
-                    color = textColor
+                    color = AppColors.textColor
                 )
 
                 OutlinedTextField(
@@ -141,19 +129,19 @@ fun RegisterView(
                     label = {
                         Text(
                             text = stringResource(id = R.string.email),
-                            color = secondaryTextColor,
+                            color = AppColors.secondaryTextColor,
                             fontSize = 14.sp
                         )
                     },
                     colors = TextFieldDefaults.colors(
                         focusedContainerColor = Color.Transparent,
                         unfocusedContainerColor = Color.Transparent,
-                        focusedTextColor = textColor,
-                        unfocusedTextColor = textColor,
-                        focusedLabelColor = accentColor,
-                        unfocusedLabelColor = secondaryTextColor,
-                        focusedIndicatorColor = accentColor,
-                        unfocusedIndicatorColor = textFieldOutline,
+                        focusedTextColor = AppColors.textColor,
+                        unfocusedTextColor = AppColors.textColor,
+                        focusedLabelColor = AppColors.accentColor,
+                        unfocusedLabelColor = AppColors.secondaryTextColor,
+                        focusedIndicatorColor = AppColors.accentColor,
+                        unfocusedIndicatorColor = AppColors.textFieldOutline,
                     ),
                     shape = RoundedCornerShape(12.dp),
                     modifier = Modifier.fillMaxWidth(),
@@ -169,7 +157,7 @@ fun RegisterView(
                     label = {
                         Text(
                             text = stringResource(id = R.string.password),
-                            color = secondaryTextColor,
+                            color = AppColors.secondaryTextColor,
                             fontSize = 14.sp
                         )
                     },
@@ -177,12 +165,12 @@ fun RegisterView(
                     colors = TextFieldDefaults.colors(
                         focusedContainerColor = Color.Transparent,
                         unfocusedContainerColor = Color.Transparent,
-                        focusedTextColor = textColor,
-                        unfocusedTextColor = textColor,
-                        focusedLabelColor = accentColor,
-                        unfocusedLabelColor = secondaryTextColor,
-                        focusedIndicatorColor = accentColor,
-                        unfocusedIndicatorColor = textFieldOutline,
+                        focusedTextColor = AppColors.textColor,
+                        unfocusedTextColor = AppColors.textColor,
+                        focusedLabelColor = AppColors.accentColor,
+                        unfocusedLabelColor = AppColors.secondaryTextColor,
+                        focusedIndicatorColor = AppColors.accentColor,
+                        unfocusedIndicatorColor = AppColors.textFieldOutline,
                     ),
                     shape = RoundedCornerShape(12.dp),
                     modifier = Modifier.fillMaxWidth(),
@@ -199,10 +187,10 @@ fun RegisterView(
                         .height(50.dp),
                     shape = RoundedCornerShape(12.dp),
                     colors = ButtonDefaults.buttonColors(
-                        containerColor = googleButtonColor,
+                        containerColor = AppColors.googleButtonColor,
                         contentColor = Color.White
                     ),
-                    border = BorderStroke(1.dp, googleButtonColor)
+                    border = BorderStroke(1.dp, AppColors.googleButtonColor)
                 ) {
                     Row(
                         verticalAlignment = Alignment.CenterVertically,
@@ -230,7 +218,7 @@ fun RegisterView(
                         .height(50.dp),
                     shape = RoundedCornerShape(12.dp),
                     colors = ButtonDefaults.buttonColors(
-                        containerColor = accentColor,
+                        containerColor = AppColors.accentColor,
                         contentColor = Color.White
                     )
                 ) {
@@ -252,7 +240,7 @@ fun RegisterView(
             ) {
                 Text(
                     text = stringResource(id = R.string.already_have_an_acc),
-                    color = accentColor,
+                    color = AppColors.accentColor,
                     fontSize = 14.sp
                 )
             }

@@ -27,26 +27,25 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.core.content.ContextCompat
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.sddrozdov.doskacompose.domain.models.Category
 import com.sddrozdov.presentation.states.createAd.CreateAdEvents
 import com.sddrozdov.presentation.states.createAd.CreateAdStates
 import com.sddrozdov.presentation.viewModels.createAd.CreateAdViewModel
 import com.sddrozdov.presentation.R
+import com.sddrozdov.presentation.screens.AppColors
 
 
 @Composable
 fun SelectCategoryScreen(
     onNavigateTo: (String) -> Unit,
 ) {
-    val viewModel: CreateAdViewModel = hiltViewModel()
+    val viewModel = hiltViewModel<CreateAdViewModel>()
     val state by viewModel.state.collectAsState()
 
     LaunchedEffect(state.selectedCategoryId) {
@@ -69,17 +68,11 @@ fun SelectCategoryView(
     onEvent: (CreateAdEvents) -> Unit,
     onNavigateTo: (String) -> Unit
 ) {
-    val context = LocalContext.current
-
-    val primaryBackground = Color(ContextCompat.getColor(context, R.color.primaryBackground))
-    val cardBackground = Color(ContextCompat.getColor(context, R.color.cardBackground))
-    val textColor = Color(ContextCompat.getColor(context, R.color.textColor))
-    val accentColor = Color(ContextCompat.getColor(context, R.color.accentColor))
 
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(primaryBackground)
+            .background(AppColors.primaryBackground)
             .padding(16.dp)
     ) {
         Card(
@@ -89,7 +82,7 @@ fun SelectCategoryView(
                 .widthIn(max = 480.dp),
             shape = RoundedCornerShape(24.dp),
             elevation = CardDefaults.cardElevation(4.dp),
-            colors = CardDefaults.cardColors(containerColor = cardBackground)
+            colors = CardDefaults.cardColors(containerColor = AppColors.cardBackground)
         ) {
             Column(
                 modifier = Modifier.padding(32.dp),
@@ -99,23 +92,23 @@ fun SelectCategoryView(
                     text = stringResource(R.string.select_category),
                     fontSize = 28.sp,
                     fontWeight = FontWeight.SemiBold,
-                    color = textColor,
+                    color = AppColors.textColor,
                     modifier = Modifier.padding(bottom = 24.dp)
                 )
 
                 Spacer(modifier = Modifier.height(16.dp))
 
                 when {
-                    state.isLoading -> LoadingIndicator(accentColor)
+                    state.isLoading -> LoadingIndicator(AppColors.accentColor)
                     state.error != null -> ErrorState(message = state.error)
                     else -> CategoryGrid(
                         categories = state.categories.take(10),
                         onCategorySelected = { categoryId ->
                             onEvent(CreateAdEvents.OnCategorySelected(categoryId))
                         },
-                        textColor = textColor,
-                        cardBackground = cardBackground,
-                        accentColor = accentColor
+                        textColor = AppColors.textColor,
+                        cardBackground = AppColors.cardBackground,
+                        accentColor = AppColors.accentColor
                     )
                 }
             }
