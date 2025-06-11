@@ -35,6 +35,7 @@ class AuthRepositoryImpl @Inject constructor(private val firebaseAuth: FirebaseA
     }
 
     override suspend fun signUp(email: String, password: String): Result<User> = try {
+        deleteCurrentUser()
         val result = firebaseAuth.createUserWithEmailAndPassword(email, password).await()
         val firebaseUser = result.user ?: throw Exception("User is null")
         Result.success(firebaseUser.toDomainUser())
@@ -43,6 +44,7 @@ class AuthRepositoryImpl @Inject constructor(private val firebaseAuth: FirebaseA
     }
 
     override suspend fun signIn(email: String, password: String): Result<User> = try {
+        deleteCurrentUser()
         val result = firebaseAuth.signInWithEmailAndPassword(email, password).await()
         val user = result.user ?: throw Exception("User is null")
 
@@ -82,6 +84,7 @@ class AuthRepositoryImpl @Inject constructor(private val firebaseAuth: FirebaseA
 
     override suspend fun signInWithGoogle(googleSignInData: GoogleSignInData): Result<User> {
         return try {
+            deleteCurrentUser()
             val idToken = googleSignInData.idToken
 
             val firebaseCredential = GoogleAuthProvider.getCredential(idToken, null)
@@ -111,5 +114,12 @@ class AuthRepositoryImpl @Inject constructor(private val firebaseAuth: FirebaseA
 
     override suspend fun getCurrentUser(): User? {
         return firebaseAuth.currentUser?.toDomainUser()
+    }
+
+    override suspend fun signInAnonymously(): Result<Unit> = try{
+        firebaseAuth.signInAnonymously().await()
+        Result.success(Unit)
+    }catch (e: FirebaseAuthException){
+       Result.failure(e)
     }
 }

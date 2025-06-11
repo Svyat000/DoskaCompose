@@ -56,11 +56,14 @@ class AuthUseCase @Inject constructor(private val repository: AuthRepository) {
 
     suspend fun signOut(): Result<Unit> {
         return repository.signOut()
-
     }
 
     suspend fun sendEmailForgotPassword(email: String): Result<Unit> {
         return repository.sendEmailForgotPassword(email)
+    }
+
+    suspend fun signInAnonymously(): Result<Unit>{
+        return repository.signInAnonymously()
     }
 
 }

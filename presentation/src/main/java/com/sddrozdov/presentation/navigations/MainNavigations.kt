@@ -20,6 +20,9 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 sealed class Screen(val route: String) {
+
+    interface ProtectedScreen
+
     @Serializable
     data object LoginScreen : Screen(Routes.LOGIN)
 
@@ -48,10 +51,12 @@ sealed class Screen(val route: String) {
     data object FavoriteAdScreen : Screen(Routes.FAVORITE_AD)
 
     @Serializable
-    data object SelectCategoryScreen : Screen(Routes.SELECT_CATEGORY_AD)
+    data object SelectCategoryScreen : Screen(Routes.SELECT_CATEGORY_AD),ProtectedScreen
 
     @Serializable
     data object SelectCountryAndCityScreen : Screen(Routes.SELECT_COUNTRY_AND_CITY_AD)
+
+
 }
 
 @Composable
