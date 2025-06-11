@@ -28,9 +28,6 @@ class CreateAdViewModel @Inject constructor(
     private val _state = MutableStateFlow(CreateAdStates())
     val state: StateFlow<CreateAdStates> = _state
 
-    private var countryCityMap: Map<String, List<String>> = emptyMap()
-
-
     init {
         loadCategories()
         loadCountries()
@@ -61,6 +58,15 @@ class CreateAdViewModel @Inject constructor(
                 selectCity(event.newCity)
             }
 
+            is CreateAdEvents.OnCountryAndCitySelected ->
+                _state.update { currentState ->
+                    currentState.copy(
+                        selectedCountry = event.country,
+                        selectedCity = event.city,
+                        countryAndCitySelected = true
+                    )
+                }
+
 
             is CreateAdEvents.ImagesSelected -> TODO()
 
@@ -75,7 +81,6 @@ class CreateAdViewModel @Inject constructor(
             CreateAdEvents.OnPublishClicked -> TODO()
             is CreateAdEvents.OnTitleChanged -> TODO()
             CreateAdEvents.OpenImagePicker -> TODO()
-
 
         }
     }

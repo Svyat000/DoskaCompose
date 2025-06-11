@@ -1,13 +1,26 @@
 package com.sddrozdov.presentation.states.createAd
 
 import android.net.Uri
+import com.sddrozdov.domain.models.Country
 import com.sddrozdov.doskacompose.domain.models.Category
 
 data class CreateAdStates(
 
+    val isAuthorized: Pair<Boolean, String>? = Pair(false, ""),
+
     val categories: List<Category> = emptyList(),
-    val error: String? = null,
     val selectedCategoryId: Long? = null,
+
+    val countries: List<Country> = emptyList(),
+    val selectedCountry: Country? = null,
+    val selectedCity: String? = null,
+    val isCountrySelectionVisible: Boolean = true,
+    val isCitySelectionVisible: Boolean = false,
+    val countryAndCitySelected:Boolean = false,
+
+
+    val error: String? = null,
+
 
     val title: String = "",
     val description: String = "",
@@ -15,18 +28,27 @@ data class CreateAdStates(
     val email: String = "",
     val phone: String = "",
     val index: String = "",
-    val country: String? = null,
-    val city: String? = null,
-    val category: String? = null,
+
+
     val images: List<Uri> = emptyList(),
+
     val isLoading: Boolean = false,
     val isPublished: Boolean = false,
-    val errorMessage: String? = null
+
 )
 
 sealed class CreateAdEvents {
 
+    data class IsAuthorized(val isAuthorized: Boolean, val message: String) : CreateAdEvents()
+
     data class OnCategorySelected(val categoryId: Long) : CreateAdEvents()
+
+    object ShowCountrySelection : CreateAdEvents()
+    data class OnCountrySelected(val newCountry: Country) : CreateAdEvents()
+    object ShowCitySelection : CreateAdEvents()
+    data class OnCitySelected(val newCity: String) : CreateAdEvents()
+    data class OnCountryAndCitySelected(val countryAndCitySelected: Boolean, val country: Country,val city: String): CreateAdEvents()
+
 
 
     data class OnTitleChanged(val newTitle: String) : CreateAdEvents()
@@ -35,8 +57,8 @@ sealed class CreateAdEvents {
     data class OnEmailChanged(val newEmail: String) : CreateAdEvents()
     data class OnPhoneChanged(val newPhone: String) : CreateAdEvents()
     data class OnIndexChanged(val newIndex: String) : CreateAdEvents()
-    data class OnCountrySelected(val newCountry: String) : CreateAdEvents()
-    data class OnCitySelected(val newCity: String) : CreateAdEvents()
+
+
 
     object OpenImagePicker : CreateAdEvents()
     data class ImagesSelected(val uris: List<Uri>) : CreateAdEvents()
