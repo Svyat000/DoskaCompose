@@ -70,8 +70,7 @@ fun SelectCategoryView(
     onEvent: (CreateAdEvents) -> Unit,
     onNavigateTo: (String) -> Unit
 ) {
-
-    Box(
+    Column(
         modifier = Modifier
             .fillMaxSize()
             .background(AppColors.primaryBackground)
@@ -79,7 +78,7 @@ fun SelectCategoryView(
     ) {
         Card(
             modifier = Modifier
-                .align(Alignment.Center)
+                .weight(1f)
                 .fillMaxWidth()
                 .widthIn(max = 480.dp),
             shape = RoundedCornerShape(24.dp),
@@ -105,30 +104,46 @@ fun SelectCategoryView(
                     state.error != null -> ErrorState(message = state.error)
                     else -> CategoryGrid(
                         categories = state.categories.take(10),
+                        selectedCategoryId = state.selectedCategoryId,
                         onCategorySelected = { categoryId ->
                             onEvent(CreateAdEvents.OnCategorySelected(categoryId))
                         },
                     )
                 }
-
             }
         }
+
+        Spacer(modifier = Modifier.height(16.dp))
+
         Button(
             onClick = {
                 state.selectedCategoryId?.let {
                     onNavigateTo(Screen.SelectCountryAndCityScreen.route)
                 }
-            }, enabled = state.selectedCategoryId != null,
+            },
+            enabled = state.selectedCategoryId != null,
             modifier = Modifier
                 .fillMaxWidth()
-                .height(50.dp),
+                .height(56.dp),
             shape = RoundedCornerShape(12.dp),
             colors = ButtonDefaults.buttonColors(
-                containerColor = AppColors.accentColor,
+                containerColor = if (state.selectedCategoryId != null) {
+                    AppColors.accentColor
+                } else {
+                    AppColors.disabledButtonColor
+                },
                 contentColor = Color.White
+            ),
+            elevation = ButtonDefaults.buttonElevation(
+                defaultElevation = 4.dp,
+                pressedElevation = 8.dp
             )
         ) {
-            Text(text = stringResource(id = R.string.next_screen), fontSize = 16.sp)
+            Text(
+                text = stringResource(id = R.string.next_screen),
+                fontSize = 18.sp,
+                fontWeight = FontWeight.Medium
+            )
         }
     }
 }
@@ -136,6 +151,7 @@ fun SelectCategoryView(
 @Composable
 fun CategoryGrid(
     categories: List<Category>,
+    selectedCategoryId: Long?,
     onCategorySelected: (Long) -> Unit,
 ) {
     LazyVerticalGrid(
@@ -147,6 +163,7 @@ fun CategoryGrid(
         items(categories) { category ->
             CategoryItem(
                 category = category,
+                isSelected = selectedCategoryId == category.id.toLong(),
                 onClick = { onCategorySelected(category.id.toLong()) },
             )
         }
@@ -156,6 +173,7 @@ fun CategoryGrid(
 @Composable
 fun CategoryItem(
     category: Category,
+    isSelected: Boolean,
     onClick: () -> Unit,
 ) {
     Card(
@@ -164,17 +182,30 @@ fun CategoryItem(
             .fillMaxWidth()
             .padding(vertical = 6.dp),
         shape = RoundedCornerShape(12.dp),
-        elevation = CardDefaults.cardElevation(2.dp),
-        colors = CardDefaults.cardColors(containerColor = AppColors.cardBackground),
-        border = BorderStroke(1.dp, AppColors.accentColor)
-    ) {
-        Text(
-            text = category.name,
-            fontSize = 16.sp,
-            fontWeight = FontWeight.Medium,
-            color = AppColors.textColor,
-            modifier = Modifier.padding(16.dp)
+        elevation = CardDefaults.cardElevation(if (isSelected) 8.dp else 2.dp),
+        colors = CardDefaults.cardColors(
+            containerColor = if (isSelected) {
+                AppColors.selectedCategoryColor
+            } else {
+                AppColors.cardBackground
+            }
+        ),
+        border = BorderStroke(
+            width = if (isSelected) 2.dp else 1.dp,
+            color = if (isSelected) AppColors.accentColor else AppColors.borderColor
         )
+    ) {
+        Box(
+            contentAlignment = Alignment.Center,
+            modifier = Modifier.padding(16.dp)
+        ) {
+            Text(
+                text = category.name,
+                fontSize = 16.sp,
+                fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Medium,
+                color = if (isSelected) AppColors.accentColor else AppColors.textColor
+            )
+        }
     }
 }
 

@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -69,16 +70,15 @@ fun SelectCountryAndCityView(
     onEvent: (CreateAdEvents) -> Unit,
     onNavigateTo: (String) -> Unit
 ) {
-    Box(
+    Column(
         modifier = Modifier
             .fillMaxSize()
             .background(AppColors.primaryBackground)
             .padding(16.dp)
-    )
-    {
+    ) {
         Card(
             modifier = Modifier
-                .align(Alignment.Center)
+                .weight(1f)
                 .fillMaxWidth()
                 .widthIn(max = 480.dp),
             shape = RoundedCornerShape(24.dp),
@@ -108,7 +108,8 @@ fun SelectCountryAndCityView(
                         Text(
                             text = "Страна: ${state.selectedCountry.name}",
                             fontSize = 16.sp,
-                            color = AppColors.textColor,
+                            color = AppColors.accentColor,
+                            fontWeight = FontWeight.Bold,
                             modifier = Modifier.padding(bottom = 8.dp)
                         )
                     }
@@ -117,7 +118,8 @@ fun SelectCountryAndCityView(
                         Text(
                             text = "Город: ${state.selectedCity}",
                             fontSize = 16.sp,
-                            color = AppColors.textColor
+                            color = AppColors.accentColor,
+                            fontWeight = FontWeight.Bold
                         )
                     }
                 }
@@ -132,8 +134,16 @@ fun SelectCountryAndCityView(
                         modifier = Modifier.weight(1f),
                         shape = RoundedCornerShape(12.dp),
                         colors = ButtonDefaults.buttonColors(
-                            containerColor = if (!state.isCountrySelectionVisible) AppColors.accentColor else AppColors.secondaryTextColor,
+                            containerColor = if (!state.isCountrySelectionVisible) {
+                                AppColors.accentColor
+                            } else {
+                                AppColors.disabledButtonColor
+                            },
                             contentColor = Color.White
+                        ),
+                        elevation = ButtonDefaults.buttonElevation(
+                            defaultElevation = 4.dp,
+                            pressedElevation = 8.dp
                         )
                     ) {
                         Text("Страны", fontSize = 16.sp)
@@ -147,9 +157,16 @@ fun SelectCountryAndCityView(
                         modifier = Modifier.weight(1f),
                         shape = RoundedCornerShape(12.dp),
                         colors = ButtonDefaults.buttonColors(
-                            containerColor = if (state.selectedCountry != null && !state.isCitySelectionVisible)
-                                AppColors.accentColor else AppColors.secondaryTextColor,
+                            containerColor = if (state.selectedCountry != null && !state.isCitySelectionVisible) {
+                                AppColors.accentColor
+                            } else {
+                                AppColors.disabledButtonColor
+                            },
                             contentColor = Color.White
+                        ),
+                        elevation = ButtonDefaults.buttonElevation(
+                            defaultElevation = 4.dp,
+                            pressedElevation = 8.dp
                         )
                     ) {
                         Text("Города", fontSize = 16.sp)
@@ -161,12 +178,13 @@ fun SelectCountryAndCityView(
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .height(300.dp)
+                        .fillMaxHeight()
                 ) {
                     when {
                         state.isCountrySelectionVisible -> {
                             CountrySelectionList(
                                 countries = state.countries,
+                                selectedCountry = state.selectedCountry,
                                 onCountrySelected = { onEvent(CreateAdEvents.OnCountrySelected(it)) },
                             )
                         }
@@ -174,34 +192,53 @@ fun SelectCountryAndCityView(
                         state.isCitySelectionVisible && state.selectedCountry != null -> {
                             CitySelectionList(
                                 cities = state.selectedCountry.cities,
+                                selectedCity = state.selectedCity,
                                 onCitySelected = { onEvent(CreateAdEvents.OnCitySelected(it)) },
                             )
                         }
                     }
                 }
-
-                Spacer(modifier = Modifier.height(24.dp))
-
-                Button(
-                    onClick = {
-                        if (state.selectedCity != null) {
-                            onEvent(CreateAdEvents.OnCountryAndCitySelected(true))
-                            onNavigateTo(Screen.MainScreen.route)
-                        }
-                    },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(50.dp),
-                    shape = RoundedCornerShape(12.dp),
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = AppColors.accentColor,
-                        contentColor = Color.White
-                    ),
-                    enabled = state.selectedCity != null
-                ) {
-                    Text(text = "Подтвердить", fontSize = 16.sp)
-                }
             }
+        }
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        Button(
+            onClick = {
+                if (state.selectedCity != null) {
+                    onEvent(
+                        CreateAdEvents.OnCountryAndCitySelected(
+                            true,
+                            state.selectedCountry!!,
+                            state.selectedCity
+                        )
+                    )
+                    onNavigateTo(Screen.MainScreen.route)
+                }
+            },
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(56.dp),
+            shape = RoundedCornerShape(12.dp),
+            colors = ButtonDefaults.buttonColors(
+                containerColor = if (state.selectedCity != null) {
+                    AppColors.accentColor
+                } else {
+                    AppColors.disabledButtonColor
+                },
+                contentColor = Color.White
+            ),
+            elevation = ButtonDefaults.buttonElevation(
+                defaultElevation = 4.dp,
+                pressedElevation = 8.dp
+            ),
+            enabled = state.selectedCity != null
+        ) {
+            Text(
+                text = "Далее",
+                fontSize = 18.sp,
+                fontWeight = FontWeight.Medium
+            )
         }
     }
 }
@@ -209,12 +246,14 @@ fun SelectCountryAndCityView(
 @Composable
 private fun CountrySelectionList(
     countries: List<Country>,
+    selectedCountry: Country?,
     onCountrySelected: (Country) -> Unit,
 ) {
     LazyColumn {
         items(countries) { country ->
             CountryCityItem(
                 name = country.name,
+                isSelected = selectedCountry?.name == country.name,
                 onClick = { onCountrySelected(country) },
             )
         }
@@ -224,12 +263,14 @@ private fun CountrySelectionList(
 @Composable
 private fun CitySelectionList(
     cities: List<String>,
+    selectedCity: String?,
     onCitySelected: (String) -> Unit,
 ) {
     LazyColumn {
         items(cities) { city ->
             CountryCityItem(
                 name = city,
+                isSelected = selectedCity == city,
                 onClick = { onCitySelected(city) },
             )
         }
@@ -239,6 +280,7 @@ private fun CitySelectionList(
 @Composable
 private fun CountryCityItem(
     name: String,
+    isSelected: Boolean = false,
     onClick: () -> Unit,
 ) {
     Card(
@@ -248,15 +290,24 @@ private fun CountryCityItem(
             .clickable(onClick = onClick),
         shape = RoundedCornerShape(12.dp),
         colors = CardDefaults.cardColors(
-            containerColor = Color.Transparent,
-            contentColor = AppColors.textColor
+            containerColor = if (isSelected) {
+                AppColors.selectedItemColor
+            } else {
+                AppColors.cardBackground
+            }
         ),
-        border = BorderStroke(1.dp, AppColors.accentColor.copy(alpha = 0.3f))
+        border = BorderStroke(
+            width = if (isSelected) 2.dp else 1.dp,
+            color = if (isSelected) AppColors.accentColor else AppColors.borderColor
+        ),
+        elevation = CardDefaults.cardElevation(if (isSelected) 8.dp else 2.dp)
     ) {
         Text(
             text = name,
             modifier = Modifier.padding(16.dp),
-            fontSize = 16.sp
+            fontSize = 16.sp,
+            fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Normal,
+            color = if (isSelected) AppColors.accentColor else AppColors.textColor
         )
     }
 }
