@@ -78,7 +78,7 @@ dependencies {
     implementation(libs.hilt.navigation.compiler)
 
 // Gson для JSON сериализации
-    implementation(libs.gson)
+    api(libs.gson)
 
 // Тестирование
     testImplementation(libs.junit)

@@ -16,12 +16,13 @@ import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -34,11 +35,12 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.sddrozdov.doskacompose.domain.models.Category
+import com.sddrozdov.presentation.AppColors
+import com.sddrozdov.presentation.R
+import com.sddrozdov.presentation.navigations.Screen
 import com.sddrozdov.presentation.states.createAd.CreateAdEvents
 import com.sddrozdov.presentation.states.createAd.CreateAdStates
 import com.sddrozdov.presentation.viewModels.createAd.CreateAdViewModel
-import com.sddrozdov.presentation.R
-import com.sddrozdov.presentation.screens.AppColors
 
 
 @Composable
@@ -48,11 +50,11 @@ fun SelectCategoryScreen(
     val viewModel = hiltViewModel<CreateAdViewModel>()
     val state by viewModel.state.collectAsState()
 
-    LaunchedEffect(state.selectedCategoryId) {
-        state.selectedCategoryId?.let { categoryId ->
-            onNavigateTo("some_route_for_category_$categoryId")
-        }
-    }
+//    LaunchedEffect(state.selectedCategoryId) {
+//        state.selectedCategoryId?.let {
+//            onNavigateTo(Screen.SelectCountryAndCityScreen.route)
+//        }
+//    }
 
     SelectCategoryView(
         state = state,
@@ -99,19 +101,34 @@ fun SelectCategoryView(
                 Spacer(modifier = Modifier.height(16.dp))
 
                 when {
-                    state.isLoading -> LoadingIndicator(AppColors.accentColor)
+                    state.isLoading -> LoadingIndicator()
                     state.error != null -> ErrorState(message = state.error)
                     else -> CategoryGrid(
                         categories = state.categories.take(10),
                         onCategorySelected = { categoryId ->
                             onEvent(CreateAdEvents.OnCategorySelected(categoryId))
                         },
-                        textColor = AppColors.textColor,
-                        cardBackground = AppColors.cardBackground,
-                        accentColor = AppColors.accentColor
                     )
                 }
+
             }
+        }
+        Button(
+            onClick = {
+                state.selectedCategoryId?.let {
+                    onNavigateTo(Screen.SelectCountryAndCityScreen.route)
+                }
+            }, enabled = state.selectedCategoryId != null,
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(50.dp),
+            shape = RoundedCornerShape(12.dp),
+            colors = ButtonDefaults.buttonColors(
+                containerColor = AppColors.accentColor,
+                contentColor = Color.White
+            )
+        ) {
+            Text(text = stringResource(id = R.string.next_screen), fontSize = 16.sp)
         }
     }
 }
@@ -120,9 +137,6 @@ fun SelectCategoryView(
 fun CategoryGrid(
     categories: List<Category>,
     onCategorySelected: (Long) -> Unit,
-    textColor: Color,
-    cardBackground: Color,
-    accentColor: Color
 ) {
     LazyVerticalGrid(
         columns = GridCells.Fixed(2),
@@ -134,9 +148,6 @@ fun CategoryGrid(
             CategoryItem(
                 category = category,
                 onClick = { onCategorySelected(category.id.toLong()) },
-                textColor = textColor,
-                cardBackground = cardBackground,
-                accentColor = accentColor
             )
         }
     }
@@ -146,9 +157,6 @@ fun CategoryGrid(
 fun CategoryItem(
     category: Category,
     onClick: () -> Unit,
-    textColor: Color,
-    cardBackground: Color,
-    accentColor: Color
 ) {
     Card(
         onClick = onClick,
@@ -157,28 +165,28 @@ fun CategoryItem(
             .padding(vertical = 6.dp),
         shape = RoundedCornerShape(12.dp),
         elevation = CardDefaults.cardElevation(2.dp),
-        colors = CardDefaults.cardColors(containerColor = cardBackground),
-        border = BorderStroke(1.dp, accentColor)
+        colors = CardDefaults.cardColors(containerColor = AppColors.cardBackground),
+        border = BorderStroke(1.dp, AppColors.accentColor)
     ) {
         Text(
             text = category.name,
             fontSize = 16.sp,
             fontWeight = FontWeight.Medium,
-            color = textColor,
+            color = AppColors.textColor,
             modifier = Modifier.padding(16.dp)
         )
     }
 }
 
 @Composable
-fun LoadingIndicator(accentColor: Color) {
+fun LoadingIndicator() {
     Box(
         modifier = Modifier
             .fillMaxWidth()
             .padding(32.dp),
         contentAlignment = Alignment.Center
     ) {
-        CircularProgressIndicator(color = accentColor)
+        CircularProgressIndicator(color = AppColors.accentColor)
     }
 }
 

@@ -1,4 +1,4 @@
-package com.sddrozdov.dataa.repository.di
+package com.sddrozdov.doskacompose.di
 
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DatabaseReference

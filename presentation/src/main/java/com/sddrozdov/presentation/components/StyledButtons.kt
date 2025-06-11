@@ -8,10 +8,8 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
-import androidx.core.content.ContextCompat
-import com.sddrozdov.presentation.R
+import com.sddrozdov.presentation.AppColors
 
 
 @Composable
@@ -20,7 +18,6 @@ fun StyledButton(
     onClick: () -> Unit,
     content: @Composable ()-> Unit
 ){
-    val context = LocalContext.current
 
     Button(
         onClick = onClick,
@@ -29,7 +26,7 @@ fun StyledButton(
             .height(50.dp),
         shape = RoundedCornerShape(12.dp),
         colors = ButtonDefaults.buttonColors(
-            containerColor = Color(ContextCompat.getColor(context, R.color.accentColor)),
+            containerColor = AppColors.accentColor,
             contentColor = Color.White
         )
     ) {

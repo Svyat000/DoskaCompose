@@ -6,7 +6,7 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import com.sddrozdov.presentation.screens.createAdScreens.CreateAdScreen
+//import com.sddrozdov.presentation.screens.createAdScreens.CreateAdScreen
 import com.sddrozdov.presentation.screens.DescriptionAdScreen
 import com.sddrozdov.presentation.screens.DialogsScreen
 import com.sddrozdov.presentation.screens.FavoriteAdScreen
@@ -15,6 +15,7 @@ import com.sddrozdov.presentation.screens.LoginScreen
 import com.sddrozdov.presentation.screens.MainScreen
 import com.sddrozdov.presentation.screens.RegisterScreen
 import com.sddrozdov.presentation.screens.createAdScreens.SelectCategoryScreen
+import com.sddrozdov.presentation.screens.createAdScreens.SelectCountryAndCityScreen
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -48,6 +49,9 @@ sealed class Screen(val route: String) {
 
     @Serializable
     data object SelectCategoryScreen : Screen(Routes.SELECT_CATEGORY_AD)
+
+    @Serializable
+    data object SelectCountryAndCityScreen : Screen(Routes.SELECT_COUNTRY_AND_CITY_AD)
 }
 
 @Composable
@@ -100,13 +104,13 @@ fun MainNavigation(
         }
         composable<Screen.ChatScreen> { }
 
-        composable(Screen.CreateAdScreen.route) {
-            CreateAdScreen(
-                onNavigateTo = { route ->
-                    navHostController.navigate(route)
-                }
-            )
-        }
+//        composable(Screen.CreateAdScreen.route) {
+//            CreateAdScreen(
+//                onNavigateTo = { route ->
+//                    navHostController.navigate(route)
+//                }
+//            )
+//        }
 
         composable(Screen.DescriptionAdScreen.route) {
             DescriptionAdScreen(
@@ -129,6 +133,13 @@ fun MainNavigation(
                 }
             )
         }
+        composable(Screen.SelectCountryAndCityScreen.route) {
+            SelectCountryAndCityScreen(
+                onNavigateTo = { route ->
+                    navHostController.navigate(route)
+                }
+            )
+        }
     }
 }
 
@@ -143,4 +154,5 @@ object Routes {
     const val DESCRIPTION_AD = "description_ad_screen"
     const val FAVORITE_AD = "favorite_ad_screen"
     const val SELECT_CATEGORY_AD = "select_category_ad_screen"
+    const val SELECT_COUNTRY_AND_CITY_AD = "select_country_and_city_ad_screen"
 }

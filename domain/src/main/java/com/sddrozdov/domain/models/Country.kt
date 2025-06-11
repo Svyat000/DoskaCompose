@@ -1,4 +1,4 @@
-package com.sddrozdov.doskacompose.domain.models
+package com.sddrozdov.domain.models
 
 data class Country(
     val name: String,
