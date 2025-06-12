@@ -7,6 +7,7 @@ import androidx.credentials.Credential
 import androidx.credentials.CredentialManager
 import androidx.credentials.CustomCredential
 import androidx.credentials.GetCredentialRequest
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.android.libraries.identity.googleid.GetGoogleIdOption
@@ -24,14 +25,24 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+const val LOGIN_STATE = "login_state"
+
 @HiltViewModel
 class LoginViewModel @Inject constructor(
     private val authUseCase: AuthUseCase,
-    @ApplicationContext private val context: Context
+    @ApplicationContext private val context: Context,
+    private val savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
 
-    private val _state = MutableStateFlow(LoginScreenState())
+    private val _state =
+        MutableStateFlow(savedStateHandle.get<LoginScreenState>(LOGIN_STATE) ?: LoginScreenState())
     val state: StateFlow<LoginScreenState> = _state
+
+    init {
+        viewModelScope.launch {
+            _state.collect { savedStateHandle[LOGIN_STATE] = it }
+        }
+    }
 
     private val _snackbarMessage = MutableStateFlow<Int?>(null)
     val snackbarMessage: StateFlow<Int?> = _snackbarMessage
