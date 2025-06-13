@@ -16,4 +16,5 @@ interface AuthRepository {
     suspend fun sendEmailForgotPassword(email: String) : Result<Unit>
     suspend fun getCurrentUser(): User?
     suspend fun signInAnonymously() : Result<Unit>
+    suspend fun isUserAnonymous(): Boolean
 }

@@ -116,10 +116,13 @@ class AuthRepositoryImpl @Inject constructor(private val firebaseAuth: FirebaseA
         return firebaseAuth.currentUser?.toDomainUser()
     }
 
-    override suspend fun signInAnonymously(): Result<Unit> = try{
+    override suspend fun signInAnonymously(): Result<Unit> = try {
         firebaseAuth.signInAnonymously().await()
         Result.success(Unit)
-    }catch (e: FirebaseAuthException){
-       Result.failure(e)
+    } catch (e: FirebaseAuthException) {
+        Result.failure(e)
     }
+
+    override suspend fun isUserAnonymous(): Boolean =
+        firebaseAuth.currentUser?.isAnonymous ?: false
 }
