@@ -48,11 +48,11 @@ dependencies {
     api(libs.firebase.database.ktx)
 
 //  Тестирование
+    androidTestImplementation(platform(libs.androidx.compose.bom))
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
     androidTestImplementation(libs.androidx.ui.test.junit4)
-
 
 
 //

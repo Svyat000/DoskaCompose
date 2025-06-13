@@ -18,11 +18,13 @@ data class CreateAdStates(
     val isCitySelectionVisible: Boolean = false,
     val countryAndCitySelected:Boolean = false,
 
+    val title: String = "",
+
 
     val error: String? = null,
 
 
-    val title: String = "",
+
     val description: String = "",
     val price: String = "",
     val email: String = "",
@@ -49,9 +51,9 @@ sealed class CreateAdEvents {
     data class OnCitySelected(val newCity: String) : CreateAdEvents()
     data class OnCountryAndCitySelected(val countryAndCitySelected: Boolean, val country: Country,val city: String): CreateAdEvents()
 
-
-
     data class OnTitleChanged(val newTitle: String) : CreateAdEvents()
+
+
     data class OnDescriptionChanged(val newDescription: String) : CreateAdEvents()
     data class OnPriceChanged(val newPrice: String) : CreateAdEvents()
     data class OnEmailChanged(val newEmail: String) : CreateAdEvents()

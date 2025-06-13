@@ -23,7 +23,7 @@ fun BottomBar(navController: NavHostController, currentRoute: String?) {
         Screen.SelectCategoryScreen,
         Screen.DialogsScreen,
         Screen.LoginScreen,
-        )
+    )
 
     NavigationBar {
         screens.forEach { screen ->

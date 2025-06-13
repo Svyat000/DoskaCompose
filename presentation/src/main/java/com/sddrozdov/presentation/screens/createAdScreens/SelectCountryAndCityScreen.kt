@@ -41,7 +41,6 @@ import com.sddrozdov.presentation.states.createAd.CreateAdEvents
 import com.sddrozdov.presentation.states.createAd.CreateAdStates
 import com.sddrozdov.presentation.viewModels.createAd.CreateAdViewModel
 
-
 @Composable
 fun SelectCountryAndCityScreen(
     onNavigateTo: (String) -> Unit
