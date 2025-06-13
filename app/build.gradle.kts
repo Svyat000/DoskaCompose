@@ -1,9 +1,9 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
-    alias(libs.plugins.google.gms.google.services)
     alias(libs.plugins.ksp)
     alias(libs.plugins.hilt)
+    alias(libs.plugins.google.gms.google.services)
 }
 
 android {
@@ -45,33 +45,22 @@ dependencies {
     implementation(project(":domain"))
     implementation(project(":data"))
 
-    // AndroidX Core
-    implementation(libs.androidx.core.ktx)
-    implementation(libs.androidx.lifecycle.runtime.ktx)
-    implementation(libs.androidx.activity.compose)
-    implementation(libs.firebase.common.ktx)
 
     // Hilt for Dependency Injection
     implementation(libs.hilt.android)
     ksp(libs.hilt.android.compiler)
 
+    // Firebase
+    implementation(libs.firebase.common.ktx)
 
-//    // Testing
+    // AndroidX Core
+    implementation(libs.androidx.core.ktx)
+    implementation(libs.androidx.lifecycle.runtime.ktx)
+
+//    //  Тестирование
 //    testImplementation(libs.junit)
 //    androidTestImplementation(libs.androidx.junit)
 //    androidTestImplementation(libs.androidx.espresso.core)
-//    androidTestImplementation(platform(libs.androidx.compose.bom))
 //    androidTestImplementation(libs.androidx.ui.test.junit4)
-//        //androidTestImplementation (libs.hilt.android.testing)
-//
-//    //Testing coroutines
-//    testImplementation (libs.kotlinx.coroutines.test)
-//
-//    // Mockito
-//    testImplementation (libs.mockito.core)
-//    testImplementation (libs.mockito.inline)
-//    testImplementation (libs.kotlin.test)
-
-    // MockK testImplementation (libs.mockk)
 
 }

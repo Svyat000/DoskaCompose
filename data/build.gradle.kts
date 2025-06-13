@@ -26,32 +26,46 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_17
-        targetCompatibility = JavaVersion.VERSION_17
+        sourceCompatibility = JavaVersion.VERSION_11
+        targetCompatibility = JavaVersion.VERSION_11
     }
     kotlinOptions {
-        jvmTarget = "17"
+        jvmTarget = "11"
     }
 }
 
 dependencies {
 
+    implementation(project(":domain"))
+
+    // Hilt for Dependency Injection
     implementation(libs.hilt.android)
     ksp(libs.hilt.android.compiler)
 
-    implementation(libs.play.services.auth)
-    implementation(libs.androidx.core.ktx)
-    implementation(libs.androidx.appcompat)
+    //Firebase
+    implementation (platform(libs.firebase.bom))
     api(libs.firebase.auth.ktx)
-    implementation(libs.googleid)
     api(libs.firebase.database.ktx)
+
+//  Тестирование
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
+    androidTestImplementation(libs.androidx.ui.test.junit4)
 
-    implementation(libs.javax.inject)
 
-    implementation(project(":domain"))
+
+//
+//    implementation(libs.play.services.auth)
+//
+////    implementation(libs.androidx.core.ktx)
+////    implementation(libs.androidx.appcompat)
+//
+
+//    implementation(libs.googleid)
+
+
+
 
 
 }

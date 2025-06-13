@@ -44,51 +44,53 @@ dependencies {
 
     implementation(project(":domain"))
 
-// AndroidX Credentials
-    implementation(libs.androidx.credentials)
-    implementation(libs.androidx.credentials.play.services.auth)
-
-// AndroidX Core
-    implementation(libs.androidx.core.ktx)
-    implementation(libs.androidx.appcompat)
-    implementation(libs.androidx.lifecycle.runtime.ktx)
-    implementation (libs.androidx.lifecycle.viewmodel.savedstate)
-
-// Kotlin Serialization
-    implementation(libs.kotlinx.serialization)
-
-// Jetpack Compose BOM (управление версиями Compose)
-    implementation(platform(libs.androidx.compose.bom))
-
-// Jetpack Compose UI и навигация
-    implementation(libs.androidx.activity.compose)
-    implementation(libs.androidx.navigation.compose)
-    implementation(libs.androidx.ui.tooling.preview.android)
-
-// Material design
-    implementation(libs.androidx.material3.android)
-
-// Google ID (Google Sign-In)
-    implementation(libs.googleid)
-
-// Firebase Auth
-    implementation(libs.firebase.auth.ktx)
-
-// Hilt Dependency Injection
+    // Hilt for Dependency Injection
     implementation(libs.hilt.android)
     ksp(libs.hilt.android.compiler)
     implementation(libs.hilt.navigation.compiler)
 
-// Gson для JSON сериализации
+    //Gson для JSON сериализации
     api(libs.gson)
 
-// Тестирование
-    testImplementation(libs.junit)
-    androidTestImplementation(libs.androidx.junit)
-    androidTestImplementation(libs.androidx.espresso.core)
+    // AndroidX Credentials
+    implementation(libs.androidx.credentials)
+    implementation(libs.androidx.credentials.play.services.auth)
+
+    // Google ID (Google Sign-In)
+    implementation(libs.googleid)
+
+    // Kotlin Serialization
+    implementation(libs.kotlinx.serialization)
+
+    //Material design
+    implementation(libs.androidx.material3)
 
     // Debugging
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
+    implementation(libs.androidx.ui)
+    implementation(libs.androidx.ui.graphics)
+    implementation(libs.androidx.ui.tooling.preview)
+
+    //Jetpack Compose BOM (управление версиями Compose)
+    implementation(platform(libs.androidx.compose.bom))
+
+    // Jetpack Compose UI и навигация
+    implementation(libs.androidx.activity.compose)
+    implementation(libs.androidx.navigation.compose)
+    implementation(libs.coil.compose)
+
+    // AndroidX Core
+    implementation(libs.androidx.core.ktx)
+//  implementation(libs.androidx.appcompat)
+    implementation(libs.androidx.lifecycle.viewmodel.savedstate)
+
+
+//  Тестирование
+    testImplementation(libs.junit)
+    androidTestImplementation(libs.androidx.junit)
+    androidTestImplementation(libs.androidx.espresso.core)
+    androidTestImplementation(libs.androidx.ui.test.junit4)
+
 
 }
