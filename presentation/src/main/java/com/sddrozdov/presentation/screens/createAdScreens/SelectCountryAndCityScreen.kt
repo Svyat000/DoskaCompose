@@ -34,16 +34,18 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.sddrozdov.domain.models.Country
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
 import com.sddrozdov.presentation.AppColors
 import com.sddrozdov.presentation.navigations.Screen
+import com.sddrozdov.presentation.states.createAd.Country
 import com.sddrozdov.presentation.states.createAd.CreateAdEvents
 import com.sddrozdov.presentation.states.createAd.CreateAdStates
 import com.sddrozdov.presentation.viewModels.createAd.CreateAdViewModel
 
 @Composable
 fun SelectCountryAndCityScreen(
-    onNavigateTo: (String) -> Unit
+    navHostController: NavHostController
 ) {
 
     val viewModel: CreateAdViewModel = hiltViewModel<CreateAdViewModel>()
@@ -58,8 +60,7 @@ fun SelectCountryAndCityScreen(
     SelectCountryAndCityView(
         state = state,
         onEvent = viewModel::onEvent,
-        onNavigateTo = onNavigateTo
-
+        navHostController = navHostController
     )
 }
 
@@ -67,7 +68,7 @@ fun SelectCountryAndCityScreen(
 fun SelectCountryAndCityView(
     state: CreateAdStates,
     onEvent: (CreateAdEvents) -> Unit,
-    onNavigateTo: (String) -> Unit
+    navHostController: NavHostController
 ) {
     Column(
         modifier = Modifier
@@ -202,43 +203,67 @@ fun SelectCountryAndCityView(
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        Button(
-            onClick = {
-                if (state.selectedCity != null) {
-                    onEvent(
-                        CreateAdEvents.OnCountryAndCitySelected(
-                            true,
-                            state.selectedCountry!!,
-                            state.selectedCity
-                        )
-                    )
-                    onNavigateTo(Screen.MainScreen.route)
-                }
-            },
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(56.dp),
-            shape = RoundedCornerShape(12.dp),
-            colors = ButtonDefaults.buttonColors(
-                containerColor = if (state.selectedCity != null) {
-                    AppColors.accentColor
-                } else {
-                    AppColors.disabledButtonColor
-                },
-                contentColor = Color.White
-            ),
-            elevation = ButtonDefaults.buttonElevation(
-                defaultElevation = 4.dp,
-                pressedElevation = 8.dp
-            ),
-            enabled = state.selectedCity != null
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            Text(
-                text = "Далее",
-                fontSize = 18.sp,
-                fontWeight = FontWeight.Medium
-            )
+            Button(
+                onClick = { navHostController.popBackStack() },
+                modifier = Modifier
+                    .weight(1f)
+                    .padding(end = 8.dp),
+                shape = RoundedCornerShape(12.dp),
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = AppColors.secondaryButtonColor,
+                    contentColor = Color.White
+                ),
+                elevation = ButtonDefaults.buttonElevation(
+                    defaultElevation = 4.dp,
+                    pressedElevation = 8.dp
+                )
+            ) {
+                Text("Назад", fontSize = 18.sp)
+            }
+
+            Button(
+                onClick = {
+                    if (state.selectedCity != null) {
+                        onEvent(
+                            CreateAdEvents.OnCountryAndCitySelected(
+                                true,
+                                state.selectedCountry!!,
+                                state.selectedCity
+                            )
+                        )
+                        navHostController.navigate(Screen.EditAdTitleScreen.route)
+                    }
+                },
+                modifier = Modifier
+                    .weight(1f)
+                    .height(56.dp),
+                shape = RoundedCornerShape(12.dp),
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = if (state.selectedCity != null) {
+                        AppColors.accentColor
+                    } else {
+                        AppColors.disabledButtonColor
+                    },
+                    contentColor = Color.White
+                ),
+                elevation = ButtonDefaults.buttonElevation(
+                    defaultElevation = 4.dp,
+                    pressedElevation = 8.dp
+                ),
+                enabled = state.selectedCity != null
+            ) {
+                Text(
+                    text = "Далее",
+                    fontSize = 18.sp,
+                    fontWeight = FontWeight.Medium
+                )
+            }
         }
+
     }
 }
 
@@ -313,7 +338,9 @@ private fun CountryCityItem(
 
 @Preview(showBackground = true)
 @Composable
-fun SelectCountryAndCityScreenPreview() {
+fun SelectCountryAndCityScreenPreview(
+) {
+    val fakeNavHostController = rememberNavController()
     val fakeState = CreateAdStates(
         countries = listOf(
             Country(name = "Россия", cities = listOf("Москва", "Санкт-Петербург", "Казань")),
@@ -328,6 +355,6 @@ fun SelectCountryAndCityScreenPreview() {
     SelectCountryAndCityView(
         state = fakeState,
         onEvent = { },
-        onNavigateTo = { }
+        navHostController = fakeNavHostController
     )
 }
