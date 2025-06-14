@@ -1,9 +1,10 @@
 package com.sddrozdov.presentation.states.createAd
 
 import android.net.Uri
-import com.sddrozdov.domain.models.Country
-import com.sddrozdov.doskacompose.domain.models.Category
+import android.os.Parcelable
+import kotlinx.parcelize.Parcelize
 
+@Parcelize
 data class CreateAdStates(
 
     val isAuthorized: Pair<Boolean, String>? = Pair(false, ""),
@@ -16,13 +17,12 @@ data class CreateAdStates(
     val selectedCity: String? = null,
     val isCountrySelectionVisible: Boolean = true,
     val isCitySelectionVisible: Boolean = false,
-    val countryAndCitySelected:Boolean = false,
+    val countryAndCitySelected: Boolean = false,
 
     val title: String = "",
 
 
     val error: String? = null,
-
 
 
     val description: String = "",
@@ -37,7 +37,20 @@ data class CreateAdStates(
     val isLoading: Boolean = false,
     val isPublished: Boolean = false,
 
-)
+    ) : Parcelable
+
+@Parcelize
+data class Category(
+    val id: Int,
+    val name: String,
+    val iconRes: Int? = null
+) : Parcelable
+
+@Parcelize
+data class Country(
+    val name: String,
+    val cities: List<String>
+) : Parcelable
 
 sealed class CreateAdEvents {
 
@@ -49,7 +62,11 @@ sealed class CreateAdEvents {
     data class OnCountrySelected(val newCountry: Country) : CreateAdEvents()
     object ShowCitySelection : CreateAdEvents()
     data class OnCitySelected(val newCity: String) : CreateAdEvents()
-    data class OnCountryAndCitySelected(val countryAndCitySelected: Boolean, val country: Country,val city: String): CreateAdEvents()
+    data class OnCountryAndCitySelected(
+        val countryAndCitySelected: Boolean,
+        val country: Country,
+        val city: String
+    ) : CreateAdEvents()
 
     data class OnTitleChanged(val newTitle: String) : CreateAdEvents()
 
@@ -59,7 +76,6 @@ sealed class CreateAdEvents {
     data class OnEmailChanged(val newEmail: String) : CreateAdEvents()
     data class OnPhoneChanged(val newPhone: String) : CreateAdEvents()
     data class OnIndexChanged(val newIndex: String) : CreateAdEvents()
-
 
 
     object OpenImagePicker : CreateAdEvents()
