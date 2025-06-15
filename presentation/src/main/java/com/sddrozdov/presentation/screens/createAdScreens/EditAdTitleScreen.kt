@@ -10,7 +10,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
@@ -20,12 +19,14 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardCapitalization
@@ -35,6 +36,7 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.sddrozdov.presentation.AppColors
+import com.sddrozdov.presentation.R
 import com.sddrozdov.presentation.navigations.Screen
 import com.sddrozdov.presentation.states.createAd.CreateAdEvents
 import com.sddrozdov.presentation.states.createAd.CreateAdStates
@@ -92,7 +94,7 @@ fun EnterAdTitleView(
                 Text(
                     text = "Кратко опишите, что вы предлагаете",
                     fontSize = 16.sp,
-                    color = AppColors.textSecondaryColor,
+                    color = AppColors.textColor,
                     modifier = Modifier.padding(bottom = 32.dp)
                 )
 
@@ -103,41 +105,52 @@ fun EnterAdTitleView(
                             onEvent(CreateAdEvents.OnTitleChanged(newText))
                         }
                     },
+                    label = {
+                        Text(
+                            text = stringResource(id = R.string.title_ad),
+                            color = AppColors.secondaryTextColor,
+                            fontSize = 14.sp
+                        )
+                    },
+                    colors = TextFieldDefaults.colors(
+                        focusedContainerColor = Color.Transparent,
+                        unfocusedContainerColor = Color.Transparent,
+                        focusedTextColor = AppColors.textColor,
+                        unfocusedTextColor = AppColors.textColor,
+                        focusedLabelColor = AppColors.accentColor,
+                        unfocusedLabelColor = AppColors.secondaryTextColor,
+                        focusedIndicatorColor = AppColors.accentColor,
+                        unfocusedIndicatorColor = AppColors.textFieldOutline,
+                    ),
+                    shape = RoundedCornerShape(12.dp),
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(bottom = 16.dp),
-                    shape = RoundedCornerShape(12.dp),
-                    textStyle = TextStyle(
-                        fontSize = 18.sp,
-                        color = AppColors.textColor
-                    ),
-                    placeholder = {
-                        Text(
-                            text = "Например: Продам ноутбук",
-                            color = AppColors.textSecondaryColor
-                        )
-                    },
+                    singleLine = true,
                     keyboardOptions = KeyboardOptions(
                         capitalization = KeyboardCapitalization.Sentences,
                         keyboardType = KeyboardType.Text
                     ),
-                    singleLine = true
+                    placeholder = {
+                        Text(
+                            text = "Например: Продам ноутбук",
+                            color = AppColors.secondaryTextColor
+                        )
+                    },
+                    textStyle = TextStyle(
+                        fontSize = 16.sp,
+                        color = AppColors.textColor
+                    ),
+                    trailingIcon = {
+                        if (state.title.isNotEmpty()) {
+                            Text(
+                                text = "${state.title.length}/100",
+                                color = if (state.title.length >= 100) Color.Red else AppColors.secondaryTextColor,
+                                fontSize = 12.sp
+                            )
+                        }
+                    }
                 )
-
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.End
-                ) {
-                    Text(
-                        text = "${state.title.length}/100",
-                        color = if (state.title.length == 100) {
-                            AppColors.errorColor
-                        } else {
-                            AppColors.textSecondaryColor
-                        },
-                        fontSize = 14.sp
-                    )
-                }
 
                 Spacer(modifier = Modifier.height(32.dp))
 
@@ -145,7 +158,7 @@ fun EnterAdTitleView(
                     Card(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(vertical = 16.dp),
+                            .padding(top = 8.dp),
                         shape = RoundedCornerShape(12.dp),
                         colors = CardDefaults.cardColors(
                             containerColor = AppColors.cardBackground
@@ -153,22 +166,23 @@ fun EnterAdTitleView(
                         border = BorderStroke(
                             width = 1.dp,
                             color = AppColors.borderColor
-                        )
+                        ),
+                        elevation = CardDefaults.cardElevation(2.dp)
                     ) {
                         Column(
                             modifier = Modifier.padding(16.dp)
                         ) {
                             Text(
-                                text = "Предпросмотр:",
-                                color = AppColors.textSecondaryColor,
+                                text = "Предпросмотр заголовка:",
+                                color = AppColors.secondaryTextColor,
                                 fontSize = 14.sp,
                                 modifier = Modifier.padding(bottom = 8.dp)
                             )
                             Text(
                                 text = state.title,
                                 color = AppColors.textColor,
-                                fontSize = 18.sp,
-                                fontWeight = FontWeight.Medium
+                                fontSize = 16.sp,
+                                fontWeight = FontWeight.Normal
                             )
                         }
                     }
@@ -184,10 +198,13 @@ fun EnterAdTitleView(
         ) {
             Button(
                 onClick = { navHostController.popBackStack() },
-                modifier = Modifier.weight(1f),
+                modifier = Modifier
+                    .weight(1f)
+                    .height(56.dp)
+                    .padding(end = 8.dp),
                 shape = RoundedCornerShape(12.dp),
                 colors = ButtonDefaults.buttonColors(
-                    containerColor = AppColors.secondaryButtonColor,
+                    containerColor = AppColors.accentColor,
                     contentColor = Color.White
                 ),
                 elevation = ButtonDefaults.buttonElevation(
@@ -195,17 +212,21 @@ fun EnterAdTitleView(
                     pressedElevation = 8.dp
                 )
             ) {
-                Text("Назад", fontSize = 18.sp)
+                Text(
+                    text = stringResource(id = R.string.back),
+                    fontSize = 18.sp,
+                    fontWeight = FontWeight.Medium
+                )
             }
-
-            Spacer(modifier = Modifier.width(16.dp))
 
             Button(
                 onClick = {
-                    //onEvent(CreateAdEvents.OnTitleSubmitted(state.title))
-                    navHostController.navigate(Screen.MainScreen.route)
+                    navHostController.navigate(Screen.EditAdDescriptionScreen.route)
                 },
-                modifier = Modifier.weight(1f),
+                enabled = state.title.isNotEmpty(),
+                modifier = Modifier
+                    .weight(1f)
+                    .height(56.dp),
                 shape = RoundedCornerShape(12.dp),
                 colors = ButtonDefaults.buttonColors(
                     containerColor = if (state.title.isNotEmpty()) {
@@ -218,10 +239,13 @@ fun EnterAdTitleView(
                 elevation = ButtonDefaults.buttonElevation(
                     defaultElevation = 4.dp,
                     pressedElevation = 8.dp
-                ),
-                enabled = state.title.isNotEmpty()
+                )
             ) {
-                Text("Далее", fontSize = 18.sp)
+                Text(
+                    text = stringResource(id = R.string.next_screen),
+                    fontSize = 18.sp,
+                    fontWeight = FontWeight.Medium
+                )
             }
         }
     }
