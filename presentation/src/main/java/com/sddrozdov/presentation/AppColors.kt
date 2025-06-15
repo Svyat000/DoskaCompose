@@ -15,4 +15,7 @@ object AppColors {
     val selectedItemColor = Color(0xFFE3F2FD)
     val disabledButtonColor = Color.Gray.copy(alpha = 0.5f)
     val borderColor = Color.LightGray
+    val textSecondaryColor = Color.Blue
+    val errorColor = Color.Red
+    val secondaryButtonColor = Color.Green
 }

@@ -21,11 +21,12 @@ data class CreateAdStates(
 
     val title: String = "",
 
+    val description: String = "",
 
     val error: String? = null,
 
 
-    val description: String = "",
+
     val price: String = "",
     val email: String = "",
     val phone: String = "",
@@ -70,8 +71,8 @@ sealed class CreateAdEvents {
 
     data class OnTitleChanged(val newTitle: String) : CreateAdEvents()
 
-
     data class OnDescriptionChanged(val newDescription: String) : CreateAdEvents()
+
     data class OnPriceChanged(val newPrice: String) : CreateAdEvents()
     data class OnEmailChanged(val newEmail: String) : CreateAdEvents()
     data class OnPhoneChanged(val newPhone: String) : CreateAdEvents()

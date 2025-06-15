@@ -1,6 +1,5 @@
 package com.sddrozdov.presentation.screens.createAdScreens
 
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -9,6 +8,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -42,15 +42,14 @@ import com.sddrozdov.presentation.states.createAd.CreateAdEvents
 import com.sddrozdov.presentation.states.createAd.CreateAdStates
 import com.sddrozdov.presentation.viewModels.createAd.CreateAdViewModel
 
-
 @Composable
-fun EditAdTitleScreen(
+fun EditAdDescriptionScreen(
     navHostController: NavHostController
 ) {
     val viewModel: CreateAdViewModel = hiltViewModel<CreateAdViewModel>()
     val state by viewModel.state.collectAsState()
 
-    EnterAdTitleView(
+    EnterAdDescriptionView(
         state = state,
         onEvent = viewModel::onEvent,
         navHostController = navHostController
@@ -58,7 +57,7 @@ fun EditAdTitleScreen(
 }
 
 @Composable
-fun EnterAdTitleView(
+fun EnterAdDescriptionView(
     state: CreateAdStates,
     onEvent: (CreateAdEvents) -> Unit,
     navHostController: NavHostController
@@ -84,7 +83,7 @@ fun EnterAdTitleView(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Text(
-                    text = "Введите заголовок объявления",
+                    text = "Опишите товар подробно",
                     fontSize = 28.sp,
                     fontWeight = FontWeight.SemiBold,
                     modifier = Modifier.padding(bottom = 24.dp),
@@ -92,22 +91,22 @@ fun EnterAdTitleView(
                 )
 
                 Text(
-                    text = "Кратко опишите, что вы предлагаете",
+                    text = "Укажите все важные детали и характеристики",
                     fontSize = 16.sp,
                     color = AppColors.textColor,
                     modifier = Modifier.padding(bottom = 32.dp)
                 )
 
                 OutlinedTextField(
-                    value = state.title,
+                    value = state.description,
                     onValueChange = { newText ->
-                        if (newText.length <= 100) {
-                            onEvent(CreateAdEvents.OnTitleChanged(newText))
+                        if (newText.length <= 500) {
+                            onEvent(CreateAdEvents.OnDescriptionChanged(newText))
                         }
                     },
                     label = {
                         Text(
-                            text = stringResource(id = R.string.title_ad),
+                            text = "Описание товара",
                             color = AppColors.secondaryTextColor,
                             fontSize = 14.sp
                         )
@@ -125,15 +124,15 @@ fun EnterAdTitleView(
                     shape = RoundedCornerShape(12.dp),
                     modifier = Modifier
                         .fillMaxWidth()
+                        .heightIn(min = 150.dp)
                         .padding(bottom = 16.dp),
-                    singleLine = true,
                     keyboardOptions = KeyboardOptions(
                         capitalization = KeyboardCapitalization.Sentences,
                         keyboardType = KeyboardType.Text
                     ),
                     placeholder = {
                         Text(
-                            text = "Например: Продам ноутбук",
+                            text = "Например: Состояние нового, полная комплектация, гарантия 1 год...",
                             color = AppColors.secondaryTextColor
                         )
                     },
@@ -141,16 +140,17 @@ fun EnterAdTitleView(
                         fontSize = 16.sp,
                         color = AppColors.textColor
                     ),
-                    trailingIcon = {
-                        if (state.title.isNotEmpty()) {
-                            Text(
-                                text = "${state.title.length}/100",
-                                color = if (state.title.length >= 100) Color.Red else AppColors.secondaryTextColor,
-                                fontSize = 12.sp
-                            )
-                        }
-                    }
+                    maxLines = 10,
+                    singleLine = false,
                 )
+
+                if (state.description.isNotEmpty()) {
+                    Text(
+                        text = "${state.description.length}/500",
+                        color = if (state.description.length >= 500) Color.Red else AppColors.secondaryTextColor,
+                        fontSize = 12.sp
+                    )
+                }
 
                 Spacer(modifier = Modifier.height(32.dp))
 
@@ -188,15 +188,15 @@ fun EnterAdTitleView(
 
             Button(
                 onClick = {
-                    navHostController.navigate(Screen.EditAdDescriptionScreen.route)
+                    navHostController.navigate(Screen.MainScreen.route)
                 },
-                enabled = state.title.isNotEmpty(),
+                enabled = state.description.isNotEmpty(),
                 modifier = Modifier
                     .weight(1f)
                     .height(56.dp),
                 shape = RoundedCornerShape(12.dp),
                 colors = ButtonDefaults.buttonColors(
-                    containerColor = if (state.title.isNotEmpty()) {
+                    containerColor = if (state.description.isNotEmpty()) {
                         AppColors.accentColor
                     } else {
                         AppColors.disabledButtonColor

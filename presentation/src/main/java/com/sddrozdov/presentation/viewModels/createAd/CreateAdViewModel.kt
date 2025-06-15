@@ -80,13 +80,18 @@ class CreateAdViewModel @Inject constructor(
                 currentState.copy(title = event.newTitle)
             }
 
+            is CreateAdEvents.OnDescriptionChanged -> _state.update { currentState ->
+                currentState.copy(description = event.newDescription)
+            }
+
+            is CreateAdEvents.OnEmailChanged -> TODO()
+
 
             is CreateAdEvents.ImagesSelected -> TODO()
 
             CreateAdEvents.OnClearError -> TODO()
 
-            is CreateAdEvents.OnDescriptionChanged -> TODO()
-            is CreateAdEvents.OnEmailChanged -> TODO()
+
             CreateAdEvents.OnImagesAdded -> TODO()
             is CreateAdEvents.OnIndexChanged -> TODO()
             is CreateAdEvents.OnPhoneChanged -> TODO()

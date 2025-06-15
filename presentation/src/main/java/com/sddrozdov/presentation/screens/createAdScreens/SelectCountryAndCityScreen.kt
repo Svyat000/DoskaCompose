@@ -270,7 +270,6 @@ fun SelectCountryAndCityView(
                 )
             }
         }
-
     }
 }
 
