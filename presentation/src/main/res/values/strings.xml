@@ -25,5 +25,9 @@
     <string name="select_category">Выберите категорию</string>
     <string name="you_need_to_login">Вам нужно авторизоваться!</string>
     <string name="next_screen">Далее</string>
+    <string name="back">Назад</string>
+    <string name="cities">Города</string>
+    <string name="countries">Страны</string>
+    <string name="title_ad">Заголовок объявления</string>
 
 </resources>

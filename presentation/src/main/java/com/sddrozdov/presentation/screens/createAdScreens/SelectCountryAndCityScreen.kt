@@ -29,6 +29,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -37,6 +38,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.sddrozdov.presentation.AppColors
+import com.sddrozdov.presentation.R
 import com.sddrozdov.presentation.navigations.Screen
 import com.sddrozdov.presentation.states.createAd.Country
 import com.sddrozdov.presentation.states.createAd.CreateAdEvents
@@ -146,7 +148,7 @@ fun SelectCountryAndCityView(
                             pressedElevation = 8.dp
                         )
                     ) {
-                        Text("Страны", fontSize = 16.sp)
+                        Text(text = stringResource(id = R.string.countries), fontSize = 16.sp)
                     }
 
                     Spacer(modifier = Modifier.width(16.dp))
@@ -169,7 +171,7 @@ fun SelectCountryAndCityView(
                             pressedElevation = 8.dp
                         )
                     ) {
-                        Text("Города", fontSize = 16.sp)
+                        Text(text = stringResource(id = R.string.cities), fontSize = 16.sp)
                     }
                 }
 
@@ -211,10 +213,11 @@ fun SelectCountryAndCityView(
                 onClick = { navHostController.popBackStack() },
                 modifier = Modifier
                     .weight(1f)
+                    .height(56.dp)
                     .padding(end = 8.dp),
                 shape = RoundedCornerShape(12.dp),
                 colors = ButtonDefaults.buttonColors(
-                    containerColor = AppColors.secondaryButtonColor,
+                    containerColor = AppColors.accentColor,
                     contentColor = Color.White
                 ),
                 elevation = ButtonDefaults.buttonElevation(
@@ -222,7 +225,11 @@ fun SelectCountryAndCityView(
                     pressedElevation = 8.dp
                 )
             ) {
-                Text("Назад", fontSize = 18.sp)
+                Text(
+                    text = stringResource(id = R.string.back),
+                    fontSize = 18.sp,
+                    fontWeight = FontWeight.Medium
+                )
             }
 
             Button(
@@ -257,7 +264,7 @@ fun SelectCountryAndCityView(
                 enabled = state.selectedCity != null
             ) {
                 Text(
-                    text = "Далее",
+                    text = stringResource(id = R.string.next_screen),
                     fontSize = 18.sp,
                     fontWeight = FontWeight.Medium
                 )
