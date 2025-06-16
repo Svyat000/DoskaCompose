@@ -1,8 +1,8 @@
 package com.sddrozdov.doskacompose.di
 
 
-import com.sddrozdov.dataa.repository.AdRepositoryImpl
-import com.sddrozdov.dataa.repository.AuthRepositoryImpl
+import com.sddrozdov.repository.AdRepositoryImpl
+import com.sddrozdov.repository.AuthRepositoryImpl
 import com.sddrozdov.domain.repository.AuthRepository
 import com.sddrozdov.doskacompose.domain.repository.AdRepository
 import dagger.Binds

@@ -1,4 +1,4 @@
-package com.sddrozdov.presentation.screens
+package com.sddrozdov.presentation.screens.signInSignOut
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
@@ -46,29 +46,31 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.sddrozdov.presentation.AppColors
 import com.sddrozdov.presentation.R
 import com.sddrozdov.presentation.navigations.Screen
-import com.sddrozdov.presentation.states.AuthType
-import com.sddrozdov.presentation.states.RegisterScreenEvent
-import com.sddrozdov.presentation.states.RegisterScreenState
-import com.sddrozdov.presentation.viewModels.RegisterViewModel
+import com.sddrozdov.presentation.states.signInSignOut.LoginScreenEvent
+import com.sddrozdov.presentation.states.signInSignOut.LoginScreenState
+import com.sddrozdov.presentation.viewModels.signInSignOut.LoginViewModel
+
 
 @Composable
-fun RegisterScreen(
+fun LoginScreen(
     onNavigateTo: (String) -> Unit,
     snackbarHostState: SnackbarHostState
 ) {
-    val viewModel = hiltViewModel<RegisterViewModel>()
+    val viewModel = hiltViewModel<LoginViewModel>()
     val state by viewModel.state.collectAsState()
     val snackbarMessage by viewModel.snackbarMessage.collectAsState()
     val context = LocalContext.current
 
-    LaunchedEffect(state.registerResult) {
-        state.registerResult?.let { result ->
-            result.onSuccess {
-                when (state.authType) {
-                    AuthType.EMAIL -> onNavigateTo(Screen.LoginScreen.route)
-                    AuthType.GOOGLE -> onNavigateTo(Screen.MainScreen.route)
-                }
+    LaunchedEffect(state.loginResult) {
+        state.loginResult?.onSuccess {
+            onNavigateTo(Screen.MainScreen.route)
+        }?.onFailure {
+            snackbarMessage?.let { messageRes ->
+                val message = context.getString(messageRes)
+                snackbarHostState.showSnackbar(message)
+                viewModel.messageShown()
             }
+            //println("Google sign in failed: ${e.message}")
         }
     }
 
@@ -77,11 +79,10 @@ fun RegisterScreen(
             val message = context.getString(messageRes)
             snackbarHostState.showSnackbar(message)
             viewModel.messageShown()
-
         }
     }
 
-    RegisterView(
+    LoginView(
         state = state,
         onEvent = viewModel::onEvent,
         onNavigateTo = onNavigateTo
@@ -89,9 +90,9 @@ fun RegisterScreen(
 }
 
 @Composable
-fun RegisterView(
-    state: RegisterScreenState,
-    onEvent: (RegisterScreenEvent) -> Unit,
+fun LoginView(
+    state: LoginScreenState,
+    onEvent: (LoginScreenEvent) -> Unit,
     onNavigateTo: (String) -> Unit
 ) {
 
@@ -101,7 +102,6 @@ fun RegisterView(
             .background(AppColors.primaryBackground)
             .padding(16.dp)
     ) {
-
         Card(
             modifier = Modifier
                 .align(Alignment.Center)
@@ -117,7 +117,7 @@ fun RegisterView(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Text(
-                    text = stringResource(R.string.sign_up),
+                    text = stringResource(R.string.welcome_back),
                     fontSize = 28.sp,
                     fontWeight = FontWeight.SemiBold,
                     modifier = Modifier.padding(bottom = 24.dp),
@@ -126,7 +126,7 @@ fun RegisterView(
 
                 OutlinedTextField(
                     value = state.email,
-                    onValueChange = { onEvent(RegisterScreenEvent.EmailUpdated(it)) },
+                    onValueChange = { onEvent(LoginScreenEvent.EmailUpdated(it)) },
                     label = {
                         Text(
                             text = stringResource(id = R.string.email),
@@ -154,7 +154,7 @@ fun RegisterView(
 
                 OutlinedTextField(
                     value = state.password,
-                    onValueChange = { onEvent(RegisterScreenEvent.PasswordUpdated(it)) },
+                    onValueChange = { onEvent(LoginScreenEvent.PasswordUpdated(it)) },
                     label = {
                         Text(
                             text = stringResource(id = R.string.password),
@@ -182,7 +182,7 @@ fun RegisterView(
                 Spacer(modifier = Modifier.height(32.dp))
 
                 Button(
-                    onClick = { onEvent(RegisterScreenEvent.RegisterGoogleBtnClicked) },
+                    onClick = { onEvent(LoginScreenEvent.LoginGoogleBtnClicked) },
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(50.dp),
@@ -204,7 +204,7 @@ fun RegisterView(
                         )
                         Spacer(modifier = Modifier.width(12.dp))
                         Text(
-                            text = stringResource(id = R.string.sign_up_with_google),
+                            text = stringResource(id = R.string.sign_in_with_google),
                             fontSize = 16.sp
                         )
                     }
@@ -213,7 +213,7 @@ fun RegisterView(
                 Spacer(modifier = Modifier.height(16.dp))
 
                 Button(
-                    onClick = { onEvent(RegisterScreenEvent.RegisterBtnClicked) },
+                    onClick = { onEvent(LoginScreenEvent.LoginBtnClicked) },
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(50.dp),
@@ -223,7 +223,7 @@ fun RegisterView(
                         contentColor = Color.White
                     )
                 ) {
-                    Text(text = stringResource(id = R.string.sign__up), fontSize = 16.sp)
+                    Text(text = stringResource(id = R.string.sign_in), fontSize = 16.sp)
                 }
             }
         }
@@ -236,35 +236,34 @@ fun RegisterView(
             horizontalArrangement = Arrangement.Center
         ) {
             TextButton(
-                onClick = { onNavigateTo(Screen.LoginScreen.route) },
+                onClick = { onNavigateTo(Screen.RegisterScreen.route) },
                 modifier = Modifier.padding(end = 16.dp)
             ) {
                 Text(
-                    text = stringResource(id = R.string.already_have_an_acc),
+                    text = stringResource(id = R.string.no_account),
                     color = AppColors.accentColor,
                     fontSize = 14.sp
                 )
             }
 
+            TextButton(
+                onClick = { onEvent(LoginScreenEvent.ForgotPasswordBtnClicked) }
+            ) {
+                Text(
+                    text = stringResource(id = R.string.forgot_your_password),
+                    color = AppColors.accentColor,
+                    fontSize = 14.sp
+                )
+            }
         }
-
-
-//        state.registerResult?.onFailure { exception ->
-//            Text(
-//                text = "Ошибка регистрации: ${exception.localizedMessage}",
-//                color = Color.Red,
-//                modifier = Modifier.align(Alignment.TopCenter).padding(16.dp)
-//            )
-//        }
     }
 }
 
-
 @Preview(showBackground = true)
 @Composable
-fun RegisterScreenPreview() {
-    val fakeState = RegisterScreenState(email = "", password = "")
-    RegisterView(
+fun LoginScreenPreview() {
+    val fakeState = LoginScreenState(email = "", password = "")
+    LoginView(
         state = fakeState,
         onEvent = {},
         onNavigateTo = {}

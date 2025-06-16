@@ -5,7 +5,7 @@ import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
-import com.sddrozdov.dataa.repository.dbNodes.DbNodes
+import com.sddrozdov.dbnode.DbNodes
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

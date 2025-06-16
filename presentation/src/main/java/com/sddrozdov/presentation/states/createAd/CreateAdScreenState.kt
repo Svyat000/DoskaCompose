@@ -23,12 +23,16 @@ data class CreateAdStates(
 
     val description: String = "",
 
+    val email: String = "",
+
+
+
     val error: String? = null,
 
 
 
     val price: String = "",
-    val email: String = "",
+
     val phone: String = "",
     val index: String = "",
 
@@ -73,11 +77,13 @@ sealed class CreateAdEvents {
 
     data class OnDescriptionChanged(val newDescription: String) : CreateAdEvents()
 
-    data class OnPriceChanged(val newPrice: String) : CreateAdEvents()
     data class OnEmailChanged(val newEmail: String) : CreateAdEvents()
+
+
+
+    data class OnPriceChanged(val newPrice: String) : CreateAdEvents()
     data class OnPhoneChanged(val newPhone: String) : CreateAdEvents()
     data class OnIndexChanged(val newIndex: String) : CreateAdEvents()
-
 
     object OpenImagePicker : CreateAdEvents()
     data class ImagesSelected(val uris: List<Uri>) : CreateAdEvents()

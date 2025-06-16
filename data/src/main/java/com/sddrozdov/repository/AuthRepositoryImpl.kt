@@ -1,4 +1,4 @@
-package com.sddrozdov.dataa.repository
+package com.sddrozdov.repository
 
 import com.google.firebase.auth.EmailAuthProvider
 import com.google.firebase.auth.FirebaseAuth

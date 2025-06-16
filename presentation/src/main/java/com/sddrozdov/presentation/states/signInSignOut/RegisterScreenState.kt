@@ -1,4 +1,4 @@
-package com.sddrozdov.presentation.states
+package com.sddrozdov.presentation.states.signInSignOut
 
 import android.os.Parcelable
 import com.sddrozdov.domain.models.User

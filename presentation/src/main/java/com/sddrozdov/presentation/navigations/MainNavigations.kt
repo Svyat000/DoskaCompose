@@ -11,17 +11,18 @@ import com.sddrozdov.presentation.screens.DescriptionAdScreen
 import com.sddrozdov.presentation.screens.DialogsScreen
 import com.sddrozdov.presentation.screens.FavoriteAdScreen
 import com.sddrozdov.presentation.screens.FilterScreen
-import com.sddrozdov.presentation.screens.LoginScreen
+import com.sddrozdov.presentation.screens.signInSignOut.LoginScreen
 import com.sddrozdov.presentation.screens.MainScreen
-import com.sddrozdov.presentation.screens.RegisterScreen
+import com.sddrozdov.presentation.screens.signInSignOut.RegisterScreen
+import com.sddrozdov.presentation.screens.createAdScreens.EditAdDescriptionScreen
+import com.sddrozdov.presentation.screens.createAdScreens.EditAdTitleScreen
 import com.sddrozdov.presentation.screens.createAdScreens.SelectCategoryScreen
 import com.sddrozdov.presentation.screens.createAdScreens.SelectCountryAndCityScreen
+import com.sddrozdov.presentation.screens.myProfile.ProfileScreen
 import kotlinx.serialization.Serializable
 
 @Serializable
 sealed class Screen(val route: String) {
-
-    interface ProtectedScreen
 
     @Serializable
     data object LoginScreen : Screen(Routes.LOGIN)
@@ -45,16 +46,25 @@ sealed class Screen(val route: String) {
     data object CreateAdScreen : Screen(Routes.CREATE_AD)
 
     @Serializable
+    data object MyProfileScreen : Screen(Routes.MY_PROFILE_SCREEN)
+
+    @Serializable
     data object DescriptionAdScreen : Screen(Routes.DESCRIPTION_AD)
 
     @Serializable
     data object FavoriteAdScreen : Screen(Routes.FAVORITE_AD)
 
     @Serializable
-    data object SelectCategoryScreen : Screen(Routes.SELECT_CATEGORY_AD),ProtectedScreen
+    data object SelectCategoryScreen : Screen(Routes.SELECT_CATEGORY_AD)
 
     @Serializable
     data object SelectCountryAndCityScreen : Screen(Routes.SELECT_COUNTRY_AND_CITY_AD)
+
+    @Serializable
+    data object EditAdTitleScreen : Screen(Routes.EDIT_TITLE_SCREEN_AD)
+
+    @Serializable
+    data object EditAdDescriptionScreen : Screen(Routes.EDIT_DESCRIPTION_SCREEN_AD)
 
 
 }
@@ -124,6 +134,14 @@ fun MainNavigation(
                 }
             )
         }
+
+        composable(Screen.MyProfileScreen.route) {
+            ProfileScreen(
+                onNavigateTo = { route ->
+                    navHostController.navigate(route)
+                }
+            )
+        }
         composable(Screen.FavoriteAdScreen.route) {
             FavoriteAdScreen(
                 onNavigateTo = { route ->
@@ -139,11 +157,13 @@ fun MainNavigation(
             )
         }
         composable(Screen.SelectCountryAndCityScreen.route) {
-            SelectCountryAndCityScreen(
-                onNavigateTo = { route ->
-                    navHostController.navigate(route)
-                }
-            )
+            SelectCountryAndCityScreen(navHostController = navHostController)
+        }
+        composable(Screen.EditAdTitleScreen.route) {
+            EditAdTitleScreen(navHostController = navHostController)
+        }
+        composable(Screen.EditAdDescriptionScreen.route) {
+            EditAdDescriptionScreen(navHostController = navHostController)
         }
     }
 }
@@ -160,4 +180,9 @@ object Routes {
     const val FAVORITE_AD = "favorite_ad_screen"
     const val SELECT_CATEGORY_AD = "select_category_ad_screen"
     const val SELECT_COUNTRY_AND_CITY_AD = "select_country_and_city_ad_screen"
+    const val EDIT_TITLE_SCREEN_AD = "edit_title_screen_ad"
+    const val EDIT_DESCRIPTION_SCREEN_AD = "edit_description_screen_ad"
+    const val MY_PROFILE_SCREEN = "my_profile_screen"
+
+
 }

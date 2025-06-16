@@ -1,4 +1,4 @@
-package com.sddrozdov.presentation.viewModels
+package com.sddrozdov.presentation.viewModels.signInSignOut
 
 import android.content.Context
 import androidx.annotation.StringRes
@@ -15,9 +15,9 @@ import com.google.android.libraries.identity.googleid.GoogleIdTokenCredential.Co
 import com.sddrozdov.domain.models.GoogleSignInData
 import com.sddrozdov.domain.useCase.AuthUseCase
 import com.sddrozdov.presentation.R
-import com.sddrozdov.presentation.states.AuthType
-import com.sddrozdov.presentation.states.RegisterScreenEvent
-import com.sddrozdov.presentation.states.RegisterScreenState
+import com.sddrozdov.presentation.states.signInSignOut.AuthType
+import com.sddrozdov.presentation.states.signInSignOut.RegisterScreenEvent
+import com.sddrozdov.presentation.states.signInSignOut.RegisterScreenState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.MutableStateFlow
