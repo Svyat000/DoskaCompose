@@ -34,15 +34,10 @@ class LoginViewModel @Inject constructor(
     private val savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
 
-    private val _state =
-        MutableStateFlow(savedStateHandle.get<LoginScreenState>(LOGIN_STATE) ?: LoginScreenState())
-    val state: StateFlow<LoginScreenState> = _state
-
-    init {
-        viewModelScope.launch {
-            _state.collect { savedStateHandle[LOGIN_STATE] = it }
-        }
-    }
+    val state: StateFlow<LoginScreenState> = savedStateHandle.getStateFlow(
+        key = LOGIN_STATE,
+        initialValue = LoginScreenState()
+    )
 
     private val _snackbarMessage = MutableStateFlow<Int?>(null)
     val snackbarMessage: StateFlow<Int?> = _snackbarMessage
@@ -52,11 +47,11 @@ class LoginViewModel @Inject constructor(
     fun onEvent(event: LoginScreenEvent) {
         when (event) {
             is LoginScreenEvent.EmailUpdated -> {
-                _state.value = _state.value.copy(email = event.newEmail)
+                savedStateHandle[LOGIN_STATE] = state.value.copy(email = event.newEmail)
             }
 
             is LoginScreenEvent.PasswordUpdated -> {
-                _state.value = _state.value.copy(password = event.newPassword)
+                savedStateHandle[LOGIN_STATE] = state.value.copy(password = event.newPassword)
             }
 
             LoginScreenEvent.LoginBtnClicked -> {
@@ -70,10 +65,10 @@ class LoginViewModel @Inject constructor(
 
     private fun forgotPass() {
         viewModelScope.launch {
-            if (_state.value.email.isNotEmpty() && Patterns.EMAIL_ADDRESS.matcher(_state.value.email)
+            if (state.value.email.isNotEmpty() && Patterns.EMAIL_ADDRESS.matcher(state.value.email)
                     .matches()
             ) {
-                authUseCase.sendEmailForgotPassword(_state.value.email)
+                authUseCase.sendEmailForgotPassword(state.value.email)
                 showMessage(R.string.a_password_recovery_email_has_been_sent_to_your_email_address)
                 // _state.value = _state.value.copy(emailErrorMessage = "Письмо с восстановлением пароля успешно отправлено!")
             } else
@@ -91,12 +86,12 @@ class LoginViewModel @Inject constructor(
 
     private fun checkingEmailSymbols() {
         when {
-            _state.value.email.isEmpty() -> {
+            state.value.email.isEmpty() -> {
                 showMessage(R.string.the_Email_field_must_not_be_empty)
                 //_state.value = _state.value.copy(emailErrorMessage = "The Email field must not be empty")
             }
 
-            !Patterns.EMAIL_ADDRESS.matcher(_state.value.email).matches() -> {
+            !Patterns.EMAIL_ADDRESS.matcher(state.value.email).matches() -> {
                 showMessage(R.string.please_check_if_your_email_is_entered_correctly)
                 //_state.value = _state.value.copy(emailErrorMessage = "Please check if your email is entered correctly")
             }
@@ -116,9 +111,9 @@ class LoginViewModel @Inject constructor(
 
     private fun login() {
         viewModelScope.launch {
-            val result = authUseCase.signIn(_state.value.email, _state.value.password)
+            val result = authUseCase.signIn(state.value.email, state.value.password)
             result.onSuccess {
-                _state.value = _state.value.copy(loginResult = result)
+                savedStateHandle[LOGIN_STATE] = state.value.copy(loginResult = result)
             }.onFailure {
                 showMessage(R.string.please_check_your_email_or_password)
             }
@@ -144,7 +139,7 @@ class LoginViewModel @Inject constructor(
                 )
                 handleGoogleCredential(credentialResponse.credential)
             } catch (e: Exception) {
-                _state.value = _state.value.copy(
+                savedStateHandle[LOGIN_STATE] = state.value.copy(
                     loginResult = Result.failure(e)
                 )
                 showMessage(R.string.google_sign_in_failed)
@@ -158,9 +153,9 @@ class LoginViewModel @Inject constructor(
 
             if (googleSignInData != null) {
                 val result = authUseCase.signInWithGoogle(googleSignInData)
-                _state.value = _state.value.copy(loginResult = result)
+                savedStateHandle[LOGIN_STATE] = state.value.copy(loginResult = result)
             } else {
-                _state.value = _state.value.copy(
+                savedStateHandle[LOGIN_STATE] = state.value.copy(
                     loginResult = Result.failure(Exception("Invalid Google credential"))
                 )
                 showMessage(R.string.google_sign_in_failed)

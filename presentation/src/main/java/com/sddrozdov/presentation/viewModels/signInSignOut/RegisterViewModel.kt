@@ -34,17 +34,10 @@ class RegisterViewModel @Inject constructor(
     private val savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
 
-    private val _state =
-        MutableStateFlow(
-            savedStateHandle.get<RegisterScreenState>(REGISTER_STATE) ?: RegisterScreenState()
-        )
-    val state: StateFlow<RegisterScreenState> = _state
-
-    init {
-        viewModelScope.launch {
-            _state.collect { savedStateHandle[REGISTER_STATE] = it }
-        }
-    }
+    val state: StateFlow<RegisterScreenState> = savedStateHandle.getStateFlow(
+        key = REGISTER_STATE,
+        initialValue = RegisterScreenState()
+    )
 
     private val _snackbarMessage = MutableStateFlow<Int?>(null)
     val snackbarMessage: StateFlow<Int?> = _snackbarMessage
@@ -54,11 +47,11 @@ class RegisterViewModel @Inject constructor(
     fun onEvent(event: RegisterScreenEvent) {
         when (event) {
             is RegisterScreenEvent.EmailUpdated -> {
-                _state.value = _state.value.copy(email = event.newEmail)
+                savedStateHandle[REGISTER_STATE] = state.value.copy(email = event.newEmail)
             }
 
             is RegisterScreenEvent.PasswordUpdated -> {
-                _state.value = _state.value.copy(password = event.newPassword)
+                savedStateHandle[REGISTER_STATE] = state.value.copy(password = event.newPassword)
             }
 
             RegisterScreenEvent.RegisterBtnClicked -> {
@@ -79,9 +72,9 @@ class RegisterViewModel @Inject constructor(
 
     private fun register() {
         viewModelScope.launch {
-            _state.value = _state.value.copy(authType = AuthType.EMAIL)
-            val result = authUseCase.signUp(_state.value.email, _state.value.password)
-            _state.value = _state.value.copy(registerResult = result)
+            savedStateHandle[REGISTER_STATE] = state.value.copy(authType = AuthType.EMAIL)
+            val result = authUseCase.signUp(state.value.email, state.value.password)
+            savedStateHandle[REGISTER_STATE] = state.value.copy(registerResult = result)
             result.onSuccess { user ->
                 authUseCase.sendVerificationEmail(user)
             }
@@ -109,7 +102,7 @@ class RegisterViewModel @Inject constructor(
                 )
                 handleGoogleCredential(credentialResponse.credential)
             } catch (e: Exception) {
-                _state.value = _state.value.copy(
+                savedStateHandle[REGISTER_STATE] = state.value.copy(
                     registerResult = Result.failure(e)
                 )
             }
@@ -122,9 +115,9 @@ class RegisterViewModel @Inject constructor(
 
             if (googleSignInData != null) {
                 val result = authUseCase.signInWithGoogle(googleSignInData)
-                _state.value = _state.value.copy(registerResult = result)
+                savedStateHandle[REGISTER_STATE] = state.value.copy(registerResult = result)
             } else {
-                _state.value = _state.value.copy(
+                savedStateHandle[REGISTER_STATE] = state.value.copy(
                     registerResult = Result.failure(Exception("Invalid Google credential"))
                 )
                 showMessage(R.string.google_sign_in_failed)
