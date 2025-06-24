@@ -41,13 +41,13 @@ import com.sddrozdov.presentation.states.createAd.CreateAdStates
 import com.sddrozdov.presentation.viewModels.createAd.CreateAdViewModel
 
 @Composable
-fun EnterPriceScreen(
+fun EnterPostalCodeScreen(
     navHostController: NavHostController
 ) {
     val viewModel: CreateAdViewModel = hiltViewModel<CreateAdViewModel>()
     val state by viewModel.state.collectAsState()
 
-    EnterPriceView(
+    EnterPostalCodeView(
         state = state,
         onEvent = viewModel::onEvent,
         navHostController = navHostController
@@ -55,7 +55,7 @@ fun EnterPriceScreen(
 }
 
 @Composable
-fun EnterPriceView(
+fun EnterPostalCodeView(
     state: CreateAdStates,
     onEvent: (CreateAdEvents) -> Unit,
     navHostController: NavHostController
@@ -81,7 +81,7 @@ fun EnterPriceView(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Text(
-                    text = "Укажите цену товара",
+                    text = "Введите почтовый индекс",
                     fontSize = 28.sp,
                     fontWeight = FontWeight.SemiBold,
                     modifier = Modifier.padding(bottom = 24.dp),
@@ -89,19 +89,19 @@ fun EnterPriceView(
                 )
 
                 OutlinedTextField(
-                    value = formatPrice(state.price),
-                    onValueChange = { newPrice ->
-                        // Удаляем все нецифры и лишние точки перед обработкой
-                        val cleanPrice = newPrice.replace("[^\\d.]".toRegex(), "")
+                    value = state.postalCode,
+                    onValueChange = { newCode ->
+                        // Удаляем все нецифры
+                        val cleanCode = newCode.replace("\\D".toRegex(), "")
 
-                        // Проверяем формат максимум 8 цифр до точки и 2 после
-                        if (cleanPrice.matches(Regex("^\\d{0,8}(\\.\\d{0,2})?$"))) {
-                            onEvent(CreateAdEvents.OnPriceChanged(cleanPrice))
+                        // Проверяем что не больше 6 цифр
+                        if (cleanCode.length <= 6) {
+                            onEvent(CreateAdEvents.OnPostalCodeChanged(cleanCode))
                         }
                     },
                     label = {
                         Text(
-                            text = "Цена",
+                            text = "Почтовый индекс",
                             color = AppColors.secondaryTextColor,
                             fontSize = 14.sp
                         )
@@ -125,7 +125,7 @@ fun EnterPriceView(
                     ),
                     placeholder = {
                         Text(
-                            text = "Например: 1000 или 999.99",
+                            text = "Например: 123456",
                             color = AppColors.secondaryTextColor
                         )
                     },
@@ -134,13 +134,6 @@ fun EnterPriceView(
                         color = AppColors.textColor
                     ),
                     singleLine = true,
-                    trailingIcon = {
-                        Text(
-                            text = "₽",
-                            color = AppColors.textColor,
-                            modifier = Modifier.padding(end = 8.dp)
-                        )
-                    }
                 )
 
                 Spacer(modifier = Modifier.height(32.dp))
@@ -178,15 +171,15 @@ fun EnterPriceView(
 
             Button(
                 onClick = {
-                    navHostController.navigate(Screen.EnterPostalCodeScreen.route)
+                    navHostController.navigate(Screen.MainScreen.route)
                 },
-                enabled = state.price.isNotEmpty() && state.price.toDoubleOrNull() != null,
+                enabled = state.postalCode.length == 6,
                 modifier = Modifier
                     .weight(1f)
                     .height(56.dp),
                 shape = RoundedCornerShape(12.dp),
                 colors = ButtonDefaults.buttonColors(
-                    containerColor = if (state.price.isNotEmpty() && state.price.toDoubleOrNull() != null) {
+                    containerColor = if (state.postalCode.length == 6) {
                         AppColors.accentColor
                     } else {
                         AppColors.disabledButtonColor
@@ -208,20 +201,3 @@ fun EnterPriceView(
     }
 }
 
-fun formatPrice(input: String): String {
-    if (input.isEmpty()) return ""
-
-    // Удаляем все нецифры и лишние точки
-    val cleanString = input.replace("[^\\d.]".toRegex(), "")
-
-    // Разделяем на рубли и копейки
-    val parts = cleanString.split(".")
-    var rubles = parts[0]
-    val kopecks = if (parts.size > 1) parts[1] else ""
-
-    // Добавляем разделители тысяч
-    rubles = rubles.reversed().chunked(3).joinToString(" ").reversed()
-
-    // Собираем обратно
-    return if (kopecks.isNotEmpty()) "$rubles.$kopecks" else rubles
-}

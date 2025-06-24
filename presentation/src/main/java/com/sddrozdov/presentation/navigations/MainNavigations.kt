@@ -17,6 +17,7 @@ import com.sddrozdov.presentation.screens.signInSignOut.RegisterScreen
 import com.sddrozdov.presentation.screens.createAdScreens.EditAdDescriptionScreen
 import com.sddrozdov.presentation.screens.createAdScreens.EditAdTitleScreen
 import com.sddrozdov.presentation.screens.createAdScreens.EnterEmailScreen
+import com.sddrozdov.presentation.screens.createAdScreens.EnterPostalCodeScreen
 import com.sddrozdov.presentation.screens.createAdScreens.EnterPriceScreen
 import com.sddrozdov.presentation.screens.createAdScreens.SelectCategoryScreen
 import com.sddrozdov.presentation.screens.createAdScreens.SelectCountryAndCityScreen
@@ -73,6 +74,9 @@ sealed class Screen(val route: String) {
 
     @Serializable
     data object EnterPriceScreen : Screen(Routes.ENTER_PRICE_SCREEN)
+
+    @Serializable
+    data object EnterPostalCodeScreen : Screen(Routes.ENTER_POSTAL_CODE_SCREEN)
 
 }
 
@@ -178,6 +182,9 @@ fun MainNavigation(
         composable(Screen.EnterPriceScreen.route) {
             EnterPriceScreen(navHostController = navHostController)
         }
+        composable(Screen.EnterPostalCodeScreen.route) {
+            EnterPostalCodeScreen(navHostController = navHostController)
+        }
     }
 }
 
@@ -198,6 +205,6 @@ object Routes {
     const val MY_PROFILE_SCREEN = "my_profile_screen"
     const val ENTER_EMAIL_SCREEN = "enter_email_screen"
     const val ENTER_PRICE_SCREEN = "enter_price_screen"
-
+    const val ENTER_POSTAL_CODE_SCREEN = "enter_postal_code_screen"
 
 }

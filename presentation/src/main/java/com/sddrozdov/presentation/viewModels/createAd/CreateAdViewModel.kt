@@ -83,6 +83,12 @@ class CreateAdViewModel @Inject constructor(
 
             }
 
+            is CreateAdEvents.OnPriceChanged -> savedStateHandle[CREATE_AD_STATE] =
+                state.value.copy(price = event.newPrice)
+
+            is CreateAdEvents.OnPostalCodeChanged -> savedStateHandle[CREATE_AD_STATE] =
+                state.value.copy(postalCode = event.newPostalCode)
+
 
             is CreateAdEvents.ImagesSelected -> TODO()
 
@@ -90,9 +96,9 @@ class CreateAdViewModel @Inject constructor(
 
 
             CreateAdEvents.OnImagesAdded -> TODO()
-            is CreateAdEvents.OnIndexChanged -> TODO()
+
             is CreateAdEvents.OnPhoneChanged -> TODO()
-            is CreateAdEvents.OnPriceChanged -> TODO()
+
             CreateAdEvents.OnPublishClicked -> TODO()
 
             CreateAdEvents.OpenImagePicker -> TODO()
