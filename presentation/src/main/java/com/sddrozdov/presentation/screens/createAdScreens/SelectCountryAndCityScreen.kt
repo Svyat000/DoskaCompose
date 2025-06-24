@@ -34,7 +34,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.sddrozdov.presentation.AppColors
@@ -47,17 +46,11 @@ import com.sddrozdov.presentation.viewModels.createAd.CreateAdViewModel
 
 @Composable
 fun SelectCountryAndCityScreen(
-    navHostController: NavHostController
+    navHostController: NavHostController,
+    viewModel: CreateAdViewModel
 ) {
 
-    val viewModel: CreateAdViewModel = hiltViewModel<CreateAdViewModel>()
     val state by viewModel.state.collectAsState()
-
-//        LaunchedEffect(state.selectedCategoryId) {
-//            state.selectedCategoryId?.let { categoryId ->
-//                onNavigateTo("some_route_for_category_$categoryId")
-//            }
-//        }
 
     SelectCountryAndCityView(
         state = state,

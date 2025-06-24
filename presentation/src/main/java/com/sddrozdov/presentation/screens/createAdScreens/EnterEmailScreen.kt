@@ -31,7 +31,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.sddrozdov.presentation.AppColors
 import com.sddrozdov.presentation.R
@@ -42,9 +41,10 @@ import com.sddrozdov.presentation.viewModels.createAd.CreateAdViewModel
 
 @Composable
 fun EnterEmailScreen(
-    navHostController: NavHostController
+    navHostController: NavHostController,
+    viewModel: CreateAdViewModel
 ) {
-    val viewModel: CreateAdViewModel = hiltViewModel<CreateAdViewModel>()
+
     val state by viewModel.state.collectAsState()
 
     EnterEmailView(
