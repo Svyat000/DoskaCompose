@@ -2,10 +2,13 @@ package com.sddrozdov.presentation.navigations
 
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.compose.navigation
 //import com.sddrozdov.presentation.screens.createAdScreens.CreateAdScreen
 import com.sddrozdov.presentation.screens.DescriptionAdScreen
 import com.sddrozdov.presentation.screens.DialogsScreen
@@ -17,11 +20,13 @@ import com.sddrozdov.presentation.screens.signInSignOut.RegisterScreen
 import com.sddrozdov.presentation.screens.createAdScreens.EditAdDescriptionScreen
 import com.sddrozdov.presentation.screens.createAdScreens.EditAdTitleScreen
 import com.sddrozdov.presentation.screens.createAdScreens.EnterEmailScreen
+import com.sddrozdov.presentation.screens.createAdScreens.EnterPhoneScreen
 import com.sddrozdov.presentation.screens.createAdScreens.EnterPostalCodeScreen
 import com.sddrozdov.presentation.screens.createAdScreens.EnterPriceScreen
 import com.sddrozdov.presentation.screens.createAdScreens.SelectCategoryScreen
 import com.sddrozdov.presentation.screens.createAdScreens.SelectCountryAndCityScreen
 import com.sddrozdov.presentation.screens.myProfile.ProfileScreen
+import com.sddrozdov.presentation.viewModels.createAd.CreateAdViewModel
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -78,6 +83,9 @@ sealed class Screen(val route: String) {
     @Serializable
     data object EnterPostalCodeScreen : Screen(Routes.ENTER_POSTAL_CODE_SCREEN)
 
+    @Serializable
+    data object EnterPhoneScreen : Screen(Routes.ENTER_PHONE_SCREEN)
+
 }
 
 @Composable
@@ -91,6 +99,95 @@ fun MainNavigation(
         navController = navHostController,
         startDestination = Screen.MainScreen.route
     ) {
+        navigation(
+            startDestination = Screen.SelectCategoryScreen.route,
+            route = "create_ad_graph"
+        ) {
+            composable(Screen.SelectCategoryScreen.route) {
+                val parentEntry = remember(navHostController.currentBackStackEntry) {
+                    navHostController.getBackStackEntry("create_ad_graph")
+                }
+                val viewModel = hiltViewModel<CreateAdViewModel>(parentEntry)
+                SelectCategoryScreen(
+                    onNavigateTo = { route ->
+                        navHostController.navigate(route)
+
+                    },
+                    viewModel = viewModel
+                )
+            }
+            composable(Screen.SelectCountryAndCityScreen.route) {
+                val parentEntry = remember(navHostController.currentBackStackEntry) {
+                    navHostController.getBackStackEntry("create_ad_graph")
+                }
+                val viewModel = hiltViewModel<CreateAdViewModel>(parentEntry)
+                SelectCountryAndCityScreen(
+                    navHostController = navHostController,
+                    viewModel = viewModel
+                )
+            }
+            composable(Screen.EditAdTitleScreen.route) {
+                val parentEntry = remember(navHostController.currentBackStackEntry) {
+                    navHostController.getBackStackEntry("create_ad_graph")
+                }
+                val viewModel = hiltViewModel<CreateAdViewModel>(parentEntry)
+                EditAdTitleScreen(
+                    navHostController = navHostController,
+                    viewModel = viewModel
+                )
+            }
+            composable(Screen.EditAdDescriptionScreen.route) {
+                val parentEntry = remember(navHostController.currentBackStackEntry) {
+                    navHostController.getBackStackEntry("create_ad_graph")
+                }
+                val viewModel = hiltViewModel<CreateAdViewModel>(parentEntry)
+                EditAdDescriptionScreen(
+                    navHostController = navHostController,
+                    viewModel = viewModel
+                )
+            }
+
+            composable(Screen.EnterEmailScreen.route) {
+                val parentEntry = remember(navHostController.currentBackStackEntry) {
+                    navHostController.getBackStackEntry("create_ad_graph")
+                }
+                val viewModel = hiltViewModel<CreateAdViewModel>(parentEntry)
+                EnterEmailScreen(
+                    navHostController = navHostController,
+                    viewModel = viewModel
+                )
+            }
+            composable(Screen.EnterPriceScreen.route) {
+                val parentEntry = remember(navHostController.currentBackStackEntry) {
+                    navHostController.getBackStackEntry("create_ad_graph")
+                }
+                val viewModel = hiltViewModel<CreateAdViewModel>(parentEntry)
+                EnterPriceScreen(
+                    navHostController = navHostController,
+                    viewModel = viewModel
+                )
+            }
+            composable(Screen.EnterPostalCodeScreen.route) {
+                val parentEntry = remember(navHostController.currentBackStackEntry) {
+                    navHostController.getBackStackEntry("create_ad_graph")
+                }
+                val viewModel = hiltViewModel<CreateAdViewModel>(parentEntry)
+                EnterPostalCodeScreen(
+                    navHostController = navHostController,
+                    viewModel = viewModel
+                )
+            }
+            composable(Screen.EnterPhoneScreen.route) {
+                val parentEntry = remember(navHostController.currentBackStackEntry) {
+                    navHostController.getBackStackEntry("create_ad_graph")
+                }
+                val viewModel = hiltViewModel<CreateAdViewModel>(parentEntry)
+                EnterPhoneScreen(
+                    navHostController = navHostController,
+                    viewModel = viewModel
+                )
+            }
+        }
         composable(Screen.LoginScreen.route) {
             LoginScreen(
                 onNavigateTo = { route ->
@@ -160,31 +257,7 @@ fun MainNavigation(
                 }
             )
         }
-        composable(Screen.SelectCategoryScreen.route) {
-            SelectCategoryScreen(
-                onNavigateTo = { route ->
-                    navHostController.navigate(route)
-                }
-            )
-        }
-        composable(Screen.SelectCountryAndCityScreen.route) {
-            SelectCountryAndCityScreen(navHostController = navHostController)
-        }
-        composable(Screen.EditAdTitleScreen.route) {
-            EditAdTitleScreen(navHostController = navHostController)
-        }
-        composable(Screen.EditAdDescriptionScreen.route) {
-            EditAdDescriptionScreen(navHostController = navHostController)
-        }
-        composable(Screen.EnterEmailScreen.route) {
-            EnterEmailScreen(navHostController = navHostController)
-        }
-        composable(Screen.EnterPriceScreen.route) {
-            EnterPriceScreen(navHostController = navHostController)
-        }
-        composable(Screen.EnterPostalCodeScreen.route) {
-            EnterPostalCodeScreen(navHostController = navHostController)
-        }
+
     }
 }
 
@@ -206,5 +279,6 @@ object Routes {
     const val ENTER_EMAIL_SCREEN = "enter_email_screen"
     const val ENTER_PRICE_SCREEN = "enter_price_screen"
     const val ENTER_POSTAL_CODE_SCREEN = "enter_postal_code_screen"
+    const val ENTER_PHONE_SCREEN = "enter_phone_screen"
 
 }
