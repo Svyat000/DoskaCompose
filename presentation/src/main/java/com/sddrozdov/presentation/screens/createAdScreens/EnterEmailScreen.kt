@@ -8,7 +8,6 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -29,7 +28,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -43,13 +41,13 @@ import com.sddrozdov.presentation.states.createAd.CreateAdStates
 import com.sddrozdov.presentation.viewModels.createAd.CreateAdViewModel
 
 @Composable
-fun EditAdDescriptionScreen(
+fun EnterEmailScreen(
     navHostController: NavHostController
 ) {
     val viewModel: CreateAdViewModel = hiltViewModel<CreateAdViewModel>()
     val state by viewModel.state.collectAsState()
 
-    EnterAdDescriptionView(
+    EnterEmailView(
         state = state,
         onEvent = viewModel::onEvent,
         navHostController = navHostController
@@ -57,7 +55,7 @@ fun EditAdDescriptionScreen(
 }
 
 @Composable
-fun EnterAdDescriptionView(
+fun EnterEmailView(
     state: CreateAdStates,
     onEvent: (CreateAdEvents) -> Unit,
     navHostController: NavHostController
@@ -67,7 +65,8 @@ fun EnterAdDescriptionView(
             .fillMaxSize()
             .background(AppColors.primaryBackground)
             .padding(16.dp)
-    ) {
+    )
+    {
         Card(
             modifier = Modifier
                 .weight(1f)
@@ -83,30 +82,28 @@ fun EnterAdDescriptionView(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Text(
-                    text = "Опишите товар подробно",
+                    text = "Введите ваш email",
                     fontSize = 28.sp,
                     fontWeight = FontWeight.SemiBold,
                     modifier = Modifier.padding(bottom = 24.dp),
                     color = AppColors.textColor
                 )
 
-                Text(
-                    text = "Укажите все важные детали и характеристики",
-                    fontSize = 16.sp,
-                    color = AppColors.textColor,
-                    modifier = Modifier.padding(bottom = 32.dp)
-                )
+//                Text(
+//                    text = "Мы отправим на него код подтверждения",
+//                    fontSize = 16.sp,
+//                    color = AppColors.textColor,
+//                    modifier = Modifier.padding(bottom = 32.dp)
+//                )
 
                 OutlinedTextField(
-                    value = state.description,
-                    onValueChange = { newText ->
-                        if (newText.length <= 500) {
-                            onEvent(CreateAdEvents.OnDescriptionChanged(newText))
-                        }
+                    value = state.email,
+                    onValueChange = { newEmail ->
+                        onEvent(CreateAdEvents.OnEmailChanged(newEmail))
                     },
                     label = {
                         Text(
-                            text = "Описание товара",
+                            text = "Email",
                             color = AppColors.secondaryTextColor,
                             fontSize = 14.sp
                         )
@@ -124,15 +121,13 @@ fun EnterAdDescriptionView(
                     shape = RoundedCornerShape(12.dp),
                     modifier = Modifier
                         .fillMaxWidth()
-                        .heightIn(min = 150.dp)
                         .padding(bottom = 16.dp),
                     keyboardOptions = KeyboardOptions(
-                        capitalization = KeyboardCapitalization.Sentences,
-                        keyboardType = KeyboardType.Text
+                        keyboardType = KeyboardType.Email
                     ),
                     placeholder = {
                         Text(
-                            text = "Например: Состояние нового, полная комплектация, гарантия 1 год...",
+                            text = "example@mail.com",
                             color = AppColors.secondaryTextColor
                         )
                     },
@@ -140,20 +135,10 @@ fun EnterAdDescriptionView(
                         fontSize = 16.sp,
                         color = AppColors.textColor
                     ),
-                    maxLines = 10,
-                    singleLine = false,
+                    singleLine = true
                 )
 
-                if (state.description.isNotEmpty()) {
-                    Text(
-                        text = "${state.description.length}/500",
-                        color = if (state.description.length >= 500) Color.Red else AppColors.secondaryTextColor,
-                        fontSize = 12.sp
-                    )
-                }
-
                 Spacer(modifier = Modifier.height(32.dp))
-
             }
         }
 
@@ -188,15 +173,15 @@ fun EnterAdDescriptionView(
 
             Button(
                 onClick = {
-                    navHostController.navigate(Screen.EnterEmailScreen.route)
+                    navHostController.navigate(Screen.MainScreen.route)
                 },
-                enabled = state.description.isNotEmpty(),
+                enabled = state.email.isNotEmpty() && isValidEmail(state.email),
                 modifier = Modifier
                     .weight(1f)
                     .height(56.dp),
                 shape = RoundedCornerShape(12.dp),
                 colors = ButtonDefaults.buttonColors(
-                    containerColor = if (state.description.isNotEmpty()) {
+                    containerColor = if (state.email.isNotEmpty() && isValidEmail(state.email)) {
                         AppColors.accentColor
                     } else {
                         AppColors.disabledButtonColor
@@ -209,11 +194,16 @@ fun EnterAdDescriptionView(
                 )
             ) {
                 Text(
-                    text = stringResource(id = R.string.next_screen),
+                    text = "Продолжить",
                     fontSize = 18.sp,
                     fontWeight = FontWeight.Medium
                 )
             }
         }
     }
+}
+
+fun isValidEmail(email: String): Boolean {
+    val emailRegex = "^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+\$"
+    return email.matches(emailRegex.toRegex())
 }

@@ -16,6 +16,7 @@ import com.sddrozdov.presentation.screens.MainScreen
 import com.sddrozdov.presentation.screens.signInSignOut.RegisterScreen
 import com.sddrozdov.presentation.screens.createAdScreens.EditAdDescriptionScreen
 import com.sddrozdov.presentation.screens.createAdScreens.EditAdTitleScreen
+import com.sddrozdov.presentation.screens.createAdScreens.EnterEmailScreen
 import com.sddrozdov.presentation.screens.createAdScreens.SelectCategoryScreen
 import com.sddrozdov.presentation.screens.createAdScreens.SelectCountryAndCityScreen
 import com.sddrozdov.presentation.screens.myProfile.ProfileScreen
@@ -65,6 +66,9 @@ sealed class Screen(val route: String) {
 
     @Serializable
     data object EditAdDescriptionScreen : Screen(Routes.EDIT_DESCRIPTION_SCREEN_AD)
+
+    @Serializable
+    data object EnterEmailScreen : Screen(Routes.ENTER_EMAIL_SCREEN)
 
 
 }
@@ -165,6 +169,9 @@ fun MainNavigation(
         composable(Screen.EditAdDescriptionScreen.route) {
             EditAdDescriptionScreen(navHostController = navHostController)
         }
+        composable(Screen.EnterEmailScreen.route) {
+            EnterEmailScreen(navHostController = navHostController)
+        }
     }
 }
 
@@ -183,6 +190,7 @@ object Routes {
     const val EDIT_TITLE_SCREEN_AD = "edit_title_screen_ad"
     const val EDIT_DESCRIPTION_SCREEN_AD = "edit_description_screen_ad"
     const val MY_PROFILE_SCREEN = "my_profile_screen"
+    const val ENTER_EMAIL_SCREEN = "enter_email_screen"
 
 
 }
