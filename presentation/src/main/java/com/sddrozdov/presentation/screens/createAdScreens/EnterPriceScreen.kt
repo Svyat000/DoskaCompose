@@ -20,15 +20,21 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -60,6 +66,16 @@ fun EnterPriceView(
     onEvent: (CreateAdEvents) -> Unit,
     navHostController: NavHostController
 ) {
+    var priceValue by remember { mutableStateOf(TextFieldValue(state.price)) }
+
+    LaunchedEffect(state.price) {
+        if (state.price != priceValue.text.replace(" ", "")) {
+            // Форматируем строку из состояния и ставим курсор в конец
+            val formatted = formatPriceWithCursor(TextFieldValue(state.price))
+            priceValue = formatted
+        }
+    }
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -89,13 +105,15 @@ fun EnterPriceView(
                 )
 
                 OutlinedTextField(
-                    value = formatPrice(state.price),
-                    onValueChange = { newPrice ->
-                        // Удаляем все нецифры и лишние точки перед обработкой
-                        val cleanPrice = newPrice.replace("[^\\d.]".toRegex(), "")
+                    value = priceValue,
+                    onValueChange = { newValue ->
+                        // Форматируем новый ввод с сохранением позиции курсора
+                        val formattedValue = formatPriceWithCursor(newValue)
+                        priceValue = formattedValue
 
-                        // Проверяем формат максимум 8 цифр до точки и 2 после
-                        if (cleanPrice.matches(Regex("^\\d{0,8}(\\.\\d{0,2})?$"))) {
+                        // Отправляем в ViewModel только цифры без пробелов
+                        val cleanPrice = formattedValue.text.replace(" ", "")
+                        if (cleanPrice.length <= 8) {
                             onEvent(CreateAdEvents.OnPriceChanged(cleanPrice))
                         }
                     },
@@ -208,20 +226,29 @@ fun EnterPriceView(
     }
 }
 
-fun formatPrice(input: String): String {
-    if (input.isEmpty()) return ""
+// Функция форматирования с сохранением позиции курсора
+fun formatPriceWithCursor(input: TextFieldValue): TextFieldValue {
+    val originalText = input.text
+    val originalSelection = input.selection.start
+    // Удаляем все кроме цифр
+    val digitsOnly = originalText.filter { it.isDigit() }
+    // Ограничиваем длину до 8 цифр
+    val limitedDigits = if (digitsOnly.length > 8) digitsOnly.take(8) else digitsOnly
+    // Форматируем число с пробелами по тысячам
+    val formatted = limitedDigits.reversed().chunked(3).joinToString(" ").reversed()
+    // Рассчитываем позицию курсора после форматирования
+    // Считаем сколько цифр было до курсора в оригинальном тексте
+    val digitsBeforeCursor = originalText.take(originalSelection).count { it.isDigit() }
+    // Позиция курсора — это длина форматированного текста, соответствующая digitsBeforeCursor
+    var cursorPos = 0
+    var digitsCounted = 0
+    while (cursorPos < formatted.length && digitsCounted < digitsBeforeCursor) {
+        if (formatted[cursorPos].isDigit()) digitsCounted++
+        cursorPos++
+    }
 
-    // Удаляем все нецифры и лишние точки
-    val cleanString = input.replace("[^\\d.]".toRegex(), "")
-
-    // Разделяем на рубли и копейки
-    val parts = cleanString.split(".")
-    var rubles = parts[0]
-    val kopecks = if (parts.size > 1) parts[1] else ""
-
-    // Добавляем разделители тысяч
-    rubles = rubles.reversed().chunked(3).joinToString(" ").reversed()
-
-    // Собираем обратно
-    return if (kopecks.isNotEmpty()) "$rubles.$kopecks" else rubles
+    return TextFieldValue(
+        text = formatted,
+        selection = TextRange(cursorPos)
+    )
 }
