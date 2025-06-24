@@ -41,13 +41,13 @@ import com.sddrozdov.presentation.states.createAd.CreateAdStates
 import com.sddrozdov.presentation.viewModels.createAd.CreateAdViewModel
 
 @Composable
-fun EnterEmailScreen(
+fun EnterPriceScreen(
     navHostController: NavHostController
 ) {
     val viewModel: CreateAdViewModel = hiltViewModel<CreateAdViewModel>()
     val state by viewModel.state.collectAsState()
 
-    EnterEmailView(
+    EnterPriceView(
         state = state,
         onEvent = viewModel::onEvent,
         navHostController = navHostController
@@ -55,7 +55,7 @@ fun EnterEmailScreen(
 }
 
 @Composable
-fun EnterEmailView(
+fun EnterPriceView(
     state: CreateAdStates,
     onEvent: (CreateAdEvents) -> Unit,
     navHostController: NavHostController
@@ -65,8 +65,7 @@ fun EnterEmailView(
             .fillMaxSize()
             .background(AppColors.primaryBackground)
             .padding(16.dp)
-    )
-    {
+    ) {
         Card(
             modifier = Modifier
                 .weight(1f)
@@ -82,28 +81,27 @@ fun EnterEmailView(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Text(
-                    text = "Введите ваш email",
+                    text = "Укажите цену товара",
                     fontSize = 28.sp,
                     fontWeight = FontWeight.SemiBold,
                     modifier = Modifier.padding(bottom = 24.dp),
                     color = AppColors.textColor
                 )
 
-//                Text(
-//                    text = "Мы отправим на него код подтверждения",
-//                    fontSize = 16.sp,
-//                    color = AppColors.textColor,
-//                    modifier = Modifier.padding(bottom = 32.dp)
-//                )
-
                 OutlinedTextField(
-                    value = state.email,
-                    onValueChange = { newEmail ->
-                        onEvent(CreateAdEvents.OnEmailChanged(newEmail))
+                    value = formatPrice(state.price),
+                    onValueChange = { newPrice ->
+                        // Удаляем все нецифры и лишние точки перед обработкой
+                        val cleanPrice = newPrice.replace("[^\\d.]".toRegex(), "")
+
+                        // Проверяем формат максимум 8 цифр до точки и 2 после
+                        if (cleanPrice.matches(Regex("^\\d{0,8}(\\.\\d{0,2})?$"))) {
+                            onEvent(CreateAdEvents.OnPriceChanged(cleanPrice))
+                        }
                     },
                     label = {
                         Text(
-                            text = "Email",
+                            text = "Цена",
                             color = AppColors.secondaryTextColor,
                             fontSize = 14.sp
                         )
@@ -123,11 +121,11 @@ fun EnterEmailView(
                         .fillMaxWidth()
                         .padding(bottom = 16.dp),
                     keyboardOptions = KeyboardOptions(
-                        keyboardType = KeyboardType.Email
+                        keyboardType = KeyboardType.Number
                     ),
                     placeholder = {
                         Text(
-                            text = "example@mail.com",
+                            text = "Например: 1000 или 999.99",
                             color = AppColors.secondaryTextColor
                         )
                     },
@@ -135,7 +133,14 @@ fun EnterEmailView(
                         fontSize = 16.sp,
                         color = AppColors.textColor
                     ),
-                    singleLine = true
+                    singleLine = true,
+                    trailingIcon = {
+                        Text(
+                            text = "₽",
+                            color = AppColors.textColor,
+                            modifier = Modifier.padding(end = 8.dp)
+                        )
+                    }
                 )
 
                 Spacer(modifier = Modifier.height(32.dp))
@@ -173,15 +178,15 @@ fun EnterEmailView(
 
             Button(
                 onClick = {
-                    navHostController.navigate(Screen.EnterPriceScreen.route)
+                    navHostController.navigate(Screen.MainScreen.route)
                 },
-                enabled = state.email.isNotEmpty() && isValidEmail(state.email),
+                enabled = state.price.isNotEmpty() && state.price.toDoubleOrNull() != null,
                 modifier = Modifier
                     .weight(1f)
                     .height(56.dp),
                 shape = RoundedCornerShape(12.dp),
                 colors = ButtonDefaults.buttonColors(
-                    containerColor = if (state.email.isNotEmpty() && isValidEmail(state.email)) {
+                    containerColor = if (state.price.isNotEmpty() && state.price.toDoubleOrNull() != null) {
                         AppColors.accentColor
                     } else {
                         AppColors.disabledButtonColor
@@ -203,7 +208,20 @@ fun EnterEmailView(
     }
 }
 
-fun isValidEmail(email: String): Boolean {
-    val emailRegex = "^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+\$"
-    return email.matches(emailRegex.toRegex())
+fun formatPrice(input: String): String {
+    if (input.isEmpty()) return ""
+
+    // Удаляем все нецифры и лишние точки
+    val cleanString = input.replace("[^\\d.]".toRegex(), "")
+
+    // Разделяем на рубли и копейки
+    val parts = cleanString.split(".")
+    var rubles = parts[0]
+    val kopecks = if (parts.size > 1) parts[1] else ""
+
+    // Добавляем разделители тысяч
+    rubles = rubles.reversed().chunked(3).joinToString(" ").reversed()
+
+    // Собираем обратно
+    return if (kopecks.isNotEmpty()) "$rubles.$kopecks" else rubles
 }
