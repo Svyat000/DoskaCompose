@@ -29,6 +29,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
@@ -240,7 +241,9 @@ fun LoadingIndicator() {
             .padding(32.dp),
         contentAlignment = Alignment.Center
     ) {
-        CircularProgressIndicator(color = AppColors.accentColor)
+        CircularProgressIndicator(
+            modifier = Modifier.testTag("LoadingIndicator"),
+            color = AppColors.accentColor)
     }
 }
 
