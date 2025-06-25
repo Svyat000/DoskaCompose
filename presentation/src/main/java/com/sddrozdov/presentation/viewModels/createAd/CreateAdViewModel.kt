@@ -1,6 +1,7 @@
 package com.sddrozdov.presentation.viewModels.createAd
 
 import android.content.Context
+import android.util.Log
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -60,13 +61,13 @@ class CreateAdViewModel @Inject constructor(
                 selectCity(event.newCity)
             }
 
-            is CreateAdEvents.OnCountryAndCitySelected ->
+            is CreateAdEvents.OnCountryAndCitySelected -> {
                 savedStateHandle[CREATE_AD_STATE] = state.value.copy(
                     selectedCountry = event.country,
                     selectedCity = event.city,
                     countryAndCitySelected = true
                 )
-
+            }
 
             is CreateAdEvents.OnTitleChanged -> {
                 savedStateHandle[CREATE_AD_STATE] =
@@ -89,15 +90,27 @@ class CreateAdViewModel @Inject constructor(
             is CreateAdEvents.OnPostalCodeChanged -> savedStateHandle[CREATE_AD_STATE] =
                 state.value.copy(postalCode = event.newPostalCode)
 
+            is CreateAdEvents.OnPhoneChanged -> {
+                savedStateHandle[CREATE_AD_STATE] =
+                    state.value.copy(phone = event.newPhone)
+
+                Log.d("TAG", state.value.phone)
+                Log.d("TAG", state.value.price)
+                Log.d("TAG", state.value.title)
+                Log.d("TAG", state.value.email)
+                Log.d("TAG", state.value.description)
+                Log.d("TAG", state.value.postalCode)
+                Log.d("TAG", state.value.selectedCountry!!.name)
+                Log.d("TAG", state.value.selectedCity.toString())
+                Log.d("TAG", state.value.selectedCategoryId.toString())
+
+            }
 
             is CreateAdEvents.ImagesSelected -> TODO()
 
             CreateAdEvents.OnClearError -> TODO()
 
-
             CreateAdEvents.OnImagesAdded -> TODO()
-
-            is CreateAdEvents.OnPhoneChanged -> TODO()
 
             CreateAdEvents.OnPublishClicked -> TODO()
 
@@ -124,7 +137,6 @@ class CreateAdViewModel @Inject constructor(
         }
     }
 
-
     private fun loadCategoriesFromRaw(): List<Category> {
         val inputStream = context.resources.openRawResource(R.raw.categories)
         val jsonString = inputStream.bufferedReader().use { it.readText() }
@@ -149,7 +161,6 @@ class CreateAdViewModel @Inject constructor(
             }
         }
     }
-
 
     private fun loadCountriesFromRaw(): List<Country> {
         val inputStream = context.resources.openRawResource(R.raw.countries)
