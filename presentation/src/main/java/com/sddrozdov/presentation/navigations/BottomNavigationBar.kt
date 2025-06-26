@@ -21,7 +21,7 @@ fun BottomBar(navController: NavHostController, currentRoute: String?) {
         Screen.MainScreen,
         Screen.FavoriteAdScreen,
         Screen.SelectCategoryScreen,
-        Screen.DialogsScreen,
+        Screen.MyProfileScreen,
         Screen.LoginScreen,
     )
 
@@ -34,7 +34,7 @@ fun BottomBar(navController: NavHostController, currentRoute: String?) {
                             Screen.MainScreen -> Icons.Default.Home
                             Screen.FavoriteAdScreen -> Icons.Default.Star
                             Screen.CreateAdScreen -> Icons.Default.Add
-                            Screen.DialogsScreen -> Icons.Default.MailOutline
+                            Screen.MyProfileScreen -> Icons.Default.MailOutline
                             Screen.LoginScreen -> Icons.Default.Star
                             else -> Icons.Default.Star
                         },

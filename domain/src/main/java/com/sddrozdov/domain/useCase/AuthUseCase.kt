@@ -69,4 +69,8 @@ class AuthUseCase @Inject constructor(private val repository: AuthRepository) {
     suspend fun isUserAnonymousOrAuthorized(): Boolean {
         return repository.isUserAnonymous()
     }
+
+    suspend fun getCurrentUser(): User? {
+        return repository.getCurrentUser()
+    }
 }
