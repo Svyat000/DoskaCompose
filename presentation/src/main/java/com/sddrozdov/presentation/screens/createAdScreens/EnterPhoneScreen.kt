@@ -200,6 +200,7 @@ fun EnterPhoneView(
 
             Button(
                 onClick = {
+                    onEvent(CreateAdEvents.OnPublishClicked)
                     navHostController.navigate(Screen.MainScreen.route)
                 },
                 enabled = isValidPhoneNumber(state.phone),
@@ -221,7 +222,7 @@ fun EnterPhoneView(
                 )
             ) {
                 Text(
-                    text = "Продолжить",
+                    text = "Опубликовать",
                     fontSize = 18.sp,
                     fontWeight = FontWeight.Medium
                 )

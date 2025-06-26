@@ -7,6 +7,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
+import com.sddrozdov.domain.models.Ad
+import com.sddrozdov.domain.useCase.CreateAdUseCase
 import com.sddrozdov.presentation.R
 import com.sddrozdov.presentation.states.createAd.Category
 import com.sddrozdov.presentation.states.createAd.Country
@@ -25,6 +27,7 @@ class CreateAdViewModel @Inject constructor(
     @ApplicationContext private val context: Context,
     private val gson: Gson,
     private val savedStateHandle: SavedStateHandle,
+    private val createAdUseCase: CreateAdUseCase,
 ) : ViewModel() {
 
     val state =
@@ -106,17 +109,37 @@ class CreateAdViewModel @Inject constructor(
 
             }
 
+            CreateAdEvents.OnPublishClicked ->{
+                viewModelScope.launch {
+                    createAdUseCase.createAd(convertStatesToAd())
+                }
+            }
+
             is CreateAdEvents.ImagesSelected -> TODO()
 
             CreateAdEvents.OnClearError -> TODO()
 
             CreateAdEvents.OnImagesAdded -> TODO()
 
-            CreateAdEvents.OnPublishClicked -> TODO()
+
 
             CreateAdEvents.OpenImagePicker -> TODO()
 
         }
+    }
+
+    private fun convertStatesToAd(): Ad{
+        return Ad(
+            title = state.value.title,
+            description = state.value.description,
+            price = state.value.price,
+            country = state.value.selectedCountry!!.name,
+            city = state.value.selectedCity,
+            category = state.value.selectedCategoryId.toString(),
+            email = state.value.email,
+            phone = state.value.phone,
+            postalCode = state.value.postalCode,
+        )
     }
 
 

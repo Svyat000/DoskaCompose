@@ -1,6 +1,6 @@
-package com.sddrozdov.doskacompose.domain.repository
+package com.sddrozdov.domain.repository
 
-import com.sddrozdov.doskacompose.domain.models.Ad
+import com.sddrozdov.domain.models.Ad
 
 interface AdRepository {
     suspend fun createAd(ad: Ad): Result<Unit>

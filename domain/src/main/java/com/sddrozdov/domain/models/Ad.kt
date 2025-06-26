@@ -1,4 +1,4 @@
-package com.sddrozdov.doskacompose.domain.models
+package com.sddrozdov.domain.models
 
 import java.io.Serializable
 
@@ -12,8 +12,8 @@ data class Ad(
     val city: String? = null,
     val category: String? = null,
     val email: String? = null,
-    val tel: String? = null,
-    val index: String? = null,
+    val phone: String? = null,
+    val postalCode: String? = null,
     val time: String = "0",
 
     val mainImage: String = "empty",
