@@ -1,5 +1,6 @@
 package com.sddrozdov.repository
 
+import android.util.Log
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DatabaseReference
 import com.sddrozdov.domain.models.Ad
@@ -20,14 +21,20 @@ class AdRepositoryImpl @Inject constructor(
                 ?: return@withContext Result.failure(IllegalStateException("User not authenticated"))
 
             // Генерируем новый ключ если его нет
-            val adKey = ad.key ?: databaseReference.push().key
-            ?: return@withContext Result.failure(IllegalStateException("Failed to generate ad key"))
+            val adKey = databaseReference.child("ads").push().key
+                ?: return@withContext Result.failure(IllegalStateException("Failed to generate ad key"))
 
-            val adWithKey = ad.copy(key = adKey, uid = userId)
+            val adWithKey =
+                ad.copy(key = adKey, uid = userId, time = System.currentTimeMillis().toString())
 
-            // await для suspend корутин
-            databaseReference.child(adKey).child(userId).child("AD")
+            // Записываем объявление в /ads/{adKey}
+            databaseReference.child("ads").child(adKey)
                 .setValue(adWithKey)
+                .await()
+
+            // Записываем ссылку в /users/{userId}/ads/{adKey} = true
+            databaseReference.child("users").child(userId).child("ads").child(adKey)
+                .setValue(true)
                 .await()
 
             Result.success(Unit)
@@ -45,4 +52,35 @@ class AdRepositoryImpl @Inject constructor(
         TODO("Not yet implemented")
     }
 
+    override suspend fun readAdFromDB(): Result<List<Ad>> = withContext(Dispatchers.IO) {
+        try {
+            val userId = firebaseAuth.uid
+                ?: return@withContext Result.failure(IllegalStateException("User not authenticated"))
+
+            // Получаем список ключей объявлений пользователя
+            val keysSnapshot = databaseReference.child("users").child(userId).child("ads")
+                .get()
+                .await()
+
+            val ads = mutableListOf<Ad>()
+
+            // Для каждого ключа получаем объявление из /ads/{adKey}
+            for (keySnapshot in keysSnapshot.children) {
+                val adKey = keySnapshot.key ?: continue
+
+                val adSnapshot = databaseReference.child("ads").child(adKey)
+                    .get()
+                    .await()
+
+                val ad = adSnapshot.getValue(Ad::class.java)
+                ad?.let { ads.add(it) }
+            }
+            Log.d("TAG","data layer readAdsFromDb OK!" )
+            Result.success(ads)
+
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
 }
+
