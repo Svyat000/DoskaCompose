@@ -17,8 +17,12 @@ class CreateAdUseCase @Inject constructor(private val repository: AdRepository) 
         return repository.createAd(ad)
     }
 
-    suspend fun readAdFromDb() : Result<List<Ad>>{
-        return repository.readAdFromDB()
+    suspend fun readUserAdFromDb() : Result<List<Ad>>{
+        return repository.readUserAdFromDB()
+    }
+
+    suspend fun readAllAdFromDb() : Result<List<Ad>>{
+        return repository.readAllAdFromDB()
     }
 
 }

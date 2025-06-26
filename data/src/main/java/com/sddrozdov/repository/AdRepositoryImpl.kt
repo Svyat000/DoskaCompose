@@ -21,19 +21,19 @@ class AdRepositoryImpl @Inject constructor(
                 ?: return@withContext Result.failure(IllegalStateException("User not authenticated"))
 
             // Генерируем новый ключ если его нет
-            val adKey = databaseReference.child("ads").push().key
+            val adKey = databaseReference.child(ADS).push().key
                 ?: return@withContext Result.failure(IllegalStateException("Failed to generate ad key"))
 
             val adWithKey =
                 ad.copy(key = adKey, uid = userId, time = System.currentTimeMillis().toString())
 
             // Записываем объявление в /ads/{adKey}
-            databaseReference.child("ads").child(adKey)
+            databaseReference.child(ADS).child(adKey)
                 .setValue(adWithKey)
                 .await()
 
             // Записываем ссылку в /users/{userId}/ads/{adKey} = true
-            databaseReference.child("users").child(userId).child("ads").child(adKey)
+            databaseReference.child(USERS).child(userId).child(ADS).child(adKey)
                 .setValue(true)
                 .await()
 
@@ -52,13 +52,13 @@ class AdRepositoryImpl @Inject constructor(
         TODO("Not yet implemented")
     }
 
-    override suspend fun readAdFromDB(): Result<List<Ad>> = withContext(Dispatchers.IO) {
+    override suspend fun readUserAdFromDB(): Result<List<Ad>> = withContext(Dispatchers.IO) {
         try {
             val userId = firebaseAuth.uid
                 ?: return@withContext Result.failure(IllegalStateException("User not authenticated"))
 
             // Получаем список ключей объявлений пользователя
-            val keysSnapshot = databaseReference.child("users").child(userId).child("ads")
+            val keysSnapshot = databaseReference.child(USERS).child(userId).child(ADS)
                 .get()
                 .await()
 
@@ -68,19 +68,38 @@ class AdRepositoryImpl @Inject constructor(
             for (keySnapshot in keysSnapshot.children) {
                 val adKey = keySnapshot.key ?: continue
 
-                val adSnapshot = databaseReference.child("ads").child(adKey)
+                val adSnapshot = databaseReference.child(ADS).child(adKey)
                     .get()
                     .await()
 
                 val ad = adSnapshot.getValue(Ad::class.java)
                 ad?.let { ads.add(it) }
             }
-            Log.d("TAG","data layer readAdsFromDb OK!" )
+            Log.d("TAG", "data layer readAdsFromDb OK!")
             Result.success(ads)
 
         } catch (e: Exception) {
             Result.failure(e)
         }
+    }
+
+    override suspend fun readAllAdFromDB(): Result<List<Ad>> = withContext(Dispatchers.IO) {
+        try {
+            val snapshot = databaseReference.child(ADS).limitToLast(5).get().await()
+            val ads = mutableListOf<Ad>()
+            for (child in snapshot.children) {
+                val ad = child.getValue(Ad::class.java)
+                ad?.let { ads.add(it) }
+            }
+            Result.success(ads)
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
+
+    companion object NodesDb {
+        const val ADS = "ads"
+        const val USERS = "users"
     }
 }
 

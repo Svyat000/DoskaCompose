@@ -34,7 +34,7 @@ class MainScreenViewModel @Inject constructor(
     private fun loadAds() {
         _state.value = _state.value.copy(isLoading = true, error = null)
         viewModelScope.launch {
-            val result = createAdUseCase.readAdFromDb()
+            val result = createAdUseCase.readAllAdFromDb()
             result.fold(
                 onSuccess = { adsList ->
                     _state.value = MainScreenState(isLoading = false, ads = adsList, error = null)
