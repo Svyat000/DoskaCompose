@@ -1,9 +1,23 @@
 package com.sddrozdov.presentation.screens
 
-import androidx.compose.foundation.layout.*
+import android.util.Log
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material3.*
+import androidx.compose.material3.Button
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -13,17 +27,18 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavHostController
 import com.sddrozdov.presentation.R
-import com.sddrozdov.presentation.navigations.Screen
 import com.sddrozdov.presentation.states.MainScreenEvent
 import com.sddrozdov.presentation.states.MainScreenState
 import com.sddrozdov.presentation.viewModels.MainScreenViewModel
 import java.text.SimpleDateFormat
-import java.util.*
+import java.util.Date
+import java.util.Locale
 
 @Composable
 fun MainScreen(
-    onNavigateTo: (String) -> Unit
+    navHostController: NavHostController
 ) {
     val viewModel = hiltViewModel<MainScreenViewModel>()
     val state by viewModel.state.collectAsState()
@@ -31,7 +46,7 @@ fun MainScreen(
     MainScreenView(
         state = state,
         onEvent = viewModel::onEvent,
-        onNavigateTo = onNavigateTo
+        navHostController = navHostController
     )
 }
 
@@ -39,7 +54,7 @@ fun MainScreen(
 fun MainScreenView(
     state: MainScreenState,
     onEvent: (MainScreenEvent) -> Unit,
-    onNavigateTo: (String) -> Unit
+    navHostController: NavHostController
 ) {
     Column(
         modifier = Modifier
@@ -86,7 +101,7 @@ fun MainScreenView(
 
             state.ads.isEmpty() -> {
                 EmptyState {
-                    onNavigateTo("create_ad")
+                    navHostController.navigate("create_ad") //todo()
                 }
             }
 
@@ -111,8 +126,13 @@ fun MainScreenView(
                             viewCount = ad.viewsCounter?.toIntOrNull() ?: 0,
                             favCount = ad.favoriteCounter.toInt() ?: 0,
                             publishTime = formatTime(ad.time),
-                            onEditClick = { onNavigateTo(Screen.LoginScreen.route) },
-                            onDeleteClick = { onNavigateTo(Screen.LoginScreen.route) }
+                            onClick = {
+                                //onEvent(MainScreenEvent.OpenDescriptionAd(ad.key.toString()))
+                                navHostController.navigate("description_ad_screen/${ad.key}")
+                                Log.d("TAG", "MAIN SCREEN ${ad.key}")
+                            }
+//                            onEditClick = { onNavigateTo(Screen.LoginScreen.route) },
+//                            onDeleteClick = { onNavigateTo(Screen.LoginScreen.route) }
                         )
                     }
                 }
@@ -139,7 +159,7 @@ private fun EmptyState(onCreateClick: () -> Unit) {
 }
 
 @Composable
-private fun ErrorMessage(error: String, onRetry: () -> Unit) {
+fun ErrorMessage(error: String, onRetry: () -> Unit) {
     Column(
         modifier = Modifier.fillMaxSize(),
         verticalArrangement = Arrangement.Center,
@@ -168,5 +188,5 @@ private fun formatTime(timestamp: String?): String {
 @Preview(showBackground = true)
 @Composable
 fun MainScreenPreview() {
-    MainScreen() {}
+    //MainScreen() {}
 }
