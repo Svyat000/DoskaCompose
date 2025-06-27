@@ -6,9 +6,11 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
+import androidx.navigation.navArgument
 //import com.sddrozdov.presentation.screens.createAdScreens.CreateAdScreen
 import com.sddrozdov.presentation.screens.DescriptionAdScreen
 import com.sddrozdov.presentation.screens.DialogsScreen
@@ -26,6 +28,7 @@ import com.sddrozdov.presentation.screens.createAdScreens.EnterPriceScreen
 import com.sddrozdov.presentation.screens.createAdScreens.SelectCategoryScreen
 import com.sddrozdov.presentation.screens.createAdScreens.SelectCountryAndCityScreen
 import com.sddrozdov.presentation.screens.myProfile.ProfileScreen
+import com.sddrozdov.presentation.viewModels.AD_KEY_ARG
 import com.sddrozdov.presentation.viewModels.createAd.CreateAdViewModel
 import kotlinx.serialization.Serializable
 
@@ -206,9 +209,7 @@ fun MainNavigation(
         }
         composable(Screen.MainScreen.route) {
             MainScreen(
-                onNavigateTo = { route ->
-                    navHostController.navigate(route)
-                }
+                navHostController = navHostController,
             )
         }
         composable(Screen.FilterScreen.route) {
@@ -235,12 +236,25 @@ fun MainNavigation(
 //            )
 //        }
 
-        composable(Screen.DescriptionAdScreen.route) {
-            DescriptionAdScreen(
-                onNavigateTo = { route ->
-                    navHostController.navigate(route)
-                }
-            )
+//        composable(Screen.DescriptionAdScreen.route) {
+//            DescriptionAdScreen(
+//                onNavigateTo = { route ->
+//                    navHostController.navigate(route)
+//                }
+//            )
+//        }
+
+        composable(
+            route = Screen.DescriptionAdScreen.route,
+            arguments = listOf(navArgument(AD_KEY_ARG) { type = NavType.StringType })
+        ) { backStackEntry ->
+            val adKey = backStackEntry.arguments?.getString(AD_KEY_ARG)
+            if (adKey != null) {
+                DescriptionAdScreen(
+                    navHostController = navHostController,
+                    adKey = adKey
+                )
+            }
         }
 
         composable(Screen.MyProfileScreen.route) {
@@ -269,7 +283,7 @@ object Routes {
     const val DIALOGS = "dialogs_screen"
     const val CHAT = "chat_screen"
     const val CREATE_AD = "create_ad_screen"
-    const val DESCRIPTION_AD = "description_ad_screen"
+    const val DESCRIPTION_AD = "description_ad_screen/{adKey}"
     const val FAVORITE_AD = "favorite_ad_screen"
     const val SELECT_CATEGORY_AD = "select_category_ad_screen"
     const val SELECT_COUNTRY_AND_CITY_AD = "select_country_and_city_ad_screen"
