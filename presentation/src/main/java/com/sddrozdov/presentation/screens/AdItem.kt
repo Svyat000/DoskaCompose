@@ -2,6 +2,7 @@ package com.sddrozdov.presentation.screens
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
@@ -27,8 +28,9 @@ fun AdCard(
     viewCount: Int,
     favCount: Int,
     publishTime: String,
-    onEditClick: () -> Unit,
-    onDeleteClick: () -> Unit
+    onClick: () -> Unit,
+//    onEditClick: () -> Unit,
+//    onDeleteClick: () -> Unit
 ) {
 
     val primarySurface = Color(0xFFF7F9FC)
@@ -42,9 +44,11 @@ fun AdCard(
         modifier = Modifier
             .fillMaxWidth()
             .padding(8.dp),
+        onClick = onClick,
         shape = RoundedCornerShape(20.dp),
         elevation = CardDefaults.elevatedCardElevation(1.dp),
         colors = CardDefaults.cardColors(containerColor = primarySurface)
+
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
             Text(
@@ -112,70 +116,77 @@ fun AdCard(
 
             Row(
                 modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween,
+                horizontalArrangement = Arrangement.Absolute.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     IconWithCount(
                         iconRes = R.drawable.ic_eye,
                         count = viewCount,
-                        tint = iconColor
+                        tint = iconColor,
+                        onIconClick = {}
+
                     )
-                    Spacer(modifier = Modifier.width(16.dp))
+
+                }
+                Row(verticalAlignment = Alignment.CenterVertically) {
                     IconWithCount(
                         iconRes = R.drawable.ic_fav_normal,
                         count = favCount,
-                        tint = iconColor
+                        tint = iconColor,
+                        onIconClick = {}//todo("" Добавление в избранные)
                     )
                 }
 
-                Row(verticalAlignment = Alignment.CenterVertically) {
-                    Text(
-                        text = publishTime,
-                        color = lightText,
-                        fontSize = 12.sp
-                    )
-                    Spacer(modifier = Modifier.width(8.dp))
-                    IconButton(
-                        onClick = onEditClick,
-                        modifier = Modifier.size(36.dp)
-                    ) {
-                        Icon(
-                            painter = painterResource(id = R.drawable.ic_edit),
-                            contentDescription = "Edit",
-                            tint = accentColor
-                        )
-                    }
-                    IconButton(
-                        onClick = onDeleteClick,
-                        modifier = Modifier.size(36.dp)
-                    ) {
-                        Icon(
-                            painter = painterResource(id = R.drawable.ic_delete_image),
-                            contentDescription = "Delete",
-                            tint = Color(0xFFE17055)
-                        )
-                    }
-                }
+//                Row(verticalAlignment = Alignment.CenterVertically) {
+//                    Text(
+//                        text = publishTime,
+//                        color = lightText,
+//                        fontSize = 12.sp
+//                    )
+//                    Spacer(modifier = Modifier.width(8.dp))
+//                    IconButton(
+//                        onClick = onEditClick,
+//                        modifier = Modifier.size(36.dp)
+//                    ) {
+//                        Icon(
+//                            painter = painterResource(id = R.drawable.ic_edit),
+//                            contentDescription = "Edit",
+//                            tint = accentColor
+//                        )
+//                    }
+//                    IconButton(
+//                        onClick = onDeleteClick,
+//                        modifier = Modifier.size(36.dp)
+//                    ) {
+//                        Icon(
+//                            painter = painterResource(id = R.drawable.ic_delete_image),
+//                            contentDescription = "Delete",
+//                            tint = Color(0xFFE17055)
+//                        )
+//                    }
+//                }
             }
         }
     }
 }
 
 @Composable
-fun IconWithCount(iconRes: Int, count: Int, tint: Color) {
+fun IconWithCount(iconRes: Int, count: Int, tint: Color, onIconClick: () -> Unit) {
     Row(verticalAlignment = Alignment.CenterVertically) {
         Icon(
             painter = painterResource(id = iconRes),
             contentDescription = null,
-            modifier = Modifier.size(20.dp),
+            modifier = Modifier
+                .size(32.dp)
+                .clickable { onIconClick() },
             tint = tint
         )
         Spacer(modifier = Modifier.width(4.dp))
         Text(
             text = count.toString(),
             color = tint,
-            fontSize = 12.sp
+            fontSize = 16.sp
         )
     }
 }
@@ -191,7 +202,8 @@ fun PreviewAdCard() {
         viewCount = 142,
         favCount = 28,
         publishTime = "2 ч назад",
-        onEditClick = { },
-        onDeleteClick = { }
+        onClick = {}
+//        onEditClick = { },
+//        onDeleteClick = { }
     )
 }
