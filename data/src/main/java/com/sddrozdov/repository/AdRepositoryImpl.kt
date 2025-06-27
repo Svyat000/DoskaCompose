@@ -97,6 +97,18 @@ class AdRepositoryImpl @Inject constructor(
         }
     }
 
+    override suspend fun getAdByKey(key: String): Result<Ad> = withContext(Dispatchers.IO) {
+        try {
+            val snapshot = databaseReference.child(ADS).child(key).get().await()
+            val ad = snapshot.getValue(Ad::class.java) ?: return@withContext Result.failure(
+                NullPointerException("Ad not found")
+            )
+            Result.success(ad)
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
+
     companion object NodesDb {
         const val ADS = "ads"
         const val USERS = "users"
