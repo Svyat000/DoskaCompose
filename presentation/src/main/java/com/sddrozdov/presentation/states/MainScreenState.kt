@@ -14,7 +14,6 @@ data class MainScreenState(
 ) : Parcelable
 
 sealed class MainScreenEvent {
-    //data class OpenDescriptionAd(val adKey: String) : MainScreenEvent()
     object LoadAds : MainScreenEvent()
     data class ShowError(val message: String) : MainScreenEvent()
 

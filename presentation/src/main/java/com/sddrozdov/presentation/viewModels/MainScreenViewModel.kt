@@ -33,14 +33,6 @@ class MainScreenViewModel @Inject constructor(
         when (event) {
             MainScreenEvent.LoadAds -> loadAds()
             is MainScreenEvent.ShowError -> _state.value = _state.value.copy(error = event.message)
-//            is MainScreenEvent.OpenDescriptionAd -> {
-//                savedStateHandle[AD_FROM_MAIN_TO_DESC_SCREEN] = event.adKey
-//
-//
-//                val savedAdKey = savedStateHandle.get<String>(AD_FROM_MAIN_TO_DESC_SCREEN)
-//                Log.d("TAG", "Saved adKey in savedStateHandle: $savedAdKey")
-//            }
-
         }
     }
 
