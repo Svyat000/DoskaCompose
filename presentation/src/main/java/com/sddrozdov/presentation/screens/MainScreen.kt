@@ -35,6 +35,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import com.sddrozdov.presentation.AppColors
 import com.sddrozdov.presentation.R
@@ -50,7 +51,7 @@ fun MainScreen(
     navHostController: NavHostController
 ) {
     val viewModel = hiltViewModel<MainScreenViewModel>()
-    val state by viewModel.state.collectAsState()
+    val state by viewModel.state.collectAsStateWithLifecycle()
 
     MainScreenView(
         state = state,
