@@ -25,5 +25,9 @@ data class Ad(
     var callsCounter: String = "0",
     var favoriteCounter: String = "0",
 
-    var isFavorite: Boolean = false
-) : Serializable
+
+    val favorites: Map<String, Boolean> = emptyMap()
+) : Serializable{
+    val favCount: Int get() = favorites.count { it.value }
+    fun isFavoriteFor(uid: String): Boolean = favorites[uid] ?: false
+}

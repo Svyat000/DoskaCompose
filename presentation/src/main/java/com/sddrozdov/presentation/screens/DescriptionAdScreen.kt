@@ -58,9 +58,11 @@ fun DescriptionAdView(
     onEvent: (DescriptionAdScreenEvent) -> Unit,
     navHostController: NavHostController,
 ) {
-    Column(modifier = Modifier
-        .fillMaxSize()
-        .padding(16.dp)) {
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(16.dp)
+    ) {
 
         when {
             state.isLoading -> {
@@ -101,7 +103,32 @@ fun DescriptionAdView(
                 Text(text = "Цена: ${ad.price} ₽", style = MaterialTheme.typography.titleMedium)
                 Spacer(modifier = Modifier.height(8.dp))
 
-                Text(text = "Просмотры: ${ad.viewsCounter ?: 0}", style = MaterialTheme.typography.bodyMedium)
+                Text(
+                    text = "Просмотры: ${ad.viewsCounter ?: 0}",
+                    style = MaterialTheme.typography.bodyMedium
+                )
+                Spacer(modifier = Modifier.height(16.dp))
+
+
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceEvenly
+                ) {
+                    Button(onClick = {}) {
+                        Text("Позвонить")
+                    }
+
+                    Button(onClick = {}) {
+                        Text("Почта")
+                    }
+
+                    Button(onClick = {
+                        navHostController.navigate("ChatScreen/${ad.key}")
+                    }) {
+                        Text("Чат")
+                    }
+                }
+
                 Spacer(modifier = Modifier.height(16.dp))
 
                 Row(

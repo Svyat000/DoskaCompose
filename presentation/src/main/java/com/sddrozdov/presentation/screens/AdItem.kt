@@ -18,15 +18,19 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.tooling.preview.Preview
 import com.sddrozdov.presentation.R
+import com.sddrozdov.presentation.states.MainScreenEvent
 
 @Composable
 fun AdCard(
+    adKey: String,
     title: String,
     imageRes: Int,
     description: String,
     price: String,
     viewCount: Int,
     favCount: Int,
+    onEvent: (MainScreenEvent) -> Unit,
+    isFavorite: Boolean,
     publishTime: String,
     onClick: () -> Unit,
 //    onEditClick: () -> Unit,
@@ -131,10 +135,10 @@ fun AdCard(
                 }
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     IconWithCount(
-                        iconRes = R.drawable.ic_fav_normal,
+                        iconRes = if (isFavorite) R.drawable.ic_fav_pressed else R.drawable.ic_fav_normal,
                         count = favCount,
                         tint = iconColor,
-                        onIconClick = {}//todo("" Добавление в избранные)
+                        onIconClick = { onEvent(MainScreenEvent.AddFavoriteAd(adKey)) }
                     )
                 }
 
@@ -202,8 +206,12 @@ fun PreviewAdCard() {
         viewCount = 142,
         favCount = 28,
         publishTime = "2 ч назад",
-        onClick = {}
+        onClick = {},
+        isFavorite = true,
+        onEvent = {},
 //        onEditClick = { },
 //        onDeleteClick = { }
+        adKey = ""
+
     )
 }
