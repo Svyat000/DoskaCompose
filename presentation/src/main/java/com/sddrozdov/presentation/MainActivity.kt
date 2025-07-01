@@ -38,10 +38,10 @@ class MainActivity : ComponentActivity() {
                 val showBottomBar = when (currentRoute) {
                     Routes.MAIN,
                     Routes.DIALOGS,
-                    Routes.CREATE_AD,
                     Routes.FAVORITE_AD,
                     Routes.LOGIN,
                     Routes.REGISTER,
+                    Routes.MY_AD,
                     Routes.MY_PROFILE_SCREEN -> true
 
                     else -> false

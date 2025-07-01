@@ -21,8 +21,8 @@ fun BottomBar(navController: NavHostController, currentRoute: String?) {
         Screen.MainScreen,
         Screen.FavoriteAdScreen,
         Screen.SelectCategoryScreen,
+        Screen.MyAdScreen,
         Screen.MyProfileScreen,
-        Screen.LoginScreen,
     )
 
     NavigationBar {
@@ -33,9 +33,9 @@ fun BottomBar(navController: NavHostController, currentRoute: String?) {
                         imageVector = when (screen) {
                             Screen.MainScreen -> Icons.Default.Home
                             Screen.FavoriteAdScreen -> Icons.Default.Star
-                            Screen.CreateAdScreen -> Icons.Default.Add
-                            Screen.MyProfileScreen -> Icons.Default.MailOutline
-                            Screen.LoginScreen -> Icons.Default.Star
+                            Screen.SelectCategoryScreen -> Icons.Default.Add
+                            Screen.MyAdScreen -> Icons.Default.MailOutline
+                            Screen.MyProfileScreen -> Icons.Default.Star
                             else -> Icons.Default.Star
                         },
                         contentDescription = null
@@ -60,10 +60,10 @@ fun BottomBar(navController: NavHostController, currentRoute: String?) {
 private fun getLabelRes(screen: Screen): Int {
     return when (screen) {
         Screen.MainScreen -> R.string.main_screen
-        Screen.DialogsScreen -> R.string.dialogs
-        Screen.SelectCategoryScreen -> R.string.create_ad
-        Screen.LoginScreen -> R.string.sign_in
         Screen.FavoriteAdScreen -> R.string.favorite_ad
+        Screen.SelectCategoryScreen -> R.string.create_ad
+        Screen.MyAdScreen -> R.string.my_ad
+        Screen.MyProfileScreen -> R.string.profile
         else -> R.string.unknown
     }
 }

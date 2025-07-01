@@ -29,5 +29,7 @@
     <string name="cities">Города</string>
     <string name="countries">Страны</string>
     <string name="title_ad">Заголовок объявления</string>
+    <string name="my_ad">Мои</string>
+    <string name="profile">Профиль</string>
 
 </resources>
