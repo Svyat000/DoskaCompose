@@ -18,6 +18,7 @@ import com.sddrozdov.presentation.screens.FavoriteAdScreen
 import com.sddrozdov.presentation.screens.FilterScreen
 import com.sddrozdov.presentation.screens.signInSignOut.LoginScreen
 import com.sddrozdov.presentation.screens.MainScreen
+import com.sddrozdov.presentation.screens.MyAdScreen
 import com.sddrozdov.presentation.screens.signInSignOut.RegisterScreen
 import com.sddrozdov.presentation.screens.createAdScreens.EditAdDescriptionScreen
 import com.sddrozdov.presentation.screens.createAdScreens.EditAdTitleScreen
@@ -54,9 +55,6 @@ sealed class Screen(val route: String) {
     data object ChatScreen : Screen(Routes.CHAT)
 
     @Serializable
-    data object CreateAdScreen : Screen(Routes.CREATE_AD)
-
-    @Serializable
     data object MyProfileScreen : Screen(Routes.MY_PROFILE_SCREEN)
 
     @Serializable
@@ -64,6 +62,9 @@ sealed class Screen(val route: String) {
 
     @Serializable
     data object FavoriteAdScreen : Screen(Routes.FAVORITE_AD)
+
+    @Serializable
+    data object MyAdScreen : Screen(Routes.MY_AD)
 
     @Serializable
     data object SelectCategoryScreen : Screen(Routes.SELECT_CATEGORY_AD)
@@ -228,14 +229,6 @@ fun MainNavigation(
         }
         composable<Screen.ChatScreen> { }
 
-//        composable(Screen.CreateAdScreen.route) {
-//            CreateAdScreen(
-//                onNavigateTo = { route ->
-//                    navHostController.navigate(route)
-//                }
-//            )
-//        }
-
 //        composable(Screen.DescriptionAdScreen.route) {
 //            DescriptionAdScreen(
 //                onNavigateTo = { route ->
@@ -271,7 +264,11 @@ fun MainNavigation(
                 }
             )
         }
-
+        composable(Screen.MyAdScreen.route) {
+            MyAdScreen(
+                navHostController = navHostController,
+            )
+        }
     }
 }
 
@@ -282,9 +279,9 @@ object Routes {
     const val FILTER = "filter_screen"
     const val DIALOGS = "dialogs_screen"
     const val CHAT = "chat_screen"
-    const val CREATE_AD = "create_ad_screen"
     const val DESCRIPTION_AD = "description_ad_screen/{adKey}"
     const val FAVORITE_AD = "favorite_ad_screen"
+    const val MY_AD = "my_ad_screen"
     const val SELECT_CATEGORY_AD = "select_category_ad_screen"
     const val SELECT_COUNTRY_AND_CITY_AD = "select_country_and_city_ad_screen"
     const val EDIT_TITLE_SCREEN_AD = "edit_title_screen_ad"
