@@ -112,9 +112,20 @@ class AdRepositoryImpl @Inject constructor(
     override suspend fun toggleFavoriteAd(key: String, uid: String): Result<Unit> =
         withContext(Dispatchers.IO) {
             try {
-                val ref = databaseReference.child(ADS).child(key).child(FAVORITES).child(uid)
-                val current = ref.get().await().getValue(Boolean::class.java) ?: false
-                ref.setValue(!current).await()
+                val adFavoritesRef = databaseReference.child(ADS).child(key).child(FAVORITES).child(uid)
+                val userFavoritesRef = databaseReference.child(USERS).child(uid).child(USERS_FAVORITE_ADS).child(key)
+
+                val current = adFavoritesRef.get().await().getValue(Boolean::class.java) ?: false
+                val newValue = !current
+                adFavoritesRef.setValue(newValue).await()
+
+                if (newValue) {
+                    // Если добавляем в избранное создаем запись у пользователя
+                    userFavoritesRef.setValue(true).await()
+                } else {
+                    // Если удаляем из избранного удаляем запись у пользователя
+                    userFavoritesRef.removeValue().await()
+                }
                 Result.success(Unit)
             } catch (e: Exception) {
                 Result.failure(e)
@@ -123,6 +134,7 @@ class AdRepositoryImpl @Inject constructor(
 
     companion object NodesDb {
         const val ADS = "ads"
+        const val USERS_FAVORITE_ADS = "favorite_ads"
         const val USERS = "users"
         const val FAVORITES = "favorites"
     }
