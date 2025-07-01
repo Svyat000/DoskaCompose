@@ -109,9 +109,22 @@ class AdRepositoryImpl @Inject constructor(
         }
     }
 
+    override suspend fun toggleFavoriteAd(key: String, uid: String): Result<Unit> =
+        withContext(Dispatchers.IO) {
+            try {
+                val ref = databaseReference.child(ADS).child(key).child(FAVORITES).child(uid)
+                val current = ref.get().await().getValue(Boolean::class.java) ?: false
+                ref.setValue(!current).await()
+                Result.success(Unit)
+            } catch (e: Exception) {
+                Result.failure(e)
+            }
+        }
+
     companion object NodesDb {
         const val ADS = "ads"
         const val USERS = "users"
+        const val FAVORITES = "favorites"
     }
 }
 
