@@ -112,8 +112,10 @@ class AdRepositoryImpl @Inject constructor(
     override suspend fun toggleFavoriteAd(key: String, uid: String): Result<Unit> =
         withContext(Dispatchers.IO) {
             try {
-                val adFavoritesRef = databaseReference.child(ADS).child(key).child(FAVORITES).child(uid)
-                val userFavoritesRef = databaseReference.child(USERS).child(uid).child(USERS_FAVORITE_ADS).child(key)
+                val adFavoritesRef =
+                    databaseReference.child(ADS).child(key).child(FAVORITES).child(uid)
+                val userFavoritesRef =
+                    databaseReference.child(USERS).child(uid).child(USERS_FAVORITE_ADS).child(key)
 
                 val current = adFavoritesRef.get().await().getValue(Boolean::class.java) ?: false
                 val newValue = !current
@@ -127,6 +129,39 @@ class AdRepositoryImpl @Inject constructor(
                     userFavoritesRef.removeValue().await()
                 }
                 Result.success(Unit)
+            } catch (e: Exception) {
+                Result.failure(e)
+            }
+        }
+
+    override suspend fun loadFavAdsForUser(uid: String): Result<List<Ad>> =
+        withContext(Dispatchers.IO) {
+            try {
+                val userFavoritesSnapshot = databaseReference
+                    .child(USERS)
+                    .child(uid)
+                    .child(USERS_FAVORITE_ADS)
+                    .get()
+                    .await()
+
+                val favoriteKeys = userFavoritesSnapshot.children.mapNotNull { it.key }.toSet()
+
+                val adsSnapshot = databaseReference.child(ADS).get().await()
+
+                val favoriteAds = mutableListOf<Ad>()
+
+                for (adSnap in adsSnapshot.children) {
+                    val adKey = adSnap.key ?: continue
+
+                    // Проверяем, есть ли объявление в избранных по ключу
+                    if (favoriteKeys.contains(adKey)) {
+                        val ad = adSnap.getValue(Ad::class.java)
+                        ad?.let {
+                            favoriteAds.add(it)
+                        }
+                    }
+                }
+                Result.success(favoriteAds)
             } catch (e: Exception) {
                 Result.failure(e)
             }

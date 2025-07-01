@@ -10,5 +10,6 @@ interface AdRepository {
     suspend fun readAllAdFromDB(): Result<List<Ad>>
     suspend fun getAdByKey(key: String): Result<Ad>
     suspend fun toggleFavoriteAd(key: String, uid: String): Result<Unit>
+    suspend fun loadFavAdsForUser(uid: String): Result<List<Ad>>
 
 }

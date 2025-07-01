@@ -31,6 +31,9 @@ class CreateAdUseCase @Inject constructor(private val repository: AdRepository) 
 
     suspend fun toggleFavoriteAd(key: String, uid: String): Result<Unit> {
         return repository.toggleFavoriteAd(key, uid)
+    }
 
+    suspend fun loadFavAdsForUser(uid: String) : Result<List<Ad>>{
+        return repository.loadFavAdsForUser(uid)
     }
 }
