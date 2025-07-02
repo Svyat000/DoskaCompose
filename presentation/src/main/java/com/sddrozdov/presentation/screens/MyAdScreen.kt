@@ -337,15 +337,7 @@ private fun EmptyState(onCreateClick: () -> Unit) {
     }
 }
 
-private fun formatTime(timestamp: String?): String {
-    return try {
-        val timeLong = timestamp?.toLongOrNull() ?: return ""
-        val sdf = SimpleDateFormat("dd MMM yyyy, HH:mm", Locale.getDefault())
-        sdf.format(Date(timeLong))
-    } catch (e: Exception) {
-        ""
-    }
-}
+
 
 @Preview(showBackground = true)
 @Composable
