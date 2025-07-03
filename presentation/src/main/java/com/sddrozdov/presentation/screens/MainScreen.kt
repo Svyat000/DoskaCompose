@@ -25,7 +25,6 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -39,6 +38,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import com.sddrozdov.presentation.AppColors
 import com.sddrozdov.presentation.R
+import com.sddrozdov.presentation.navigations.Screen
 import com.sddrozdov.presentation.states.MainScreenEvent
 import com.sddrozdov.presentation.states.MainScreenState
 import com.sddrozdov.presentation.viewModels.MainScreenViewModel
@@ -101,7 +101,7 @@ fun MainScreenView(
                         modifier = Modifier.size(40.dp)
                     ) {
                         Icon(
-                            painter = painterResource(R.drawable.google_icon), // TODO: заменить иконку на refresh
+                            painter = painterResource(R.drawable.ic_refresh),
                             contentDescription = "Обновить",
                             tint = AppColors.accentColor,
                             modifier = Modifier.size(24.dp)
@@ -132,7 +132,7 @@ fun MainScreenView(
 
                     state.ads.isEmpty() -> {
                         EmptyState {
-                            navHostController.navigate("create_ad")
+                            navHostController.navigate(Screen.SelectCategoryScreen.route)
                         }
                     }
 
@@ -145,6 +145,8 @@ fun MainScreenView(
                         ) {
                             items(state.ads) { ad ->
                                 AdCard(
+                                    favCount = ad.favCount,
+                                    adKey = ad.key?:"",
                                     title = ad.title.orEmpty(),
                                     imageRes = if (ad.mainImage.isNotEmpty()) {
                                         // TODO: загрузка изображения
@@ -155,11 +157,12 @@ fun MainScreenView(
                                     description = ad.description.orEmpty(),
                                     price = "${ad.price} ₽",
                                     viewCount = ad.viewsCounter?.toIntOrNull() ?: 0,
-                                    favCount = ad.favoriteCounter.toIntOrNull() ?: 0,
                                     publishTime = formatTime(ad.time),
+                                    isFavorite = state.uid?.let { uid -> ad.isFavoriteFor(uid) } ?: false,
                                     onClick = {
                                         navHostController.navigate("description_ad_screen/${ad.key}")
-                                    }
+                                    },
+                                    onEvent = onEvent
                                 )
                             }
                         }
@@ -222,7 +225,7 @@ fun ErrorMessage(error: String, onRetry: () -> Unit) {
     }
 }
 
-private fun formatTime(timestamp: String?): String {
+fun formatTime(timestamp: String?): String {
     return try {
         val timeLong = timestamp?.toLongOrNull() ?: return ""
         val sdf = SimpleDateFormat("dd MMM yyyy, HH:mm", Locale.getDefault())

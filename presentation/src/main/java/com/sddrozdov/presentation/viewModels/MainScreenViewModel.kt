@@ -28,7 +28,7 @@ class MainScreenViewModel @Inject constructor(
 
     init {
         loadAds()
-        //loadFavoriteAds()
+        loadFavoriteAds()
     }
 
     fun onEvent(event: MainScreenEvent) {
@@ -36,7 +36,7 @@ class MainScreenViewModel @Inject constructor(
             MainScreenEvent.LoadAds -> loadAds()
             is MainScreenEvent.ShowError -> _state.value = _state.value.copy(error = event.message)
             is MainScreenEvent.AddFavoriteAd -> toggleFavoriteAd(event.key)
-            MainScreenEvent.LoadUsersFavoriteAds -> TODO()//loadFavoriteAds()
+            MainScreenEvent.LoadUsersFavoriteAds -> loadFavoriteAds()
         }
     }
 
@@ -100,5 +100,36 @@ class MainScreenViewModel @Inject constructor(
         }
     }
 
+    private fun loadFavoriteAds() {
+        _state.value = _state.value.copy(isLoading = true, error = null)
+        viewModelScope.launch {
+
+            val user = authUseCase.getCurrentUser() ?: run {
+                _state.value = _state.value.copy(error = "Пользователь не авторизован")
+                return@launch
+            }
+
+            val uid = user.uid ?: run {
+                _state.value = _state.value.copy(error = "Ошибка: UID не найден")
+                return@launch
+            }
+
+            val result = createAdUseCase.loadFavAdsForUser(uid)
+            result.fold(
+                onSuccess = { adsList ->
+                    _state.value =
+                        MainScreenState(isLoading = false, favoriteAds = adsList, error = null)
+                },
+                onFailure = { throwable ->
+                    _state.value = MainScreenState(
+                        isLoading = false,
+                        favoriteAds = emptyList(),
+                        error = throwable.message
+                    )
+                }
+            )
+        }
+        Log.d("MYTAG", " VIEWMODEL ${_state.value.favoriteAds}")//работает загрузка избранных
+    }
 
 }
