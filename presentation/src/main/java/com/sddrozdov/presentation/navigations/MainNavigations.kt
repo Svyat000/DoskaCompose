@@ -259,9 +259,7 @@ fun MainNavigation(
         }
         composable(Screen.FavoriteAdScreen.route) {
             FavoriteAdScreen(
-                onNavigateTo = { route ->
-                    navHostController.navigate(route)
-                }
+                navHostController = navHostController,
             )
         }
         composable(Screen.MyAdScreen.route) {
