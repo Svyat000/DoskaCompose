@@ -234,7 +234,6 @@ fun DescriptionAdViewPreview() {
         description = "Это подробное описание объявления. Здесь можно разместить всю информацию о товаре или услуге.",
         price = 12345.toString(),
         viewsCounter = 789.toString(),
-        favoriteCounter = 42.toString(),
         time = System.currentTimeMillis().toString()
     )
 

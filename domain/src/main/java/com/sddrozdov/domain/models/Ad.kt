@@ -23,7 +23,6 @@ data class Ad(
     var viewsCounter: String = "0",
     var emailsCounter: String = "0",
     var callsCounter: String = "0",
-    var favoriteCounter: String = "0",
 
 
     val favorites: Map<String, Boolean> = emptyMap()

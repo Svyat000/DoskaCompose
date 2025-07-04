@@ -27,8 +27,14 @@ class MainScreenViewModel @Inject constructor(
     val state: StateFlow<MainScreenState> = _state.asStateFlow()
 
     init {
-        loadAds()
-        loadFavoriteAds()
+        loadInitialData()
+    }
+    private fun loadInitialData() {
+        viewModelScope.launch {
+            if (_state.value.ads.isEmpty()) {
+                loadAds()
+            }
+        }
     }
 
     fun onEvent(event: MainScreenEvent) {
