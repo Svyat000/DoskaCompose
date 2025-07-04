@@ -144,7 +144,6 @@ fun FavoriteAdScreenView(
                         ) {
 
                             items(state.favoriteAds) { ad ->
-                                Log.d("MYTAG", " SCREEN ${state.favoriteAds}")
                                 AdCard(
                                     favCount = ad.favCount,
                                     adKey = ad.key?:"",

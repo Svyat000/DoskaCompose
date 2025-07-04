@@ -44,8 +44,42 @@ class AdRepositoryImpl @Inject constructor(
     }
 
 
-    override suspend fun deleteAd(ad: Ad): Result<Unit> {
-        TODO("Not yet implemented")
+    override suspend fun deleteAd(adKey: String): Result<Unit> = withContext(Dispatchers.IO) {
+        try {
+            val userId = firebaseAuth.uid
+                ?: return@withContext Result.failure(IllegalStateException("User not authenticated"))
+            if(adKey == null){
+                return@withContext Result.failure(IllegalStateException("Ad key is null"))
+            }
+
+
+            // Удаляем объявление из /ads/{adKey}
+            databaseReference.child(ADS).child(adKey).removeValue().await()
+
+            // Удаляем ссылку на объявление из /users/{userId}/ads/{adKey}
+            databaseReference.child(USERS).child(userId).child(ADS).child(adKey).removeValue().await()
+
+            // Получаем список пользователей у которых это объявление в избранном
+            val favoritesSnapshot = databaseReference.child(ADS).child(adKey).child(FAVORITES)
+                .get()
+                .await()
+
+            // Удаляем ссылки на избранное у всех пользователей
+            for (favoriteSnapshot in favoritesSnapshot.children) {
+                val favUserId = favoriteSnapshot.key ?: continue
+                databaseReference.child(USERS).child(favUserId).child(USERS_FAVORITE_ADS).child(adKey)
+                    .removeValue()
+                    .await()
+            }
+
+            // Удаляем узел favorites из объявления
+            databaseReference.child(ADS).child(adKey).child(FAVORITES).removeValue().await()
+
+            Result.success(Unit)
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+
     }
 
     override suspend fun updateAd(ad: Ad): Result<Unit> {

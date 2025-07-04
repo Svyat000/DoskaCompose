@@ -9,12 +9,12 @@ class CreateAdUseCase @Inject constructor(private val repository: AdRepository) 
         return repository.createAd(ad)
     }
 
-    suspend fun deleteAd(ad: Ad): Result<Unit> {
-        return repository.createAd(ad)
+    suspend fun deleteAd(adKey: String): Result<Unit> {
+        return repository.deleteAd(adKey)
     }
 
     suspend fun updateAd(ad: Ad): Result<Unit> {
-        return repository.createAd(ad)
+        return repository.updateAd(ad)
     }
 
     suspend fun readUserAdFromDb(): Result<List<Ad>> {
