@@ -1,7 +1,5 @@
 package com.sddrozdov.presentation.viewModels
 
-import android.util.Log
-import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.sddrozdov.domain.useCase.AuthUseCase
@@ -135,7 +133,6 @@ class MainScreenViewModel @Inject constructor(
                 }
             )
         }
-        Log.d("MYTAG", " VIEWMODEL ${_state.value.favoriteAds}")//работает загрузка избранных
     }
 
 }

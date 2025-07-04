@@ -15,6 +15,7 @@ data class MyAdScreenState(
 sealed class MyAdScreenEvent {
     object LoadMyAds : MyAdScreenEvent()
     data class ShowError(val message: String) : MyAdScreenEvent()
+    data class DeleteAd(val adKey: String) : MyAdScreenEvent()
 
 
 }

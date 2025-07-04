@@ -1,5 +1,6 @@
 package com.sddrozdov.presentation.screens
 
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -48,9 +49,6 @@ import com.sddrozdov.presentation.navigations.Screen
 import com.sddrozdov.presentation.states.MyAdScreenEvent
 import com.sddrozdov.presentation.states.MyAdScreenState
 import com.sddrozdov.presentation.viewModels.MyAdViewModel
-import java.text.SimpleDateFormat
-import java.util.Date
-import java.util.Locale
 
 @Composable
 fun MyAdScreen(
@@ -164,7 +162,12 @@ fun MyAdScreenView(
                                     onClick = {
                                         navHostController.navigate("description_ad_screen/${ad.key}")
                                     },
-                                    onDeleteClick = {},
+                                    onDeleteClick = {
+                                        Log.d("MYTAG", " SCREEN MY AD CLICKED DELETE")
+                                        ad.key?.let { key ->
+                                            onEvent(MyAdScreenEvent.DeleteAd(key))
+                                        }
+                                    },
                                     onEditClick = {}
                                 )
                             }
@@ -336,7 +339,6 @@ private fun EmptyState(onCreateClick: () -> Unit) {
         }
     }
 }
-
 
 
 @Preview(showBackground = true)
