@@ -48,7 +48,7 @@ class AdRepositoryImpl @Inject constructor(
         try {
             val userId = firebaseAuth.uid
                 ?: return@withContext Result.failure(IllegalStateException("User not authenticated"))
-            if(adKey == null){
+            if (adKey == null) {
                 return@withContext Result.failure(IllegalStateException("Ad key is null"))
             }
 
@@ -57,7 +57,8 @@ class AdRepositoryImpl @Inject constructor(
             databaseReference.child(ADS).child(adKey).removeValue().await()
 
             // Удаляем ссылку на объявление из /users/{userId}/ads/{adKey}
-            databaseReference.child(USERS).child(userId).child(ADS).child(adKey).removeValue().await()
+            databaseReference.child(USERS).child(userId).child(ADS).child(adKey).removeValue()
+                .await()
 
             // Получаем список пользователей у которых это объявление в избранном
             val favoritesSnapshot = databaseReference.child(ADS).child(adKey).child(FAVORITES)
@@ -67,7 +68,8 @@ class AdRepositoryImpl @Inject constructor(
             // Удаляем ссылки на избранное у всех пользователей
             for (favoriteSnapshot in favoritesSnapshot.children) {
                 val favUserId = favoriteSnapshot.key ?: continue
-                databaseReference.child(USERS).child(favUserId).child(USERS_FAVORITE_ADS).child(adKey)
+                databaseReference.child(USERS).child(favUserId).child(USERS_FAVORITE_ADS)
+                    .child(adKey)
                     .removeValue()
                     .await()
             }
@@ -82,8 +84,31 @@ class AdRepositoryImpl @Inject constructor(
 
     }
 
-    override suspend fun updateAd(ad: Ad): Result<Unit> {
-        TODO("Not yet implemented")
+    override suspend fun updateAd(ad: Ad): Result<Unit> = withContext(Dispatchers.IO) {
+        try {
+            val userId = firebaseAuth.uid
+                ?: return@withContext Result.failure(IllegalStateException("User not authenticated"))
+
+            val adKey = ad.key
+                ?: return@withContext Result.failure(IllegalStateException("Ad key is null"))
+
+            // Проверяем что объявление принадлежит текущему пользователю
+            val adSnapshot = databaseReference.child(ADS).child(adKey).get().await()
+            val existingAd = adSnapshot.getValue(Ad::class.java)
+                ?: return@withContext Result.failure(IllegalStateException("Ad not found"))
+
+            if (existingAd.uid != userId) {
+                return@withContext Result.failure(IllegalStateException("User not authorized to update this ad"))
+            }
+
+            // Обновляем данные объявления
+            val updatedAd = ad.copy(uid = userId, time = System.currentTimeMillis().toString())
+            databaseReference.child(ADS).child(adKey).setValue(updatedAd).await()
+
+            Result.success(Unit)
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
     }
 
     override suspend fun readUserAdFromDB(): Result<List<Ad>> = withContext(Dispatchers.IO) {
