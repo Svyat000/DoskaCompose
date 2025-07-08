@@ -28,6 +28,7 @@ import com.sddrozdov.presentation.screens.createAdScreens.EnterPostalCodeScreen
 import com.sddrozdov.presentation.screens.createAdScreens.EnterPriceScreen
 import com.sddrozdov.presentation.screens.createAdScreens.SelectCategoryScreen
 import com.sddrozdov.presentation.screens.createAdScreens.SelectCountryAndCityScreen
+import com.sddrozdov.presentation.screens.createAdScreens.SelectPhotoAdScreen
 import com.sddrozdov.presentation.screens.myProfile.ProfileScreen
 import com.sddrozdov.presentation.viewModels.AD_KEY_ARG
 import com.sddrozdov.presentation.viewModels.createAd.CreateAdViewModel
@@ -89,6 +90,8 @@ sealed class Screen(val route: String) {
 
     @Serializable
     data object EnterPhoneScreen : Screen(Routes.ENTER_PHONE_SCREEN)
+    @Serializable
+    data object SelectPhotoAdScreen : Screen(Routes.SELECT_PHOTO_AD_SCREEN)
 
 }
 
@@ -191,6 +194,16 @@ fun MainNavigation(
                     viewModel = viewModel
                 )
             }
+            composable(Screen.SelectPhotoAdScreen.route) {
+                val parentEntry = remember(navHostController.currentBackStackEntry) {
+                    navHostController.getBackStackEntry("create_ad_graph")
+                }
+                val viewModel = hiltViewModel<CreateAdViewModel>(parentEntry)
+                SelectPhotoAdScreen(
+                    navHostController = navHostController,
+                    viewModel = viewModel
+                )
+            }
         }
         composable(Screen.LoginScreen.route) {
             LoginScreen(
@@ -289,5 +302,6 @@ object Routes {
     const val ENTER_PRICE_SCREEN = "enter_price_screen"
     const val ENTER_POSTAL_CODE_SCREEN = "enter_postal_code_screen"
     const val ENTER_PHONE_SCREEN = "enter_phone_screen"
+    const val SELECT_PHOTO_AD_SCREEN = "select_photo_ad_screen"
 
 }

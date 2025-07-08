@@ -141,7 +141,7 @@ fun SelectCategoryView(
             Button(
                 onClick = {
                     state.selectedCategoryId?.let {
-                        onNavigateTo(Screen.SelectCountryAndCityScreen.route)
+                        onNavigateTo(Screen.SelectPhotoAdScreen.route)
                     }
                 },
                 enabled = state.selectedCategoryId != null,
