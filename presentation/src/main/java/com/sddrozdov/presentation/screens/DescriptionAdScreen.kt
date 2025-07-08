@@ -1,5 +1,8 @@
 package com.sddrozdov.presentation.screens
 
+import android.content.Intent
+import android.net.Uri
+import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -31,6 +34,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
@@ -44,7 +48,9 @@ import com.sddrozdov.presentation.AppColors
 import com.sddrozdov.presentation.R
 import com.sddrozdov.presentation.states.DescriptionAdScreenEvent
 import com.sddrozdov.presentation.states.DescriptionAdScreenState
+import com.sddrozdov.presentation.states.DescriptionAdScreenUiEvent
 import com.sddrozdov.presentation.viewModels.DescriptionAdViewModel
+import kotlinx.coroutines.flow.collectLatest
 
 @Composable
 fun DescriptionAdScreen(
@@ -53,9 +59,49 @@ fun DescriptionAdScreen(
 ) {
     val viewModel = hiltViewModel<DescriptionAdViewModel>()
     val state by viewModel.state.collectAsState()
+    val context = LocalContext.current
 
     LaunchedEffect(adKey) {
         viewModel.onEvent(DescriptionAdScreenEvent.LoadAdByKey(adKey))
+    }
+
+    LaunchedEffect(true) {
+        viewModel.uiEvent.collectLatest { event ->
+            when (event) {
+                is DescriptionAdScreenUiEvent.InitiatePhoneCall -> {
+                    val phoneNumber = event.phoneNumber
+                    if (!phoneNumber.isNullOrEmpty()) {
+                        val callUri = "tel:$phoneNumber"
+                        val intentCall = Intent(Intent.ACTION_DIAL).apply {
+                            data = Uri.parse(callUri)
+                        }
+                        try {
+                            context.startActivity(intentCall)
+                        } catch (e: Exception) {
+                            Toast.makeText(context, "Не удалось открыть приложение телефона", Toast.LENGTH_SHORT).show()
+                        }
+                    } else {
+                        Toast.makeText(context, "Номер телефона не указан", Toast.LENGTH_SHORT).show()
+                    }
+                }
+                is DescriptionAdScreenUiEvent.InitiateEmail -> {
+                    val emailIntent = Intent(Intent.ACTION_SEND).apply {
+                        type = "message/rfc822"
+                        putExtra(Intent.EXTRA_EMAIL, arrayOf(event.email))
+                        putExtra(Intent.EXTRA_SUBJECT, event.subject)
+                        putExtra(Intent.EXTRA_TEXT, event.body)
+                    }
+                    try {
+                        context.startActivity(Intent.createChooser(emailIntent, "Открыть с помощью"))
+                    } catch (e: Exception) {
+                        Toast.makeText(context, "Нет приложения для отправки почты", Toast.LENGTH_SHORT).show()
+                    }
+                }
+                is DescriptionAdScreenUiEvent.ShowToast -> {
+                    Toast.makeText(context, event.message, Toast.LENGTH_SHORT).show()
+                }
+            }
+        }
     }
 
     DescriptionAdView(
@@ -167,7 +213,7 @@ fun DescriptionAdView(
                             horizontalArrangement = Arrangement.spacedBy(16.dp)
                         ) {
                             Button(
-                                onClick = { /* TODO: Call action */ },
+                                onClick = { onEvent(DescriptionAdScreenEvent.CallOnThePhone) },
                                 modifier = Modifier.weight(1f),
                                 shape = RoundedCornerShape(12.dp),
                                 colors = ButtonDefaults.buttonColors(containerColor = AppColors.accentColor)
@@ -183,7 +229,7 @@ fun DescriptionAdView(
                             }
 
                             Button(
-                                onClick = { /* TODO: Email action */ },
+                                onClick = { onEvent(DescriptionAdScreenEvent.SendEmail) },
                                 modifier = Modifier.weight(1f),
                                 shape = RoundedCornerShape(12.dp),
                                 colors = ButtonDefaults.buttonColors(containerColor = AppColors.accentColor)
