@@ -13,6 +13,12 @@ data class DescriptionAdScreenState(
 
 sealed class DescriptionAdScreenEvent {
     data class LoadAdByKey(val adKey: String) : DescriptionAdScreenEvent()
-    data class OpenEdit(val ad: Ad) : DescriptionAdScreenEvent()
-    data class DeleteAd(val ad: Ad) : DescriptionAdScreenEvent()
+    object CallOnThePhone : DescriptionAdScreenEvent()
+    object SendEmail : DescriptionAdScreenEvent()
+}
+
+sealed class DescriptionAdScreenUiEvent {
+    data class InitiatePhoneCall(val phoneNumber: String?) : DescriptionAdScreenUiEvent()
+    data class InitiateEmail(val email: String?, val subject: String, val body: String) : DescriptionAdScreenUiEvent()
+    data class ShowToast(val message: String) : DescriptionAdScreenUiEvent()
 }

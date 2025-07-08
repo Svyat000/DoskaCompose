@@ -7,9 +7,14 @@ import androidx.lifecycle.viewModelScope
 import com.sddrozdov.domain.useCase.CreateAdUseCase
 import com.sddrozdov.presentation.states.DescriptionAdScreenEvent
 import com.sddrozdov.presentation.states.DescriptionAdScreenState
+import com.sddrozdov.presentation.states.DescriptionAdScreenUiEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asSharedFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -24,9 +29,14 @@ class DescriptionAdViewModel @Inject constructor(
 
 
     private val _state = MutableStateFlow(DescriptionAdScreenState())
-    val state: StateFlow<DescriptionAdScreenState> = _state
+    val state: StateFlow<DescriptionAdScreenState> = _state.asStateFlow()
+
+    private val _uiEvent = MutableSharedFlow<DescriptionAdScreenUiEvent>()
+    val uiEvent: SharedFlow<DescriptionAdScreenUiEvent> = _uiEvent.asSharedFlow()
+
 
     private val adKey: String? = savedStateHandle.get<String>(AD_KEY_ARG)
+
 
     init {
         adKey?.let {
@@ -70,19 +80,41 @@ class DescriptionAdViewModel @Inject constructor(
 
     fun onEvent(event: DescriptionAdScreenEvent) {
         when (event) {
-            is DescriptionAdScreenEvent.OpenEdit -> {
-                // TODO: навигация в экран редактирования с event.ad.key
-                Log.d("DescriptionAdViewModel", "Open edit for ad: ${event.ad.key}")
-            }
-            is DescriptionAdScreenEvent.DeleteAd -> {
-                // TODO: удаление объявления
-                Log.d("DescriptionAdViewModel", "Delete ad: ${event.ad.key}")
-            }
             is DescriptionAdScreenEvent.LoadAdByKey -> {
                 loadAd(event.adKey)
             }
+            DescriptionAdScreenEvent.CallOnThePhone -> initiatePhoneCall()
+            DescriptionAdScreenEvent.SendEmail -> initiateEmailSending()
         }
     }
+
+
+    private fun initiatePhoneCall() {
+        viewModelScope.launch {
+            val phoneNumber = _state.value.ad?.phone
+            _uiEvent.emit(DescriptionAdScreenUiEvent.InitiatePhoneCall(phoneNumber))
+        }
+    }
+
+    private fun initiateEmailSending() {
+        viewModelScope.launch {
+            val email = _state.value.ad?.email
+            val title = _state.value.ad?.title
+            if (!email.isNullOrEmpty()) {
+                _uiEvent.emit(
+                    DescriptionAdScreenUiEvent.InitiateEmail(
+                        email = email,
+                        subject = title ?: "",
+                        body = "Здравствуйте, я заинтересован в вашем объявлении."
+                    )
+                )
+            } else {
+                _uiEvent.emit(DescriptionAdScreenUiEvent.ShowToast("Email не указан"))
+            }
+        }
+    }
+
+
 }
 
 
