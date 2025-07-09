@@ -115,7 +115,10 @@ class CreateAdViewModel @Inject constructor(
                 }
             }
 
-            is CreateAdEvents.ImagesSelected -> TODO()
+            is CreateAdEvents.ImagesSelected ->{
+                val updatedImages = state.value.images + event.uris
+                savedStateHandle[CREATE_AD_STATE] = state.value.copy(images = updatedImages)
+            }
 
             CreateAdEvents.OnClearError -> TODO()
 

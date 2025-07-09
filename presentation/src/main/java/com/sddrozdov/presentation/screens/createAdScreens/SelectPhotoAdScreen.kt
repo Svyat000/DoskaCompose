@@ -73,14 +73,16 @@ fun SelectPhotoAdView(
 ) {
 
     val context = LocalContext.current
-    var imageUri by remember { mutableStateOf<Uri?>(null) }
+        //var imageUri by remember { mutableStateOf<Uri?>(null) }
     var tempImageUri by remember { mutableStateOf<Uri?>(null) }
 
     // Лаунчер для выбора фото из галереи
     val galleryLauncher = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.GetContent()
-    ) { uri: Uri? ->
-        imageUri = uri
+        contract = ActivityResultContracts.GetMultipleContents()
+    ) { uris: List<Uri>? ->
+        uris?.let {
+            onEvent(CreateAdEvents.ImagesSelected(it)) // Передаём выбранное изображение через событие
+        }
     }
 
     // Лаунчер для съемки фото с камеры
@@ -88,7 +90,9 @@ fun SelectPhotoAdView(
         contract = ActivityResultContracts.TakePicture()
     ) { success: Boolean ->
         if (success) {
-            imageUri = tempImageUri
+            tempImageUri?.let {
+                onEvent(CreateAdEvents.ImagesSelected(listOf(it))) // Передаём URI фото с камеры через событие
+            }
         }
     }
 
@@ -98,7 +102,9 @@ fun SelectPhotoAdView(
     ) { isGranted: Boolean ->
         if (isGranted) {
             tempImageUri = createImageUri(context)
-            cameraLauncher.launch(tempImageUri!!)
+            tempImageUri?.let {
+                cameraLauncher.launch(it)
+            }
         } else {
             TODO()//Обработка отказа в разрешении Toast
         }
@@ -139,14 +145,23 @@ fun SelectPhotoAdView(
                 )
 
                 // Отображение выбранного изображения
-                imageUri?.let { uri ->
-                    Image(
-                        painter = rememberAsyncImagePainter(uri),
-                        contentDescription = "Selected Image",
+                if (state.images.isNotEmpty()) {
+                    Row(
                         modifier = Modifier
-                            .size(300.dp)
-                            .padding(bottom = 32.dp)
-                    )
+                            .fillMaxWidth()
+                            .padding(bottom = 32.dp),
+                        horizontalArrangement = Arrangement.SpaceEvenly
+                    ) {
+                        state.images.take(3).forEach { uri -> // Ограничение 3 фото
+                            Image(
+                                painter = rememberAsyncImagePainter(uri),
+                                contentDescription = "Selected Image",
+                                modifier = Modifier
+                                    .size(100.dp)
+                                    .padding(4.dp)
+                            )
+                        }
+                    }
                 }
 
                 Button(
@@ -227,14 +242,14 @@ fun SelectPhotoAdView(
             }
 
             Button(
-                onClick = { Screen.SelectCountryAndCityScreen.route },
-                enabled = imageUri != null,
+                onClick = { navHostController.navigate(Screen.SelectCountryAndCityScreen.route) },
+                enabled = state.images.isNotEmpty(),
                 modifier = Modifier
                     .weight(1f)
                     .height(56.dp),
                 shape = RoundedCornerShape(12.dp),
                 colors = ButtonDefaults.buttonColors(
-                    containerColor = if (imageUri != null) {
+                    containerColor = if (state.images.isNotEmpty()) {
                         AppColors.accentColor
                     } else {
                         AppColors.disabledButtonColor
