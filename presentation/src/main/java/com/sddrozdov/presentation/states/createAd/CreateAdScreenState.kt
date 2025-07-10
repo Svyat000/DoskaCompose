@@ -34,14 +34,8 @@ data class CreateAdStates(
     val error: String? = null,
 
 
-
-
-
-
-
-
-
     val images: List<Uri> = emptyList(),
+    val imageFinishUrl: List<String> = emptyList(),
 
     val isLoading: Boolean = false,
     val isPublished: Boolean = false,

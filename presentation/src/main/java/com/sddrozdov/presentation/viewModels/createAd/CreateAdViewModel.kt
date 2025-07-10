@@ -65,6 +65,7 @@ class CreateAdViewModel @Inject constructor(
             }
 
             is CreateAdEvents.OnCountryAndCitySelected -> {
+                loadPhotoToAppWrite()
                 savedStateHandle[CREATE_AD_STATE] = state.value.copy(
                     selectedCountry = event.country,
                     selectedCity = event.city,
@@ -106,16 +107,19 @@ class CreateAdViewModel @Inject constructor(
                 Log.d("TAG", state.value.selectedCountry!!.name)
                 Log.d("TAG", state.value.selectedCity.toString())
                 Log.d("TAG", state.value.selectedCategoryId.toString())
+                Log.d("TAG", state.value.images.toString())
+                Log.d("TAG", state.value.imageFinishUrl.toString())
 
             }
 
-            CreateAdEvents.OnPublishClicked ->{
+            CreateAdEvents.OnPublishClicked -> {
                 viewModelScope.launch {
+
                     createAdUseCase.createAd(convertStatesToAd())
                 }
             }
 
-            is CreateAdEvents.ImagesSelected ->{
+            is CreateAdEvents.ImagesSelected -> {
                 val updatedImages = state.value.images + event.uris
                 savedStateHandle[CREATE_AD_STATE] = state.value.copy(images = updatedImages)
             }
@@ -125,13 +129,28 @@ class CreateAdViewModel @Inject constructor(
             CreateAdEvents.OnImagesAdded -> TODO()
 
 
-
             CreateAdEvents.OpenImagePicker -> TODO()
 
         }
     }
 
-    private fun convertStatesToAd(): Ad{
+    private fun loadPhotoToAppWrite() {
+        viewModelScope.launch {
+            val listPhotos = createAdUseCase.uploadPhotos(state.value.images.map { it.toString() })
+            listPhotos.onSuccess {
+                val newList = mutableListOf<String>()
+                for (item in it) {
+                    newList.add(item.fileId.toString())
+                }
+
+                savedStateHandle[CREATE_AD_STATE] = state.value.copy(imageFinishUrl = newList)
+                Log.d("TAG", state.value.imageFinishUrl.toString())
+            }
+        }
+    }
+
+
+    private fun convertStatesToAd(): Ad {
         return Ad(
             title = state.value.title,
             description = state.value.description,
@@ -142,6 +161,9 @@ class CreateAdViewModel @Inject constructor(
             email = state.value.email,
             phone = state.value.phone,
             postalCode = state.value.postalCode,
+            mainImage = state.value.imageFinishUrl[0],
+            image2 = state.value.imageFinishUrl[1],
+            image3 = state.value.imageFinishUrl[2],
         )
     }
 

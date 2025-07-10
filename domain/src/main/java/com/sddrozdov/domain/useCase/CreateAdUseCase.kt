@@ -1,6 +1,7 @@
 package com.sddrozdov.domain.useCase
 
 import com.sddrozdov.domain.models.Ad
+import com.sddrozdov.domain.models.UploadResult
 import com.sddrozdov.domain.repository.AdRepository
 import javax.inject.Inject
 
@@ -35,5 +36,9 @@ class CreateAdUseCase @Inject constructor(private val repository: AdRepository) 
 
     suspend fun loadFavAdsForUser(uid: String) : Result<List<Ad>>{
         return repository.loadFavAdsForUser(uid)
+    }
+
+    suspend fun uploadPhotos(listPhotos: List<String>): Result<List<UploadResult>> {
+        return repository.uploadPhotos(listPhotos)
     }
 }
