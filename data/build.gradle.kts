@@ -6,7 +6,7 @@ plugins {
 }
 
 android {
-    namespace = "com.sddrozdov.dataa"
+    namespace = "com.sddrozdov.data"
     compileSdk = 35
 
     defaultConfig {
@@ -53,6 +53,9 @@ dependencies {
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
     androidTestImplementation(libs.androidx.ui.test.junit4)
+
+    // Appwrite SDK
+    api("io.appwrite:sdk-for-android:7.0.0")
 
 
 //
