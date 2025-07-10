@@ -1,18 +1,31 @@
 package com.sddrozdov.repository
 
+import Appwrt
+import Appwrt.BUCKET_ID
+import android.content.Context
+import android.net.Uri
 import android.util.Log
+import androidx.core.net.toUri
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DatabaseReference
 import com.sddrozdov.domain.models.Ad
+import com.sddrozdov.domain.models.UploadResult
 import com.sddrozdov.domain.repository.AdRepository
+import dagger.hilt.android.qualifiers.ApplicationContext
+import io.appwrite.models.InputFile
+import io.appwrite.services.Storage
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
+import java.io.File
+import java.io.FileOutputStream
 import javax.inject.Inject
 
 class AdRepositoryImpl @Inject constructor(
     private val databaseReference: DatabaseReference,
-    private val firebaseAuth: FirebaseAuth
+    private val firebaseAuth: FirebaseAuth,
+    private val storage: Storage,
+    @ApplicationContext private val context: Context
 ) : AdRepository {
 
     override suspend fun createAd(ad: Ad): Result<Unit> = withContext(Dispatchers.IO) {
@@ -225,6 +238,49 @@ class AdRepositoryImpl @Inject constructor(
                 Result.failure(e)
             }
         }
+
+    override suspend fun uploadPhotos(uris: List<String>): Result<List<UploadResult>> {
+        return withContext(Dispatchers.IO) {
+            val listStringToListUris = mutableListOf<Uri>()
+            uris.forEach { listStringToListUris.add(it.toUri()) }
+            try {
+                val results = listStringToListUris.map { uri ->
+                    try {
+                        // Преобразуем URI в временный файл
+                        val tempFile = createTempFileFromUri(uri)
+                        val inputFile = InputFile.fromFile(tempFile)
+                        // Загружаем файл в Appwrite
+                        val response = storage.createFile(
+                            bucketId = BUCKET_ID,
+                            fileId = "unique()",
+                            file = inputFile,
+                            permissions = listOf("read(\"any\")")
+                        )
+                        tempFile.delete()
+                        val fileUrl = "${Appwrt.START_URL}${response.id}${Appwrt.END_URL}"
+                        UploadResult(fileId = fileUrl)
+                    } catch (e: Exception) {
+                        UploadResult(error = e.message ?: "Unknown error")
+                    }
+                }
+                Result.success(results)
+            } catch (e: Exception) {
+                Result.failure(e)
+            }
+        }
+    }
+
+    private fun createTempFileFromUri(uri: Uri): File {
+        val inputStream = context.contentResolver.openInputStream(uri)
+            ?: throw IllegalStateException("Cannot open InputStream for URI: $uri")
+        val tempFile = File.createTempFile("upload_", ".tmp")
+        FileOutputStream(tempFile).use { outputStream ->
+            inputStream.copyTo(outputStream)
+        }
+        inputStream.close()
+        return tempFile
+    }
+
 
     companion object NodesDb {
         const val ADS = "ads"
