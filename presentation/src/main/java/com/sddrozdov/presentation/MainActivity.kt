@@ -42,7 +42,8 @@ class MainActivity : ComponentActivity() {
                     Routes.LOGIN,
                     Routes.REGISTER,
                     Routes.MY_AD,
-                    Routes.MY_PROFILE_SCREEN -> true
+                    Routes.MY_PROFILE_SCREEN,
+                    Routes.DESCRIPTION_AD -> true
 
                     else -> false
                 }

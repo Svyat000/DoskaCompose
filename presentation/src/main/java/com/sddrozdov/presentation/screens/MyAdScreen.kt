@@ -1,7 +1,6 @@
 package com.sddrozdov.presentation.screens
 
 import android.util.Log
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -34,6 +33,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -43,6 +43,8 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
+import coil.compose.AsyncImage
+import coil.request.ImageRequest
 import com.sddrozdov.presentation.AppColors
 import com.sddrozdov.presentation.R
 import com.sddrozdov.presentation.navigations.Screen
@@ -150,12 +152,7 @@ fun MyAdScreenView(
                             items(state.ads) { ad ->
                                 AdMyCard(
                                     title = ad.title.orEmpty(),
-                                    imageRes = if (ad.mainImage.isNotEmpty()) {
-                                        // TODO: загрузка изображения
-                                        R.drawable.ic_def_image
-                                    } else {
-                                        R.drawable.ic_def_image
-                                    },
+                                    imageUri = ad.mainImage,
                                     description = ad.description.orEmpty(),
                                     price = "${ad.price} ₽",
                                     publishTime = formatTime(ad.time),
@@ -182,7 +179,7 @@ fun MyAdScreenView(
 @Composable
 fun AdMyCard(
     title: String,
-    imageRes: Int,
+    imageUri: String,
     description: String,
     price: String,
     publishTime: String,
@@ -224,8 +221,13 @@ fun AdMyCard(
                 fontWeight = FontWeight.SemiBold
             )
 
-            Image(
-                painter = painterResource(id = imageRes),
+            AsyncImage(
+                model = ImageRequest.Builder(LocalContext.current)
+                    .data(imageUri)
+                    .crossfade(true)
+                    .error(R.drawable.ic_def_image)
+                    .placeholder(R.drawable.ic_def_image)
+                    .build(),
                 contentDescription = null,
                 modifier = Modifier
                     .fillMaxWidth()

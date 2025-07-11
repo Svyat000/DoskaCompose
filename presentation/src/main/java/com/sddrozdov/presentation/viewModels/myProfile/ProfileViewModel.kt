@@ -34,15 +34,15 @@ class ProfileViewModel @Inject constructor(
             val user = authUseCase.getCurrentUser()
             if (user != null) {
                 _state.value = MyProfileState(
+                    uid = user.uid,
                     userName = user.displayName ?: "No name",
                     email = user.email ?: "No email",
-                    photoUrl = user.photoUrl?.toString()
+                    photoUrl = user.photoUrl?.toString(),
+
                 )
             } else {
                 _state.value = MyProfileState(
-                    userName = "",
-                    email = "",
-                    photoUrl = null
+                    errorMessage = "Ошибка загрузки профиля!"
                 )
             }
         }

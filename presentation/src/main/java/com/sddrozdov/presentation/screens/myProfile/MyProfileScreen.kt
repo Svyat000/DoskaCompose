@@ -80,7 +80,8 @@ fun ProfileView(
                 AsyncImage(
                     model = state.photoUrl,
                     contentDescription = "Profile photo",
-                    modifier = Modifier.size(120.dp)
+                    modifier = Modifier
+                        .size(120.dp)
                         .clip(CircleShape)
                         .border(2.dp, MaterialTheme.colorScheme.primary, CircleShape),
                     contentScale = ContentScale.Crop
@@ -104,61 +105,69 @@ fun ProfileView(
 
             Spacer(modifier = Modifier.height(24.dp))
 
-            Text(
-                text = state.userName,
-                style = MaterialTheme.typography.headlineSmall,
-                fontWeight = FontWeight.Bold
-            )
+            state.userName?.let {
+                Text(
+                    text = it,
+                    style = MaterialTheme.typography.headlineSmall,
+                    fontWeight = FontWeight.Bold
+                )
+            }
 
-            Text(
-                text = state.email,
-                style = MaterialTheme.typography.bodyMedium,
-                color = Color.Gray
-            )
+            state.email?.let {
+                Text(
+                    text = it,
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = Color.Gray
+                )
+            }
 
             Spacer(modifier = Modifier.height(48.dp))
 
-            Button(
-                onClick = { onNavigateTo(Screen.LoginScreen.route) },
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                Text("Перейти к авторизации")
-            }
-
-            Spacer(modifier = Modifier.height(16.dp))
-
-            Button(
-                colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.error),
-                onClick = { showLogoutDialog = true },
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                Text("Выйти", color = Color.White)
-            }
-        }
-
-        if (showLogoutDialog) {
-            AlertDialog(
-                onDismissRequest = { showLogoutDialog = false },
-                title = { Text("Подтверждение выхода") },
-                text = { Text("Вы уверены, что хотите выйти из аккаунта?") },
-                confirmButton = {
-                    TextButton(
-                        onClick = {
-                            showLogoutDialog = false
-                            onEvent(ProfileScreenEvent.Logout)
-                        }
-                    ) {
-                        Text("Выйти")
-                    }
-                },
-                dismissButton = {
-                    TextButton(
-                        onClick = { showLogoutDialog = false }
-                    ) {
-                        Text("Отмена")
-                    }
+            if (state.uid == null) {
+                Button(
+                    onClick = { onNavigateTo(Screen.LoginScreen.route) },
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Text("Перейти к авторизации")
                 }
-            )
+                Spacer(modifier = Modifier.height(16.dp))
+            }
+
+            // Кнопка "Выйти" отображается только для авторизованных пользователей
+            if (state.uid != null) {
+                Button(
+                    colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.error),
+                    onClick = { showLogoutDialog = true },
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Text("Выйти", color = Color.White)
+                }
+            }
+
+            if (showLogoutDialog) {
+                AlertDialog(
+                    onDismissRequest = { showLogoutDialog = false },
+                    title = { Text("Подтверждение выхода") },
+                    text = { Text("Вы уверены, что хотите выйти из аккаунта?") },
+                    confirmButton = {
+                        TextButton(
+                            onClick = {
+                                showLogoutDialog = false
+                                onEvent(ProfileScreenEvent.Logout)
+                            }
+                        ) {
+                            Text("Выйти")
+                        }
+                    },
+                    dismissButton = {
+                        TextButton(
+                            onClick = { showLogoutDialog = false }
+                        ) {
+                            Text("Отмена")
+                        }
+                    }
+                )
+            }
         }
     }
 }
@@ -174,4 +183,5 @@ fun ProfileScreenPreview() {
         onEvent = {},
         state = fakeState,
     )
+
 }
