@@ -10,6 +10,7 @@ import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
@@ -29,17 +30,32 @@ fun BottomBar(navController: NavHostController, currentRoute: String?) {
         screens.forEach { screen ->
             NavigationBarItem(
                 icon = {
-                    Icon(
-                        imageVector = when (screen) {
-                            Screen.MainScreen -> Icons.Default.Home
-                            Screen.FavoriteAdScreen -> Icons.Default.Star
-                            Screen.SelectCategoryScreen -> Icons.Default.Add
-                            Screen.MyAdScreen -> Icons.Default.MailOutline
-                            Screen.MyProfileScreen -> Icons.Default.Star
-                            else -> Icons.Default.Star
-                        },
-                        contentDescription = null
-                    )
+                    when (screen) {
+                        Screen.MainScreen -> Icon(
+                            imageVector = Icons.Default.Home,
+                            contentDescription = null
+                        )
+                        Screen.FavoriteAdScreen -> Icon(
+                            painter = painterResource(id = R.drawable.ic_favorite_ad),
+                            contentDescription = null
+                        )
+                        Screen.SelectCategoryScreen -> Icon(
+                            imageVector = Icons.Default.Add,
+                            contentDescription = null
+                        )
+                        Screen.MyAdScreen -> Icon(
+                            imageVector = Icons.Default.MailOutline,
+                            contentDescription = null
+                        )
+                        Screen.MyProfileScreen -> Icon(
+                            imageVector = Icons.Default.Star,
+                            contentDescription = null
+                        )
+                        else -> Icon(
+                            imageVector = Icons.Default.Star,
+                            contentDescription = null
+                        )
+                    }
                 },
                 label = { Text(stringResource(getLabelRes(screen))) },
                 selected = currentRoute == screen.route,
