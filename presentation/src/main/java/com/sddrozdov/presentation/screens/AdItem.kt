@@ -12,11 +12,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.tooling.preview.Preview
+import coil.compose.AsyncImage
+import coil.request.ImageRequest
 import com.sddrozdov.presentation.R
 import com.sddrozdov.presentation.states.MainScreenEvent
 
@@ -24,7 +27,7 @@ import com.sddrozdov.presentation.states.MainScreenEvent
 fun AdCard(
     adKey: String,
     title: String,
-    imageRes: Int,
+    imageUri: String,
     description: String,
     price: String,
     viewCount: Int,
@@ -33,9 +36,7 @@ fun AdCard(
     isFavorite: Boolean,
     publishTime: String,
     onClick: () -> Unit,
-//    onEditClick: () -> Unit,
-//    onDeleteClick: () -> Unit
-) {
+    ) {
 
     val primarySurface = Color(0xFFF7F9FC)
     val accentColor = Color(0xFF6C5CE7)
@@ -70,8 +71,13 @@ fun AdCard(
                 fontWeight = FontWeight.SemiBold
             )
 
-            Image(
-                painter = painterResource(id = imageRes),
+            AsyncImage(
+                model = ImageRequest.Builder(LocalContext.current)
+                    .data(imageUri)
+                    .crossfade(true)
+                    .error(R.drawable.ic_def_image)
+                    .placeholder(R.drawable.ic_def_image)
+                    .build(),
                 contentDescription = null,
                 modifier = Modifier
                     .fillMaxWidth()
@@ -141,35 +147,6 @@ fun AdCard(
                         onIconClick = { onEvent(MainScreenEvent.AddFavoriteAd(adKey)) }
                     )
                 }
-
-//                Row(verticalAlignment = Alignment.CenterVertically) {
-//                    Text(
-//                        text = publishTime,
-//                        color = lightText,
-//                        fontSize = 12.sp
-//                    )
-//                    Spacer(modifier = Modifier.width(8.dp))
-//                    IconButton(
-//                        onClick = onEditClick,
-//                        modifier = Modifier.size(36.dp)
-//                    ) {
-//                        Icon(
-//                            painter = painterResource(id = R.drawable.ic_edit),
-//                            contentDescription = "Edit",
-//                            tint = accentColor
-//                        )
-//                    }
-//                    IconButton(
-//                        onClick = onDeleteClick,
-//                        modifier = Modifier.size(36.dp)
-//                    ) {
-//                        Icon(
-//                            painter = painterResource(id = R.drawable.ic_delete_image),
-//                            contentDescription = "Delete",
-//                            tint = Color(0xFFE17055)
-//                        )
-//                    }
-//                }
             }
         }
     }
@@ -200,7 +177,7 @@ fun IconWithCount(iconRes: Int, count: Int, tint: Color, onIconClick: () -> Unit
 fun PreviewAdCard() {
     AdCard(
         title = "Дизайнерский стул Eames",
-        imageRes = R.drawable.ic_def_image,
+        imageUri = "",
         description = "Эргономичное кресло премиум-класса с подлокотниками из натурального дуба. Идеальное состояние.",
         price = "24 990₽",
         viewCount = 142,
@@ -209,8 +186,6 @@ fun PreviewAdCard() {
         onClick = {},
         isFavorite = true,
         onEvent = {},
-//        onEditClick = { },
-//        onDeleteClick = { }
         adKey = ""
 
     )

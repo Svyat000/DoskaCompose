@@ -57,7 +57,6 @@ fun FavoriteAdScreen(
         onEvent = viewModel::onEvent,
         navHostController = navHostController
     )
-
 }
 
 @Composable
@@ -148,12 +147,7 @@ fun FavoriteAdScreenView(
                                     favCount = ad.favCount,
                                     adKey = ad.key?:"",
                                     title = ad.title.orEmpty(),
-                                    imageRes = if (ad.mainImage.isNotEmpty()) {
-                                        // TODO: загрузка изображения
-                                        R.drawable.ic_def_image
-                                    } else {
-                                        R.drawable.ic_def_image
-                                    },
+                                    imageUri = ad.mainImage,
                                     description = ad.description.orEmpty(),
                                     price = "${ad.price} ₽",
                                     viewCount = ad.viewsCounter?.toIntOrNull() ?: 0,
