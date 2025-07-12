@@ -150,7 +150,7 @@ fun FavoriteAdScreenView(
                                     imageUri = ad.mainImage,
                                     description = ad.description.orEmpty(),
                                     price = "${ad.price} ₽",
-                                    viewCount = ad.viewsCounter?.toIntOrNull() ?: 0,
+                                    viewCount = ad.viewsCounter,
                                     publishTime = formatTime(ad.time),
                                     isFavorite = state.uid?.let { uid -> ad.isFavoriteFor(uid) } ?: false,
                                     onClick = {

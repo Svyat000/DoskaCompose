@@ -279,7 +279,7 @@ fun DescriptionAdViewPreview() {
         mainImage = "https://via.placeholder.com/600x400.png?text=Ad+Image",
         description = "Это подробное описание объявления. Здесь можно разместить всю информацию о товаре или услуге.",
         price = 12345.toString(),
-        viewsCounter = 789.toString(),
+        viewsCounter = 789,
         time = System.currentTimeMillis().toString()
     )
 

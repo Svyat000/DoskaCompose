@@ -1,5 +1,6 @@
 package com.sddrozdov.presentation.viewModels
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.sddrozdov.domain.useCase.AuthUseCase
@@ -27,6 +28,7 @@ class MainScreenViewModel @Inject constructor(
     init {
         loadInitialData()
     }
+
     private fun loadInitialData() {
         viewModelScope.launch {
             if (_state.value.ads.isEmpty()) {
@@ -41,6 +43,29 @@ class MainScreenViewModel @Inject constructor(
             is MainScreenEvent.ShowError -> _state.value = _state.value.copy(error = event.message)
             is MainScreenEvent.AddFavoriteAd -> toggleFavoriteAd(event.key)
             MainScreenEvent.LoadUsersFavoriteAds -> loadFavoriteAds()
+            is MainScreenEvent.IncrementViewCounter -> incrementViewCounter(event.adKey)
+        }
+    }
+
+    private fun incrementViewCounter(adKey: String) {
+        Log.d("MYTAG", "VIEW MODEL ViewCounter click for adKey=$adKey")
+        viewModelScope.launch {
+            val user = authUseCase.getCurrentUser() ?: run {
+                _state.value = _state.value.copy(error = "Пользователь не авторизован")
+                return@launch
+            }
+            val uid = user.uid ?: run {
+                _state.value = _state.value.copy(error = "Ошибка: UID не найден")
+                return@launch
+            }
+            _state.value = _state.value.copy(uid = uid, adKey = adKey)
+            createAdUseCase.incrementViewCount(adKey, uid).fold(
+                onSuccess = { Log.d("MYTAG", "View count incremented for adKey=$adKey") },
+                onFailure = { error ->
+                    Log.e("MYTAG", "Failed to increment view count for adKey=$adKey", error)
+                    _state.value = _state.value.copy(error = "Ошибка счетчика: ${error.message}")
+                }
+            )
         }
     }
 

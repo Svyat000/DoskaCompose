@@ -20,6 +20,7 @@ sealed class MainScreenEvent {
     data class ShowError(val message: String) : MainScreenEvent()
     data class AddFavoriteAd(val key: String): MainScreenEvent()
     object LoadUsersFavoriteAds: MainScreenEvent()
+    data class IncrementViewCounter(val adKey: String) : MainScreenEvent()
 
 
 }

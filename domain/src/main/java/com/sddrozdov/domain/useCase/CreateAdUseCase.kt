@@ -41,4 +41,8 @@ class CreateAdUseCase @Inject constructor(private val repository: AdRepository) 
     suspend fun uploadPhotos(listPhotos: List<String>): Result<List<UploadResult>> {
         return repository.uploadPhotos(listPhotos)
     }
+
+    suspend fun incrementViewCount(adKey: String, uid: String): Result<Unit>{
+        return repository.incrementViewCount(adKey,uid)
+    }
 }
