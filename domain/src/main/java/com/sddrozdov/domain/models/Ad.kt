@@ -20,7 +20,7 @@ data class Ad(
     val image2: String = "empty",
     val image3: String = "empty",
 
-    var viewsCounter: String = "0",
+    var viewsCounter: Int = 0,
     var emailsCounter: String = "0",
     var callsCounter: String = "0",
 

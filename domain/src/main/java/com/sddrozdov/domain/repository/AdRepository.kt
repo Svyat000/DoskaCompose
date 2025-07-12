@@ -13,5 +13,6 @@ interface AdRepository {
     suspend fun toggleFavoriteAd(key: String, uid: String): Result<Unit>
     suspend fun loadFavAdsForUser(uid: String): Result<List<Ad>>
     suspend fun uploadPhotos(uris: List<String>) : Result<List<UploadResult>>
+    suspend fun incrementViewCount(adKey: String, uid: String) : Result<Unit>
 
 }

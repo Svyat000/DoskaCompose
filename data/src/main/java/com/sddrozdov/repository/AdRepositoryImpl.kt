@@ -270,6 +270,30 @@ class AdRepositoryImpl @Inject constructor(
         }
     }
 
+    override suspend fun incrementViewCount(adKey: String, uid: String): Result<Unit> {
+        return withContext(Dispatchers.IO) {
+            try {
+                val adViewsCounterRef =
+                    databaseReference.child(ADS).child(adKey).child("viewsCounter")
+                val adViewsRef = databaseReference.child(ADS).child(adKey).child("views").child(uid)
+
+                // Проверяем, просматривал ли пользователь объявление
+                val hasViewed = adViewsRef.get().await().getValue(Boolean::class.java) ?: false
+
+                if (!hasViewed) {
+                    val currentCount =
+                        adViewsCounterRef.get().await().getValue(Long::class.java) ?: 0
+                    adViewsCounterRef.setValue(currentCount + 1).await()
+                    adViewsRef.setValue(true).await()
+                }
+
+                Result.success(Unit)
+            } catch (e: Exception) {
+                Result.failure(e)
+            }
+        }
+    }
+
     private fun createTempFileFromUri(uri: Uri): File {
         val inputStream = context.contentResolver.openInputStream(uri)
             ?: throw IllegalStateException("Cannot open InputStream for URI: $uri")
