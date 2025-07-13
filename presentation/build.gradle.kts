@@ -93,4 +93,9 @@ dependencies {
     debugImplementation(libs.androidx.ui.test.manifest)
 
 
+    testImplementation (libs.jetbrains.kotlinx.coroutines.test)
+    testImplementation (libs.mockito.core)
+    testImplementation (libs.mockito.kotlin)
+
+
 }
