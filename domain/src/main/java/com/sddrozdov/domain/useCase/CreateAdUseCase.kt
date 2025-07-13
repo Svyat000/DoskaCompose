@@ -5,44 +5,56 @@ import com.sddrozdov.domain.models.UploadResult
 import com.sddrozdov.domain.repository.AdRepository
 import javax.inject.Inject
 
-class CreateAdUseCase @Inject constructor(private val repository: AdRepository) {
-    suspend fun createAd(ad: Ad): Result<Unit> {
+interface CreateAdUseCaseInterface {
+    suspend fun createAd(ad: Ad): Result<Unit>
+    suspend fun deleteAd(adKey: String): Result<Unit>
+    suspend fun updateAd(ad: Ad): Result<Unit>
+    suspend fun readUserAdFromDb(): Result<List<Ad>>
+    suspend fun readAllAdFromDb(): Result<List<Ad>>
+    suspend fun getAdByKey(key: String): Result<Ad>
+    suspend fun toggleFavoriteAd(key: String, uid: String): Result<Unit>
+    suspend fun loadFavAdsForUser(uid: String): Result<List<Ad>>
+    suspend fun uploadPhotos(listPhotos: List<String>): Result<List<UploadResult>>
+    suspend fun incrementViewCount(adKey: String, uid: String): Result<Unit>
+}
+class CreateAdUseCase @Inject constructor(private val repository: AdRepository): CreateAdUseCaseInterface {
+    override suspend fun createAd(ad: Ad): Result<Unit> {
         return repository.createAd(ad)
     }
 
-    suspend fun deleteAd(adKey: String): Result<Unit> {
+    override suspend fun deleteAd(adKey: String): Result<Unit> {
         return repository.deleteAd(adKey)
     }
 
-    suspend fun updateAd(ad: Ad): Result<Unit> {
+    override suspend fun updateAd(ad: Ad): Result<Unit> {
         return repository.updateAd(ad)
     }
 
-    suspend fun readUserAdFromDb(): Result<List<Ad>> {
+    override suspend fun readUserAdFromDb(): Result<List<Ad>> {
         return repository.readUserAdFromDB()
     }
 
-    suspend fun readAllAdFromDb(): Result<List<Ad>> {
+    override suspend fun readAllAdFromDb(): Result<List<Ad>> {
         return repository.readAllAdFromDB()
     }
 
-    suspend fun getAdByKey(key: String): Result<Ad> {
+    override suspend fun getAdByKey(key: String): Result<Ad> {
         return repository.getAdByKey(key)
     }
 
-    suspend fun toggleFavoriteAd(key: String, uid: String): Result<Unit> {
+    override suspend fun toggleFavoriteAd(key: String, uid: String): Result<Unit> {
         return repository.toggleFavoriteAd(key, uid)
     }
 
-    suspend fun loadFavAdsForUser(uid: String) : Result<List<Ad>>{
+    override suspend fun loadFavAdsForUser(uid: String) : Result<List<Ad>>{
         return repository.loadFavAdsForUser(uid)
     }
 
-    suspend fun uploadPhotos(listPhotos: List<String>): Result<List<UploadResult>> {
+    override suspend fun uploadPhotos(listPhotos: List<String>): Result<List<UploadResult>> {
         return repository.uploadPhotos(listPhotos)
     }
 
-    suspend fun incrementViewCount(adKey: String, uid: String): Result<Unit>{
+    override suspend fun incrementViewCount(adKey: String, uid: String): Result<Unit>{
         return repository.incrementViewCount(adKey,uid)
     }
 }

@@ -5,9 +5,30 @@ import com.sddrozdov.domain.models.User
 import com.sddrozdov.domain.repository.AuthRepository
 import javax.inject.Inject
 
-class AuthUseCase @Inject constructor(private val repository: AuthRepository) {
+interface AuthUseCaseInterface {
 
-    suspend fun signUp(email: String, password: String): Result<User> {
+    suspend fun signUp(email: String, password: String): Result<User>
+
+    suspend fun signIn(email: String, password: String): Result<User>
+
+    suspend fun sendVerificationEmail(user: User): Result<Unit>
+
+    suspend fun signInWithGoogle(googleSignInData: GoogleSignInData): Result<User>
+
+    suspend fun signOut(): Result<Unit>
+
+    suspend fun sendEmailForgotPassword(email: String): Result<Unit>
+
+    suspend fun signInAnonymously(): Result<Unit>
+
+    suspend fun isUserAnonymousOrAuthorized(): Boolean
+
+    suspend fun getCurrentUser(): User?
+}
+
+class AuthUseCase @Inject constructor(private val repository: AuthRepository): AuthUseCaseInterface {
+
+    override suspend fun signUp(email: String, password: String): Result<User> {
         if (email.isEmpty() || password.isEmpty()) {
             return Result.failure(IllegalArgumentException("Email or password is empty"))
         }
@@ -33,7 +54,7 @@ class AuthUseCase @Inject constructor(private val repository: AuthRepository) {
         return signUpResult
     }
 
-    suspend fun signIn(email: String, password: String): Result<User> {
+    override suspend fun signIn(email: String, password: String): Result<User> {
         if (email.isEmpty() || password.isEmpty()) {
             return Result.failure(IllegalArgumentException("Email or password is empty"))
         }
@@ -46,31 +67,31 @@ class AuthUseCase @Inject constructor(private val repository: AuthRepository) {
         return repository.signIn(email, password)
     }
 
-    suspend fun sendVerificationEmail(user: User): Result<Unit> {
+    override suspend fun sendVerificationEmail(user: User): Result<Unit> {
         return repository.sendEmailVerification(user)
     }
 
-    suspend fun signInWithGoogle(googleSignInData: GoogleSignInData): Result<User> {
+    override suspend fun signInWithGoogle(googleSignInData: GoogleSignInData): Result<User> {
         return repository.signInWithGoogle(googleSignInData)
     }
 
-    suspend fun signOut(): Result<Unit> {
+    override suspend fun signOut(): Result<Unit> {
         return repository.signOut()
     }
 
-    suspend fun sendEmailForgotPassword(email: String): Result<Unit> {
+    override suspend fun sendEmailForgotPassword(email: String): Result<Unit> {
         return repository.sendEmailForgotPassword(email)
     }
 
-    suspend fun signInAnonymously(): Result<Unit> {
+    override suspend fun signInAnonymously(): Result<Unit> {
         return repository.signInAnonymously()
     }
 
-    suspend fun isUserAnonymousOrAuthorized(): Boolean {
+    override suspend fun isUserAnonymousOrAuthorized(): Boolean {
         return repository.isUserAnonymous()
     }
 
-    suspend fun getCurrentUser(): User? {
+    override suspend fun getCurrentUser(): User? {
         return repository.getCurrentUser()
     }
 }
