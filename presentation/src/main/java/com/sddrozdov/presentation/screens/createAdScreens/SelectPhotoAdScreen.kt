@@ -22,6 +22,7 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -39,7 +40,6 @@ import androidx.compose.ui.unit.sp
 import androidx.core.content.FileProvider
 import androidx.navigation.NavHostController
 import coil.compose.rememberAsyncImagePainter
-import com.sddrozdov.presentation.AppColors
 import com.sddrozdov.presentation.navigations.Screen
 import com.sddrozdov.presentation.states.createAd.CreateAdEvents
 import com.sddrozdov.presentation.states.createAd.CreateAdStates
@@ -64,16 +64,13 @@ fun SelectPhotoAdScreen(
     )
 
 }
-
 @Composable
 fun SelectPhotoAdView(
     state: CreateAdStates,
     onEvent: (CreateAdEvents) -> Unit,
     navHostController: NavHostController
 ) {
-
     val context = LocalContext.current
-        //var imageUri by remember { mutableStateOf<Uri?>(null) }
     var tempImageUri by remember { mutableStateOf<Uri?>(null) }
 
     // Лаунчер для выбора фото из галереи
@@ -106,14 +103,16 @@ fun SelectPhotoAdView(
                 cameraLauncher.launch(it)
             }
         } else {
-            TODO()//Обработка отказа в разрешении Toast
+            TODO() // Обработка отказа в разрешении Toast
         }
     }
+
+    val colorScheme = MaterialTheme.colorScheme
 
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(AppColors.primaryBackground)
+            .background(colorScheme.background)
             .padding(16.dp)
     ) {
         Card(
@@ -123,7 +122,7 @@ fun SelectPhotoAdView(
                 .widthIn(max = 480.dp),
             shape = RoundedCornerShape(24.dp),
             elevation = CardDefaults.cardElevation(4.dp),
-            colors = CardDefaults.cardColors(containerColor = AppColors.cardBackground)
+            colors = CardDefaults.cardColors(containerColor = colorScheme.surface)
         ) {
             Column(
                 modifier = Modifier.padding(32.dp),
@@ -134,13 +133,13 @@ fun SelectPhotoAdView(
                     fontSize = 28.sp,
                     fontWeight = FontWeight.SemiBold,
                     modifier = Modifier.padding(bottom = 24.dp),
-                    color = AppColors.textColor
+                    color = colorScheme.onSurface
                 )
 
                 Text(
                     text = "Фотографии помогут привлечь больше покупателей",
                     fontSize = 16.sp,
-                    color = AppColors.textColor,
+                    color = colorScheme.onSurface,
                     modifier = Modifier.padding(bottom = 32.dp)
                 )
 
@@ -172,7 +171,7 @@ fun SelectPhotoAdView(
                         .padding(bottom = 16.dp),
                     shape = RoundedCornerShape(12.dp),
                     colors = ButtonDefaults.buttonColors(
-                        containerColor = AppColors.accentColor,
+                        containerColor = colorScheme.primary,
                         contentColor = Color.White
                     ),
                     elevation = ButtonDefaults.buttonElevation(
@@ -193,7 +192,7 @@ fun SelectPhotoAdView(
                         .height(56.dp),
                     shape = RoundedCornerShape(12.dp),
                     colors = ButtonDefaults.buttonColors(
-                        containerColor = AppColors.accentColor,
+                        containerColor = colorScheme.primary,
                         contentColor = Color.White
                     ),
                     elevation = ButtonDefaults.buttonElevation(
@@ -226,7 +225,7 @@ fun SelectPhotoAdView(
                     .padding(end = 8.dp),
                 shape = RoundedCornerShape(12.dp),
                 colors = ButtonDefaults.buttonColors(
-                    containerColor = AppColors.accentColor,
+                    containerColor = colorScheme.primary,
                     contentColor = Color.White
                 ),
                 elevation = ButtonDefaults.buttonElevation(
@@ -250,9 +249,9 @@ fun SelectPhotoAdView(
                 shape = RoundedCornerShape(12.dp),
                 colors = ButtonDefaults.buttonColors(
                     containerColor = if (state.images.isNotEmpty()) {
-                        AppColors.accentColor
+                        colorScheme.primary
                     } else {
-                        AppColors.disabledButtonColor
+                        colorScheme.onSurfaceVariant
                     },
                     contentColor = Color.White
                 ),

@@ -10,7 +10,6 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.lazy.grid.GridCells
@@ -22,6 +21,7 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -35,7 +35,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.sddrozdov.presentation.AppColors
 import com.sddrozdov.presentation.R
 import com.sddrozdov.presentation.navigations.Screen
 import com.sddrozdov.presentation.states.createAd.Category
@@ -66,10 +65,12 @@ fun SelectCategoryView(
     onEvent: (CreateAdEvents) -> Unit,
     onNavigateTo: (String) -> Unit
 ) {
+    val colorScheme = MaterialTheme.colorScheme
+
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(AppColors.primaryBackground)
+            .background(colorScheme.background)
             .padding(16.dp)
     ) {
         Card(
@@ -79,7 +80,7 @@ fun SelectCategoryView(
                 .widthIn(max = 480.dp),
             shape = RoundedCornerShape(24.dp),
             elevation = CardDefaults.cardElevation(4.dp),
-            colors = CardDefaults.cardColors(containerColor = AppColors.cardBackground)
+            colors = CardDefaults.cardColors(containerColor = colorScheme.surface)
         ) {
             Column(
                 modifier = Modifier.padding(32.dp),
@@ -89,7 +90,7 @@ fun SelectCategoryView(
                     text = stringResource(R.string.select_category),
                     fontSize = 28.sp,
                     fontWeight = FontWeight.SemiBold,
-                    color = AppColors.textColor,
+                    color = colorScheme.onSurface,
                     modifier = Modifier.padding(bottom = 24.dp)
                 )
 
@@ -123,7 +124,7 @@ fun SelectCategoryView(
                     .padding(end = 8.dp),
                 shape = RoundedCornerShape(12.dp),
                 colors = ButtonDefaults.buttonColors(
-                    containerColor = AppColors.accentColor,
+                    containerColor = colorScheme.primary,
                     contentColor = Color.White
                 ),
                 elevation = ButtonDefaults.buttonElevation(
@@ -151,9 +152,9 @@ fun SelectCategoryView(
                 shape = RoundedCornerShape(12.dp),
                 colors = ButtonDefaults.buttonColors(
                     containerColor = if (state.selectedCategoryId != null) {
-                        AppColors.accentColor
+                        colorScheme.primary
                     } else {
-                        AppColors.disabledButtonColor
+                        colorScheme.onSurfaceVariant
                     },
                     contentColor = Color.White
                 ),
@@ -179,8 +180,8 @@ fun CategoryGrid(
     onCategorySelected: (Long) -> Unit,
 ) {
     LazyVerticalGrid(
-        columns = GridCells.Fixed(2),
-        modifier = Modifier.heightIn(max = (5 * 100).dp),
+        columns = GridCells.Fixed(1),
+        modifier = Modifier.fillMaxSize(),
         horizontalArrangement = Arrangement.spacedBy(12.dp),
         verticalArrangement = Arrangement.spacedBy(12.dp)
     ) {
@@ -200,6 +201,8 @@ fun CategoryItem(
     isSelected: Boolean,
     onClick: () -> Unit,
 ) {
+    val colorScheme = MaterialTheme.colorScheme
+
     Card(
         onClick = onClick,
         modifier = Modifier
@@ -208,15 +211,11 @@ fun CategoryItem(
         shape = RoundedCornerShape(12.dp),
         elevation = CardDefaults.cardElevation(if (isSelected) 8.dp else 2.dp),
         colors = CardDefaults.cardColors(
-            containerColor = if (isSelected) {
-                AppColors.selectedCategoryColor
-            } else {
-                AppColors.cardBackground
-            }
+            containerColor = colorScheme.surface
         ),
         border = BorderStroke(
             width = if (isSelected) 2.dp else 1.dp,
-            color = if (isSelected) AppColors.accentColor else AppColors.borderColor
+            color = if (isSelected) colorScheme.primary else colorScheme.outline
         )
     ) {
         Box(
@@ -227,7 +226,7 @@ fun CategoryItem(
                 text = category.name,
                 fontSize = 16.sp,
                 fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Medium,
-                color = if (isSelected) AppColors.accentColor else AppColors.textColor
+                color = if (isSelected) colorScheme.primary else colorScheme.onSurface
             )
         }
     }
@@ -235,6 +234,8 @@ fun CategoryItem(
 
 @Composable
 fun LoadingIndicator() {
+    val colorScheme = MaterialTheme.colorScheme
+
     Box(
         modifier = Modifier
             .fillMaxWidth()
@@ -243,7 +244,8 @@ fun LoadingIndicator() {
     ) {
         CircularProgressIndicator(
             modifier = Modifier.testTag("LoadingIndicator"),
-            color = AppColors.accentColor)
+            color = colorScheme.primary
+        )
     }
 }
 

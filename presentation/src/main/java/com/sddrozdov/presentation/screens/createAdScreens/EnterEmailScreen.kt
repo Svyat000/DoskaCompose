@@ -16,6 +16,7 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextFieldDefaults
@@ -32,7 +33,6 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
-import com.sddrozdov.presentation.AppColors
 import com.sddrozdov.presentation.R
 import com.sddrozdov.presentation.navigations.Screen
 import com.sddrozdov.presentation.states.createAd.CreateAdEvents
@@ -60,13 +60,14 @@ fun EnterEmailView(
     onEvent: (CreateAdEvents) -> Unit,
     navHostController: NavHostController
 ) {
+    val colorScheme = MaterialTheme.colorScheme
+
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(AppColors.primaryBackground)
+            .background(colorScheme.background)
             .padding(16.dp)
-    )
-    {
+    ) {
         Card(
             modifier = Modifier
                 .weight(1f)
@@ -74,7 +75,7 @@ fun EnterEmailView(
                 .widthIn(max = 480.dp),
             shape = RoundedCornerShape(24.dp),
             elevation = CardDefaults.cardElevation(4.dp),
-            colors = CardDefaults.cardColors(containerColor = AppColors.cardBackground)
+            colors = CardDefaults.cardColors(containerColor = colorScheme.surface)
         ) {
             Column(
                 modifier = Modifier
@@ -82,19 +83,12 @@ fun EnterEmailView(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Text(
-                    text = "Введите ваш email",
+                    text = stringResource(R.string.enter_your_email),
                     fontSize = 28.sp,
                     fontWeight = FontWeight.SemiBold,
                     modifier = Modifier.padding(bottom = 24.dp),
-                    color = AppColors.textColor
+                    color = colorScheme.onSurface
                 )
-
-//                Text(
-//                    text = "Мы отправим на него код подтверждения",
-//                    fontSize = 16.sp,
-//                    color = AppColors.textColor,
-//                    modifier = Modifier.padding(bottom = 32.dp)
-//                )
 
                 OutlinedTextField(
                     value = state.email,
@@ -103,20 +97,20 @@ fun EnterEmailView(
                     },
                     label = {
                         Text(
-                            text = "Email",
-                            color = AppColors.secondaryTextColor,
+                            text = stringResource(R.string.email),
+                            color = colorScheme.onSurfaceVariant,
                             fontSize = 14.sp
                         )
                     },
                     colors = TextFieldDefaults.colors(
                         focusedContainerColor = Color.Transparent,
                         unfocusedContainerColor = Color.Transparent,
-                        focusedTextColor = AppColors.textColor,
-                        unfocusedTextColor = AppColors.textColor,
-                        focusedLabelColor = AppColors.accentColor,
-                        unfocusedLabelColor = AppColors.secondaryTextColor,
-                        focusedIndicatorColor = AppColors.accentColor,
-                        unfocusedIndicatorColor = AppColors.textFieldOutline,
+                        focusedTextColor = colorScheme.onSurface,
+                        unfocusedTextColor = colorScheme.onSurface,
+                        focusedLabelColor = colorScheme.primary,
+                        unfocusedLabelColor = colorScheme.onSurfaceVariant,
+                        focusedIndicatorColor = colorScheme.primary,
+                        unfocusedIndicatorColor = colorScheme.outline,
                     ),
                     shape = RoundedCornerShape(12.dp),
                     modifier = Modifier
@@ -127,13 +121,13 @@ fun EnterEmailView(
                     ),
                     placeholder = {
                         Text(
-                            text = "example@mail.com",
-                            color = AppColors.secondaryTextColor
+                            text = stringResource(R.string.example_mail_com),
+                            color = colorScheme.onSurfaceVariant
                         )
                     },
                     textStyle = TextStyle(
                         fontSize = 16.sp,
-                        color = AppColors.textColor
+                        color = colorScheme.onSurface
                     ),
                     singleLine = true
                 )
@@ -156,8 +150,8 @@ fun EnterEmailView(
                     .padding(end = 8.dp),
                 shape = RoundedCornerShape(12.dp),
                 colors = ButtonDefaults.buttonColors(
-                    containerColor = AppColors.accentColor,
-                    contentColor = Color.White
+                    containerColor = colorScheme.primary,
+                    contentColor = colorScheme.onPrimary
                 ),
                 elevation = ButtonDefaults.buttonElevation(
                     defaultElevation = 4.dp,
@@ -182,11 +176,15 @@ fun EnterEmailView(
                 shape = RoundedCornerShape(12.dp),
                 colors = ButtonDefaults.buttonColors(
                     containerColor = if (state.email.isNotEmpty() && isValidEmail(state.email)) {
-                        AppColors.accentColor
+                        colorScheme.primary
                     } else {
-                        AppColors.disabledButtonColor
+                        colorScheme.surfaceVariant.copy(alpha = 0.38f)
                     },
-                    contentColor = Color.White
+                    contentColor = if (state.email.isNotEmpty() && isValidEmail(state.email)) {
+                        colorScheme.onPrimary
+                    } else {
+                        colorScheme.onSurfaceVariant
+                    }
                 ),
                 elevation = ButtonDefaults.buttonElevation(
                     defaultElevation = 4.dp,
@@ -194,7 +192,7 @@ fun EnterEmailView(
                 )
             ) {
                 Text(
-                    text = "Продолжить",
+                    text = stringResource(id = R.string.next_screen),
                     fontSize = 18.sp,
                     fontWeight = FontWeight.Medium
                 )

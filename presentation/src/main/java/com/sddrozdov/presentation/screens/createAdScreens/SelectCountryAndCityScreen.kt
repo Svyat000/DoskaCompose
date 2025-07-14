@@ -22,6 +22,7 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -36,7 +37,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
-import com.sddrozdov.presentation.AppColors
 import com.sddrozdov.presentation.R
 import com.sddrozdov.presentation.navigations.Screen
 import com.sddrozdov.presentation.states.createAd.Country
@@ -65,10 +65,12 @@ fun SelectCountryAndCityView(
     onEvent: (CreateAdEvents) -> Unit,
     navHostController: NavHostController
 ) {
+    val colorScheme = MaterialTheme.colorScheme
+
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(AppColors.primaryBackground)
+            .background(colorScheme.background)
             .padding(16.dp)
     ) {
         Card(
@@ -78,7 +80,7 @@ fun SelectCountryAndCityView(
                 .widthIn(max = 480.dp),
             shape = RoundedCornerShape(24.dp),
             elevation = CardDefaults.cardElevation(4.dp),
-            colors = CardDefaults.cardColors(containerColor = AppColors.cardBackground)
+            colors = CardDefaults.cardColors(containerColor = colorScheme.surface)
         ) {
             Column(
                 modifier = Modifier
@@ -90,7 +92,7 @@ fun SelectCountryAndCityView(
                     fontSize = 28.sp,
                     fontWeight = FontWeight.SemiBold,
                     modifier = Modifier.padding(bottom = 24.dp),
-                    color = AppColors.textColor
+                    color = colorScheme.onSurface
                 )
 
                 Column(
@@ -103,7 +105,7 @@ fun SelectCountryAndCityView(
                         Text(
                             text = "Страна: ${state.selectedCountry.name}",
                             fontSize = 16.sp,
-                            color = AppColors.accentColor,
+                            color = colorScheme.primary,
                             fontWeight = FontWeight.Bold,
                             modifier = Modifier.padding(bottom = 8.dp)
                         )
@@ -113,7 +115,7 @@ fun SelectCountryAndCityView(
                         Text(
                             text = "Город: ${state.selectedCity}",
                             fontSize = 16.sp,
-                            color = AppColors.accentColor,
+                            color = colorScheme.primary,
                             fontWeight = FontWeight.Bold
                         )
                     }
@@ -130,9 +132,9 @@ fun SelectCountryAndCityView(
                         shape = RoundedCornerShape(12.dp),
                         colors = ButtonDefaults.buttonColors(
                             containerColor = if (!state.isCountrySelectionVisible) {
-                                AppColors.accentColor
+                                colorScheme.primary
                             } else {
-                                AppColors.disabledButtonColor
+                                colorScheme.onSurfaceVariant
                             },
                             contentColor = Color.White
                         ),
@@ -153,9 +155,9 @@ fun SelectCountryAndCityView(
                         shape = RoundedCornerShape(12.dp),
                         colors = ButtonDefaults.buttonColors(
                             containerColor = if (state.selectedCountry != null && !state.isCitySelectionVisible) {
-                                AppColors.accentColor
+                                colorScheme.primary
                             } else {
-                                AppColors.disabledButtonColor
+                                colorScheme.onSurfaceVariant
                             },
                             contentColor = Color.White
                         ),
@@ -210,7 +212,7 @@ fun SelectCountryAndCityView(
                     .padding(end = 8.dp),
                 shape = RoundedCornerShape(12.dp),
                 colors = ButtonDefaults.buttonColors(
-                    containerColor = AppColors.accentColor,
+                    containerColor = colorScheme.primary,
                     contentColor = Color.White
                 ),
                 elevation = ButtonDefaults.buttonElevation(
@@ -244,9 +246,9 @@ fun SelectCountryAndCityView(
                 shape = RoundedCornerShape(12.dp),
                 colors = ButtonDefaults.buttonColors(
                     containerColor = if (state.selectedCity != null) {
-                        AppColors.accentColor
+                        colorScheme.primary
                     } else {
-                        AppColors.disabledButtonColor
+                        colorScheme.onSurfaceVariant
                     },
                     contentColor = Color.White
                 ),
@@ -306,6 +308,8 @@ private fun CountryCityItem(
     isSelected: Boolean = false,
     onClick: () -> Unit,
 ) {
+    val colors = MaterialTheme.colorScheme
+
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -314,14 +318,15 @@ private fun CountryCityItem(
         shape = RoundedCornerShape(12.dp),
         colors = CardDefaults.cardColors(
             containerColor = if (isSelected) {
-                AppColors.selectedItemColor
+                colors.primary
             } else {
-                AppColors.cardBackground
+                colors.surface
             }
         ),
         border = BorderStroke(
             width = if (isSelected) 2.dp else 1.dp,
-            color = if (isSelected) AppColors.accentColor else AppColors.borderColor
+            color = if (isSelected) colors.primary
+            else colors.outline
         ),
         elevation = CardDefaults.cardElevation(if (isSelected) 8.dp else 2.dp)
     ) {
@@ -330,7 +335,8 @@ private fun CountryCityItem(
             modifier = Modifier.padding(16.dp),
             fontSize = 16.sp,
             fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Normal,
-            color = if (isSelected) AppColors.accentColor else AppColors.textColor
+            color = if (isSelected) colors.primary
+            else colors.onSurface
         )
     }
 }

@@ -151,19 +151,26 @@ class CreateAdViewModel @Inject constructor(
 
 
     private fun convertStatesToAd(): Ad {
+
+        val imageFinishUrl = state.value.imageFinishUrl
+
+        val mainImage = if (imageFinishUrl.isNotEmpty()) imageFinishUrl[0] else "empty"
+        val image2 = if (imageFinishUrl.size > 1) imageFinishUrl[1] else "empty"
+        val image3 = if (imageFinishUrl.size > 2) imageFinishUrl[2] else "empty"
+
         return Ad(
             title = state.value.title,
             description = state.value.description,
             price = state.value.price,
-            country = state.value.selectedCountry!!.name,
+            country = state.value.selectedCountry?.name,
             city = state.value.selectedCity,
             category = state.value.selectedCategoryId.toString(),
             email = state.value.email,
             phone = state.value.phone,
             postalCode = state.value.postalCode,
-            mainImage = state.value.imageFinishUrl[0],
-            image2 = state.value.imageFinishUrl[1],
-            image3 = state.value.imageFinishUrl[2],
+            mainImage = mainImage,
+            image2 = image2,
+            image3 = image3,
         )
     }
 

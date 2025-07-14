@@ -16,6 +16,7 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextFieldDefaults
@@ -33,20 +34,17 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
-import com.sddrozdov.presentation.AppColors
 import com.sddrozdov.presentation.R
 import com.sddrozdov.presentation.navigations.Screen
 import com.sddrozdov.presentation.states.createAd.CreateAdEvents
 import com.sddrozdov.presentation.states.createAd.CreateAdStates
 import com.sddrozdov.presentation.viewModels.createAd.CreateAdViewModel
 
-
 @Composable
 fun EditAdTitleScreen(
     navHostController: NavHostController,
     viewModel: CreateAdViewModel
 ) {
-
     val state by viewModel.state.collectAsState()
 
     EnterAdTitleView(
@@ -62,10 +60,12 @@ fun EnterAdTitleView(
     onEvent: (CreateAdEvents) -> Unit,
     navHostController: NavHostController
 ) {
+    val colorScheme = MaterialTheme.colorScheme
+
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(AppColors.primaryBackground)
+            .background(colorScheme.background)
             .padding(16.dp)
     ) {
         Card(
@@ -75,7 +75,7 @@ fun EnterAdTitleView(
                 .widthIn(max = 480.dp),
             shape = RoundedCornerShape(24.dp),
             elevation = CardDefaults.cardElevation(4.dp),
-            colors = CardDefaults.cardColors(containerColor = AppColors.cardBackground)
+            colors = CardDefaults.cardColors(containerColor = colorScheme.surface)
         ) {
             Column(
                 modifier = Modifier
@@ -83,17 +83,17 @@ fun EnterAdTitleView(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Text(
-                    text = "Введите заголовок объявления",
+                    text = stringResource(R.string.enter_ad_title),
                     fontSize = 28.sp,
                     fontWeight = FontWeight.SemiBold,
                     modifier = Modifier.padding(bottom = 24.dp),
-                    color = AppColors.textColor
+                    color = colorScheme.onSurface
                 )
 
                 Text(
-                    text = "Кратко опишите, что вы предлагаете",
+                    text = stringResource(R.string.briefly_describe_what_you_offer),
                     fontSize = 16.sp,
-                    color = AppColors.textColor,
+                    color = colorScheme.onSurfaceVariant,
                     modifier = Modifier.padding(bottom = 32.dp)
                 )
 
@@ -107,19 +107,19 @@ fun EnterAdTitleView(
                     label = {
                         Text(
                             text = stringResource(id = R.string.title_ad),
-                            color = AppColors.secondaryTextColor,
+                            color = colorScheme.onSurfaceVariant,
                             fontSize = 14.sp
                         )
                     },
                     colors = TextFieldDefaults.colors(
                         focusedContainerColor = Color.Transparent,
                         unfocusedContainerColor = Color.Transparent,
-                        focusedTextColor = AppColors.textColor,
-                        unfocusedTextColor = AppColors.textColor,
-                        focusedLabelColor = AppColors.accentColor,
-                        unfocusedLabelColor = AppColors.secondaryTextColor,
-                        focusedIndicatorColor = AppColors.accentColor,
-                        unfocusedIndicatorColor = AppColors.textFieldOutline,
+                        focusedTextColor = colorScheme.onSurface,
+                        unfocusedTextColor = colorScheme.onSurface,
+                        focusedLabelColor = colorScheme.primary,
+                        unfocusedLabelColor = colorScheme.onSurfaceVariant,
+                        focusedIndicatorColor = colorScheme.primary,
+                        unfocusedIndicatorColor = colorScheme.outline,
                     ),
                     shape = RoundedCornerShape(12.dp),
                     modifier = Modifier
@@ -132,19 +132,19 @@ fun EnterAdTitleView(
                     ),
                     placeholder = {
                         Text(
-                            text = "Например: Продам ноутбук",
-                            color = AppColors.secondaryTextColor
+                            text = stringResource(R.string.for_example_selling_a_laptop),
+                            color = colorScheme.onSurfaceVariant
                         )
                     },
                     textStyle = TextStyle(
                         fontSize = 16.sp,
-                        color = AppColors.textColor
+                        color = colorScheme.onSurface
                     ),
                     trailingIcon = {
                         if (state.title.isNotEmpty()) {
                             Text(
                                 text = "${state.title.length}/100",
-                                color = if (state.title.length >= 100) Color.Red else AppColors.secondaryTextColor,
+                                color = if (state.title.length >= 100) colorScheme.error else colorScheme.onSurfaceVariant,
                                 fontSize = 12.sp
                             )
                         }
@@ -152,7 +152,6 @@ fun EnterAdTitleView(
                 )
 
                 Spacer(modifier = Modifier.height(32.dp))
-
             }
         }
 
@@ -170,8 +169,8 @@ fun EnterAdTitleView(
                     .padding(end = 8.dp),
                 shape = RoundedCornerShape(12.dp),
                 colors = ButtonDefaults.buttonColors(
-                    containerColor = AppColors.accentColor,
-                    contentColor = Color.White
+                    containerColor = colorScheme.primary,
+                    contentColor = colorScheme.onPrimary
                 ),
                 elevation = ButtonDefaults.buttonElevation(
                     defaultElevation = 4.dp,
@@ -196,11 +195,15 @@ fun EnterAdTitleView(
                 shape = RoundedCornerShape(12.dp),
                 colors = ButtonDefaults.buttonColors(
                     containerColor = if (state.title.isNotEmpty()) {
-                        AppColors.accentColor
+                        colorScheme.primary
                     } else {
-                        AppColors.disabledButtonColor
+                        colorScheme.surfaceVariant.copy(alpha = 0.38f)
                     },
-                    contentColor = Color.White
+                    contentColor = if (state.title.isNotEmpty()) {
+                        colorScheme.onPrimary
+                    } else {
+                        colorScheme.onSurfaceVariant
+                    }
                 ),
                 elevation = ButtonDefaults.buttonElevation(
                     defaultElevation = 4.dp,

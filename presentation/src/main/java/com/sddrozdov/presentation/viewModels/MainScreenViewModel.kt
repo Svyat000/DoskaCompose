@@ -3,8 +3,8 @@ package com.sddrozdov.presentation.viewModels
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.sddrozdov.domain.useCase.AuthUseCase
-import com.sddrozdov.domain.useCase.CreateAdUseCase
+import com.sddrozdov.domain.useCase.AuthUseCaseInterface
+import com.sddrozdov.domain.useCase.CreateAdUseCaseInterface
 import com.sddrozdov.presentation.states.MainScreenEvent
 import com.sddrozdov.presentation.states.MainScreenState
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -18,8 +18,8 @@ const val AD_FROM_MAIN_TO_DESC_SCREEN = "ad_from_main_screen_to_description_scre
 
 @HiltViewModel
 class MainScreenViewModel @Inject constructor(
-    private val createAdUseCase: CreateAdUseCase,
-    private val authUseCase: AuthUseCase,
+    private val createAdUseCase: CreateAdUseCaseInterface,
+    private val authUseCase: AuthUseCaseInterface,
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(MainScreenState())
@@ -110,7 +110,7 @@ class MainScreenViewModel @Inject constructor(
         })
     }
 
-    private fun loadAds() {
+    fun loadAds() {
         _state.value = _state.value.copy(isLoading = true, error = null)
         viewModelScope.launch {
             val result = createAdUseCase.readAllAdFromDb()

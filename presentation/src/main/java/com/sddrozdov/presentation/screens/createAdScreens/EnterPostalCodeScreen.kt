@@ -16,6 +16,7 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextFieldDefaults
@@ -32,7 +33,6 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
-import com.sddrozdov.presentation.AppColors
 import com.sddrozdov.presentation.R
 import com.sddrozdov.presentation.navigations.Screen
 import com.sddrozdov.presentation.states.createAd.CreateAdEvents
@@ -60,10 +60,12 @@ fun EnterPostalCodeView(
     onEvent: (CreateAdEvents) -> Unit,
     navHostController: NavHostController
 ) {
+    val colorScheme = MaterialTheme.colorScheme
+
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(AppColors.primaryBackground)
+            .background(colorScheme.background)
             .padding(16.dp)
     ) {
         Card(
@@ -73,7 +75,7 @@ fun EnterPostalCodeView(
                 .widthIn(max = 480.dp),
             shape = RoundedCornerShape(24.dp),
             elevation = CardDefaults.cardElevation(4.dp),
-            colors = CardDefaults.cardColors(containerColor = AppColors.cardBackground)
+            colors = CardDefaults.cardColors(containerColor = colorScheme.surface)
         ) {
             Column(
                 modifier = Modifier
@@ -81,11 +83,11 @@ fun EnterPostalCodeView(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Text(
-                    text = "Введите почтовый индекс",
+                    text = stringResource(R.string.enter_postal_code),
                     fontSize = 28.sp,
                     fontWeight = FontWeight.SemiBold,
                     modifier = Modifier.padding(bottom = 24.dp),
-                    color = AppColors.textColor
+                    color = colorScheme.onSurface
                 )
 
                 OutlinedTextField(
@@ -101,20 +103,20 @@ fun EnterPostalCodeView(
                     },
                     label = {
                         Text(
-                            text = "Почтовый индекс",
-                            color = AppColors.secondaryTextColor,
+                            text = stringResource(R.string.postal_code),
+                            color = colorScheme.onSurfaceVariant,
                             fontSize = 14.sp
                         )
                     },
                     colors = TextFieldDefaults.colors(
                         focusedContainerColor = Color.Transparent,
                         unfocusedContainerColor = Color.Transparent,
-                        focusedTextColor = AppColors.textColor,
-                        unfocusedTextColor = AppColors.textColor,
-                        focusedLabelColor = AppColors.accentColor,
-                        unfocusedLabelColor = AppColors.secondaryTextColor,
-                        focusedIndicatorColor = AppColors.accentColor,
-                        unfocusedIndicatorColor = AppColors.textFieldOutline,
+                        focusedTextColor = colorScheme.onSurface,
+                        unfocusedTextColor = colorScheme.onSurface,
+                        focusedLabelColor = colorScheme.primary,
+                        unfocusedLabelColor = colorScheme.onSurfaceVariant,
+                        focusedIndicatorColor = colorScheme.primary,
+                        unfocusedIndicatorColor = colorScheme.outline
                     ),
                     shape = RoundedCornerShape(12.dp),
                     modifier = Modifier
@@ -125,13 +127,13 @@ fun EnterPostalCodeView(
                     ),
                     placeholder = {
                         Text(
-                            text = "Например: 123456",
-                            color = AppColors.secondaryTextColor
+                            text = stringResource(R.string.for_example_123456),
+                            color = colorScheme.onSurfaceVariant
                         )
                     },
                     textStyle = TextStyle(
                         fontSize = 16.sp,
-                        color = AppColors.textColor
+                        color = colorScheme.onSurface
                     ),
                     singleLine = true,
                 )
@@ -154,7 +156,7 @@ fun EnterPostalCodeView(
                     .padding(end = 8.dp),
                 shape = RoundedCornerShape(12.dp),
                 colors = ButtonDefaults.buttonColors(
-                    containerColor = AppColors.accentColor,
+                    containerColor = colorScheme.primary,
                     contentColor = Color.White
                 ),
                 elevation = ButtonDefaults.buttonElevation(
@@ -180,9 +182,9 @@ fun EnterPostalCodeView(
                 shape = RoundedCornerShape(12.dp),
                 colors = ButtonDefaults.buttonColors(
                     containerColor = if (state.postalCode.length == 6) {
-                        AppColors.accentColor
+                        colorScheme.primary
                     } else {
-                        AppColors.disabledButtonColor
+                        colorScheme.onSurfaceVariant
                     },
                     contentColor = Color.White
                 ),
@@ -192,7 +194,7 @@ fun EnterPostalCodeView(
                 )
             ) {
                 Text(
-                    text = "Продолжить",
+                    text = stringResource(id = R.string.next_screen),
                     fontSize = 18.sp,
                     fontWeight = FontWeight.Medium
                 )
@@ -200,4 +202,5 @@ fun EnterPostalCodeView(
         }
     }
 }
+
 

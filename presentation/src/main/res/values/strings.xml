@@ -31,5 +31,24 @@
     <string name="title_ad">Заголовок объявления</string>
     <string name="my_ad">Мои</string>
     <string name="profile">Профиль</string>
+    <string name="describe_the_product_in_detail">Опишите товар подробно</string>
+    <string name="please_provide_all_important_details_and_specifications">Укажите все важные детали и характеристики</string>
+    <string name="product_description">Описание товара</string>
+    <string name="for_example_condition_is_new_full_set_1_year_warranty">Например: Состояние нового, полная комплектация, гарантия 1 год...</string>
+    <string name="enter_ad_title">Введите заголовок объявления</string>
+    <string name="briefly_describe_what_you_offer">Кратко опишите, что вы предлагаете</string>
+    <string name="for_example_selling_a_laptop">Например: Продам ноутбук</string>
+    <string name="enter_your_email">Введите ваш email</string>
+    <string name="example_mail_com">example@mail.com</string>
+    <string name="enter_your_phone_number">Введите номер телефона</string>
+    <string name="buyers_will_be_able_to_call_this_number">На этот номер смогут звонить покупатели</string>
+    <string name="phone_number">Номер телефона</string>
+    <string name="publish">Опубликовать</string>
+    <string name="enter_postal_code">Введите почтовый индекс</string>
+    <string name="postal_code">Почтовый индекс</string>
+    <string name="for_example_123456">Например: 123456</string>
+    <string name="specify_the_price_of_the_product">Укажите цену товара</string>
+    <string name="price">Цена</string>
+    <string name="for_example_1000_or_999_99">Например: 1000 или 999.99</string>
 
 </resources>

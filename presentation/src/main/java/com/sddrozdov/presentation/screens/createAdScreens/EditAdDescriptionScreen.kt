@@ -17,6 +17,7 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextFieldDefaults
@@ -34,7 +35,6 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
-import com.sddrozdov.presentation.AppColors
 import com.sddrozdov.presentation.R
 import com.sddrozdov.presentation.navigations.Screen
 import com.sddrozdov.presentation.states.createAd.CreateAdEvents
@@ -46,7 +46,6 @@ fun EditAdDescriptionScreen(
     navHostController: NavHostController,
     viewModel: CreateAdViewModel
 ) {
-
     val state by viewModel.state.collectAsState()
 
     EnterAdDescriptionView(
@@ -62,10 +61,12 @@ fun EnterAdDescriptionView(
     onEvent: (CreateAdEvents) -> Unit,
     navHostController: NavHostController
 ) {
+    val colorScheme = MaterialTheme.colorScheme
+
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(AppColors.primaryBackground)
+            .background(colorScheme.background)
             .padding(16.dp)
     ) {
         Card(
@@ -75,7 +76,7 @@ fun EnterAdDescriptionView(
                 .widthIn(max = 480.dp),
             shape = RoundedCornerShape(24.dp),
             elevation = CardDefaults.cardElevation(4.dp),
-            colors = CardDefaults.cardColors(containerColor = AppColors.cardBackground)
+            colors = CardDefaults.cardColors(containerColor = colorScheme.surface)
         ) {
             Column(
                 modifier = Modifier
@@ -83,17 +84,17 @@ fun EnterAdDescriptionView(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Text(
-                    text = "Опишите товар подробно",
+                    text = stringResource(R.string.describe_the_product_in_detail),
                     fontSize = 28.sp,
                     fontWeight = FontWeight.SemiBold,
                     modifier = Modifier.padding(bottom = 24.dp),
-                    color = AppColors.textColor
+                    color = colorScheme.onSurface
                 )
 
                 Text(
-                    text = "Укажите все важные детали и характеристики",
+                    text = stringResource(R.string.please_provide_all_important_details_and_specifications),
                     fontSize = 16.sp,
-                    color = AppColors.textColor,
+                    color = colorScheme.onSurfaceVariant,
                     modifier = Modifier.padding(bottom = 32.dp)
                 )
 
@@ -106,20 +107,20 @@ fun EnterAdDescriptionView(
                     },
                     label = {
                         Text(
-                            text = "Описание товара",
-                            color = AppColors.secondaryTextColor,
+                            text = stringResource(R.string.product_description),
+                            color = colorScheme.onSurfaceVariant,
                             fontSize = 14.sp
                         )
                     },
                     colors = TextFieldDefaults.colors(
                         focusedContainerColor = Color.Transparent,
                         unfocusedContainerColor = Color.Transparent,
-                        focusedTextColor = AppColors.textColor,
-                        unfocusedTextColor = AppColors.textColor,
-                        focusedLabelColor = AppColors.accentColor,
-                        unfocusedLabelColor = AppColors.secondaryTextColor,
-                        focusedIndicatorColor = AppColors.accentColor,
-                        unfocusedIndicatorColor = AppColors.textFieldOutline,
+                        focusedTextColor = colorScheme.onSurface,
+                        unfocusedTextColor = colorScheme.onSurface,
+                        focusedLabelColor = colorScheme.primary,
+                        unfocusedLabelColor = colorScheme.onSurfaceVariant,
+                        focusedIndicatorColor = colorScheme.primary,
+                        unfocusedIndicatorColor = colorScheme.outline,
                     ),
                     shape = RoundedCornerShape(12.dp),
                     modifier = Modifier
@@ -132,13 +133,13 @@ fun EnterAdDescriptionView(
                     ),
                     placeholder = {
                         Text(
-                            text = "Например: Состояние нового, полная комплектация, гарантия 1 год...",
-                            color = AppColors.secondaryTextColor
+                            text = stringResource(R.string.for_example_condition_is_new_full_set_1_year_warranty),
+                            color = colorScheme.onSurfaceVariant
                         )
                     },
                     textStyle = TextStyle(
                         fontSize = 16.sp,
-                        color = AppColors.textColor
+                        color = colorScheme.onSurface
                     ),
                     maxLines = 10,
                     singleLine = false,
@@ -147,13 +148,12 @@ fun EnterAdDescriptionView(
                 if (state.description.isNotEmpty()) {
                     Text(
                         text = "${state.description.length}/500",
-                        color = if (state.description.length >= 500) Color.Red else AppColors.secondaryTextColor,
+                        color = if (state.description.length >= 500) colorScheme.error else colorScheme.onSurfaceVariant,
                         fontSize = 12.sp
                     )
                 }
 
                 Spacer(modifier = Modifier.height(32.dp))
-
             }
         }
 
@@ -171,8 +171,8 @@ fun EnterAdDescriptionView(
                     .padding(end = 8.dp),
                 shape = RoundedCornerShape(12.dp),
                 colors = ButtonDefaults.buttonColors(
-                    containerColor = AppColors.accentColor,
-                    contentColor = Color.White
+                    containerColor = colorScheme.primary,
+                    contentColor = colorScheme.onPrimary
                 ),
                 elevation = ButtonDefaults.buttonElevation(
                     defaultElevation = 4.dp,
@@ -197,11 +197,15 @@ fun EnterAdDescriptionView(
                 shape = RoundedCornerShape(12.dp),
                 colors = ButtonDefaults.buttonColors(
                     containerColor = if (state.description.isNotEmpty()) {
-                        AppColors.accentColor
+                        colorScheme.primary
                     } else {
-                        AppColors.disabledButtonColor
+                        colorScheme.surfaceVariant.copy(alpha = 0.38f)
                     },
-                    contentColor = Color.White
+                    contentColor = if (state.description.isNotEmpty()) {
+                        colorScheme.onPrimary
+                    } else {
+                        colorScheme.onSurfaceVariant
+                    }
                 ),
                 elevation = ButtonDefaults.buttonElevation(
                     defaultElevation = 4.dp,
